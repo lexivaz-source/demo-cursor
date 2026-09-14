@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Harbor — A quieter way to start the day</title>
+    <meta
+      name="description"
+      content="Harbor is a simple daily planner that keeps your morning clear: one list, one focus, no extra noise."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="logo" href="#top" aria-label="Harbor home">
+          <span class="logo-mark" aria-hidden="true"></span>
+          Harbor
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          Menu
+        </button>
+        <nav id="site-nav" class="site-nav" aria-label="Primary">
+          <a href="#how">How it works</a>
+          <a href="#features">Features</a>
+          <a href="#start">Get started</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Daily planning, minus the clutter</p>
+            <h1>Start with one clear list. Leave the rest behind.</h1>
+            <p class="lede">
+              Harbor is a focused planner for people who want a calm morning, a
+              short list, and a day that actually matches what they meant to do.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#start">Try Harbor free</a>
+              <a class="button ghost" href="#how">See how it works</a>
+            </div>
+          </div>
+          <aside class="planner-card" aria-label="Sample Harbor list">
+            <p class="planner-label">Today</p>
+            <h2>Tuesday, September 15</h2>
+            <ul class="task-list">
+              <li class="done">Walk before opening email</li>
+              <li>Finish the landing page copy</li>
+              <li>Send the two follow-ups that matter</li>
+              <li class="muted">Leave room for lunch</li>
+            </ul>
+            <p class="focus-note">Focus: ship the first version.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="how" id="how">
+        <div class="container">
+          <p class="eyebrow">How it works</p>
+          <h2>Three steps. Then you close the app.</h2>
+          <ol class="steps">
+            <li>
+              <h3>Write what matters</h3>
+              <p>Cap the list at five. If it doesn’t fit, it waits until tomorrow.</p>
+            </li>
+            <li>
+              <h3>Pick one focus</h3>
+              <p>Harbor highlights a single job so the rest of the day has an anchor.</p>
+            </li>
+            <li>
+              <h3>Check off and stop</h3>
+              <p>When the list is done, Harbor closes. No streak guilt. No extra tabs.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="container">
+          <p class="eyebrow">Why Harbor</p>
+          <h2>Built for mornings that already feel full.</h2>
+          <div class="feature-grid">
+            <article>
+              <h3>A hard limit, on purpose</h3>
+              <p>Five tasks. That’s the product. The constraint is what keeps the day honest.</p>
+            </article>
+            <article>
+              <h3>Works on a phone</h3>
+              <p>Open it while the kettle boils. No account maze, no onboarding tour.</p>
+            </article>
+            <article>
+              <h3>Your list stays yours</h3>
+              <p>Plans live on this device first. Sync later if you want it — never required.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="start">
+        <div class="container cta-card">
+          <p class="eyebrow">Get started</p>
+          <h2>Try Harbor with tomorrow’s list.</h2>
+          <p>
+            This is a demo landing page. Leave your email if you’d like a note
+            when a real version exists.
+          </p>
+          <form class="signup" action="#" method="post">
+            <label class="sr-only" for="email">Email address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="you@example.com"
+            />
+            <button class="button primary" type="submit">Notify me</button>
+          </form>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>Harbor — a quieter way to start the day.</p>
+        <p>&copy; 2026 Harbor</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
