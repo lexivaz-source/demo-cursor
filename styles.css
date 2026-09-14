@@ -2,8 +2,8 @@
   --paper: #f3eee4;
   --ink: #1d1914;
   --muted: #6a6258;
-  --accent: #b4451d;
-  --accent-dark: #8f3415;
+  --accent: #1e5aa8;
+  --accent-dark: #164682;
   --card: #fffaf2;
   --line: #ddd4c6;
   --shadow: 0 24px 50px rgba(40, 28, 16, 0.12);
@@ -21,7 +21,7 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(1200px 500px at 10% -10%, #f8e7cf 0%, transparent 55%),
+    radial-gradient(1200px 500px at 10% -10%, #d7e6f6 0%, transparent 55%),
     var(--paper);
   font-family: Figtree, system-ui, sans-serif;
   line-height: 1.55;
@@ -120,7 +120,7 @@ a {
   height: 0.85rem;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 6px 0 0 #e7b089;
+  box-shadow: 6px 0 0 #8eb4e0;
 }
 
 .site-nav {
@@ -272,7 +272,7 @@ h1 {
 .focus-note {
   margin: 1.1rem 0 0;
   padding: 0.75rem 0.9rem;
-  background: #f6e6d4;
+  background: #dce8f6;
   border-radius: 0.8rem;
   font-weight: 600;
 }
@@ -351,7 +351,7 @@ h1 {
 }
 
 .cta-card .eyebrow {
-  color: #e7b089;
+  color: #9ec0e8;
 }
 
 .cta-card p {
@@ -384,7 +384,7 @@ h1 {
 .form-status {
   min-height: 1.4em;
   margin: 0.8rem 0 0;
-  color: #e7b089;
+  color: #9ec0e8;
   font-weight: 600;
 }
 
