@@ -1,0 +1,17 @@
+---
+description: Block tab is the shared settings set on every new block
+alwaysApply: true
+---
+
+# Block tab
+
+The Block tab is the same on every new block. Do not invent extra Block settings.
+
+Include only these settings, in this order, with no extra helper text:
+
+1. Animation (section title “Animation”; Behavior uses the Figma outlined Text field plus the Hover Animation Dropdown)
+2. Full-width divider
+3. Padding (Figma segmented chips: — S M L + tune)
+
+Do not add field-help or hint copy under Animation or Padding.
+Do not include Link Container, Content Max Width, Content Layout, alignment, container size, Positioning, or Layer Position.

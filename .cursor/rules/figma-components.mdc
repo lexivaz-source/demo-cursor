@@ -1,0 +1,46 @@
+---
+description: Figma component guidelines for editor panel controls
+alwaysApply: true
+---
+
+# Figma component guidelines
+
+Use the New Editor Blocks / Material 3 components. Do not invent a parallel control language.
+
+## Text field (outlined)
+
+- Width 282px, height 40px, 1px `#686e81` border, 4px radius
+- Value: Lato 15px, 0.75px tracking, `#686e81`
+- Floating label: Roboto 12/16, 0.4px tracking, white fill on the border
+- Supporting text: Lato 14px, 0.7px tracking, `#858787`, 5px inset — only when the design includes it
+- Dropdowns are the same field plus a trailing 24px chevron in a 40px icon button
+
+## Switch
+
+- Preferred control for binary on/off settings
+- Track 52×32, thumb 24px, selected track `#1e2743`
+- Switch sits to the left of its label; helper sits under the label
+
+## Icon button
+
+- 40×40, 12px radius, 24px icon
+- Container is transparent until hover or selected (`#dbdfe0`)
+
+## Tabs
+
+- Lato 15px, 0.75px tracking, `#4b5269`
+- Selected tab is bold with a 2px `#4b5269` underline
+
+## Divider
+
+- Full-width 1px `#dbdfe0` to separate unrelated sections
+
+## Menu
+
+- Temporary surface over the field, 10px radius, elevation shadow
+- Items use Lato 14px button text
+
+## Section quick actions
+
+- 282×55, 11px padding, 10px radius, 1px `#dbdfe0`
+- Options are 40px; selected fill is `#dbdfe0`

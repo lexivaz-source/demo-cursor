@@ -1,0 +1,34 @@
+---
+description: Toggle switches always sit to the left of their label
+alwaysApply: true
+---
+
+# Toggle layout
+
+Put the switch control to the left of its label. Do this for every toggle, including new ones.
+
+```html
+<!-- ❌ BAD -->
+<div class="toggle-row">
+  <span>Track clicks</span>
+  <button class="switch" role="switch"></button>
+</div>
+
+<!-- ✅ GOOD -->
+<div class="toggle-row">
+  <button class="switch" role="switch" aria-labelledby="track-label"></button>
+  <span id="track-label">Track clicks</span>
+</div>
+```
+
+Put the label and helper in `.toggle-copy` so the helper sits directly underneath the label. Align the switch with the top of the label.
+
+```html
+<div class="toggle-row">
+  <button class="switch" role="switch" aria-labelledby="track-label"></button>
+  <div class="toggle-copy">
+    <span id="track-label">Track clicks</span>
+    <p class="hint">Helper underneath the label.</p>
+  </div>
+</div>
+```
