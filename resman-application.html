@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResMan Application — Editor</title>
+    <meta
+      name="description"
+      content="ResMan Application editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="resman-application.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-state="configured">Configured</button>
+          <button type="button" class="chip" data-state="missing">Missing fields</button>
+          <button type="button" class="chip" data-state="compact">Compact</button>
+          <button type="button" class="chip" data-tab-only="block">Block</button>
+        </div>
+
+        <p class="canvas-kicker">Section canvas · ResMan Application</p>
+
+        <article class="page-card">
+          <div class="page-body page-body-center" id="page-body">
+            <div class="block-wrap" id="block-wrap">
+              <div class="quick-actions" role="toolbar" aria-label="Block quick actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Duplicate">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" id="qa-delete" aria-label="Delete">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+
+              <div class="apply-frame" id="apply-frame">
+                <div class="apply-chrome">
+                  <span class="apply-dot" aria-hidden="true"></span>
+                  <span id="apply-host">demo.myresman.com/Portal/Applicants/ApplyFromMarketing</span>
+                </div>
+                <div class="apply-body">
+                  <h2>Apply now</h2>
+                  <p>Placeholder for the ResMan iframe. Editors do not style this form.</p>
+                  <label class="apply-field">
+                    <span>First name</span>
+                    <span class="apply-input"></span>
+                  </label>
+                  <label class="apply-field">
+                    <span>Email</span>
+                    <span class="apply-input"></span>
+                  </label>
+                  <label class="apply-field">
+                    <span>Desired move-in</span>
+                    <span class="apply-input"></span>
+                  </label>
+                  <span class="apply-btn">Continue</span>
+                </div>
+              </div>
+
+              <p class="missing-canvas" id="missing-canvas" hidden>
+                [This app is not associated to a ResMan property]
+              </p>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint">
+          Content is read-only from the app’s ResMan connection. There is no Design tab — the block is an iframe of ResMan’s apply form.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <header class="panel-header">
+          <h1>ResMan Application</h1>
+        </header>
+
+        <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+          <button class="tab active" type="button" role="tab" id="tab-content" aria-selected="true" aria-controls="panel-content">
+            Content
+          </button>
+          <button class="tab" type="button" role="tab" id="tab-block" aria-selected="false" aria-controls="panel-block">
+            Block
+          </button>
+          <button
+            class="tab tab-icon"
+            type="button"
+            id="device-btn"
+            aria-pressed="false"
+            aria-label="Device overrides"
+          >
+            <span class="icon-28">
+              <img src="assets/icon-device.svg" alt="" width="28" height="28" />
+            </span>
+          </button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+            <p class="warn" id="missing-warn" hidden>
+              <span class="icon-24" aria-hidden="true">
+                <img src="assets/icon-warning.svg" alt="" width="24" height="24" />
+              </span>
+              <span class="warn-copy">
+                <strong>Apply form can’t load</strong>
+                One or more required ResMan fields are missing. Please check your setup and try again.
+              </span>
+            </p>
+
+            <p class="section-label">ResMan settings</p>
+
+            <label class="field" id="field-subdomain">
+              <span class="field-label">Subdomain</span>
+              <input type="text" id="subdomain" value="demo" readonly />
+            </label>
+
+            <label class="field" id="field-account">
+              <span class="field-label">Account ID</span>
+              <input type="text" id="account-id" value="500" readonly />
+            </label>
+
+            <label class="field" id="field-property">
+              <span class="field-label">Property ID</span>
+              <input
+                type="text"
+                id="property-id"
+                value="4fb18691-c894-4b84-805b-c62da481ca63"
+                readonly
+              />
+            </label>
+            <p class="field-help field-help-block" id="missing-help" hidden>
+              Block reflects the viewer experience once the app’s subdomain, account ID, and property ID are configured.
+            </p>
+
+            <label class="field" id="field-integration" hidden>
+              <span class="field-label">Integration</span>
+              <input type="text" id="integration" value="demo · 500 · 4fb18691…ca63" readonly />
+            </label>
+
+            <hr class="panel-divider" id="content-divider" />
+
+            <div class="field" id="field-url">
+              <span class="field-label" id="apply-url-label">Apply URL preview</span>
+              <input
+                type="text"
+                id="apply-url"
+                value="https://demo.myresman.com/Portal/Applicants/ApplyFromMarketing?accountID=500&propertyID=4fb18691-c894-4b84-805b-c62da481ca63"
+                readonly
+                title="https://demo.myresman.com/Portal/Applicants/ApplyFromMarketing?accountID=500&propertyID=4fb18691-c894-4b84-805b-c62da481ca63"
+                aria-labelledby="apply-url-label"
+              />
+              <span class="field-help">
+                These values are connected to your published app’s ResMan integration. To update them, go to
+                <a class="text-link" id="app-integrations-link" href="#">App Integrations</a>.
+              </span>
+            </div>
+
+            <label class="field" id="field-org" hidden>
+              <span class="field-label">Org override</span>
+              <input type="text" id="org-override" value="Same as app" readonly />
+              <span class="field-help">Same as the app’s ResMan connection.</span>
+            </label>
+          </div>
+
+          <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+            <p class="section-label">Animation</p>
+            <div class="field">
+              <span class="field-label" id="animation-label">Behavior</span>
+              <button
+                type="button"
+                class="field-trigger"
+                id="animation-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="animation-label animation-value"
+              >
+                <span id="animation-value">None</span>
+                <span class="icon-button" aria-hidden="true">
+                  <span class="icon-24">
+                    <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                  </span>
+                </span>
+              </button>
+              <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                <li><button type="button" role="option" data-animation="" aria-selected="true">None</button></li>
+                <li><button type="button" role="option" data-animation="slide-y" aria-selected="false">Slide From Bottom</button></li>
+                <li><button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button></li>
+                <li><button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">Shrink</button></li>
+                <li><button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">Zoom In</button></li>
+                <li><button type="button" role="option" data-animation="zoom-out" aria-selected="false">Zoom Out</button></li>
+              </ul>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch"
+                id="sw-parallax"
+                role="switch"
+                aria-checked="false"
+                aria-labelledby="parallax-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="parallax-label">Parallax</span>
+              </div>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <p class="section-label">Width</p>
+            <div class="segmented has-tune" id="width-source" role="group" aria-label="Width">
+              <button type="button" data-width="50">50%</button>
+              <button type="button" data-width="75">75%</button>
+              <button type="button" class="active" data-width="100">100%</button>
+              <button type="button" class="tune" aria-label="Custom width">
+                <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+              </button>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <p class="section-label">Positioning</p>
+            <div class="field">
+              <span class="field-label" id="positioning-label">Position</span>
+              <button
+                type="button"
+                class="field-trigger"
+                id="positioning-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="positioning-label positioning-value"
+              >
+                <span id="positioning-value">Default</span>
+                <span class="icon-button" aria-hidden="true">
+                  <span class="icon-24">
+                    <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                  </span>
+                </span>
+              </button>
+              <ul class="field-menu" id="positioning-menu" hidden role="listbox" aria-labelledby="positioning-label">
+                <li><button type="button" role="option" data-position="center" aria-selected="true">Default</button></li>
+                <li><button type="button" role="option" data-position="top-left" aria-selected="false">Top left</button></li>
+                <li><button type="button" role="option" data-position="top-right" aria-selected="false">Top right</button></li>
+                <li><button type="button" role="option" data-position="bottom-left" aria-selected="false">Bottom left</button></li>
+                <li><button type="button" role="option" data-position="bottom-right" aria-selected="false">Bottom right</button></li>
+              </ul>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <p class="section-label">Padding</p>
+            <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+              <button type="button" data-pad="0">—</button>
+              <button type="button" class="active" data-pad="8">S</button>
+              <button type="button" data-pad="16">M</button>
+              <button type="button" data-pad="24">L</button>
+              <button type="button" class="tune" aria-label="Custom padding">
+                <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+              </button>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <p class="section-label">Layer Position</p>
+            <label class="field">
+              <span class="field-label">Layer</span>
+              <input type="number" id="layer-pos" value="1" min="0" />
+            </label>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+    <script src="resman-application.js"></script>
+  </body>
+</html>
