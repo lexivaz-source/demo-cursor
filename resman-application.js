@@ -15,10 +15,6 @@ const subdomain = document.querySelector("#subdomain");
 const accountId = document.querySelector("#account-id");
 const propertyId = document.querySelector("#property-id");
 const applyUrl = document.querySelector("#apply-url");
-const animationTrigger = document.querySelector("#animation-trigger");
-const animationMenu = document.querySelector("#animation-menu");
-const animationValue = document.querySelector("#animation-value");
-const parallaxSwitch = document.querySelector("#sw-parallax");
 const positioningTrigger = document.querySelector("#positioning-trigger");
 const positioningMenu = document.querySelector("#positioning-menu");
 const positioningValue = document.querySelector("#positioning-value");
@@ -26,10 +22,7 @@ const pageBody = document.querySelector("#page-body");
 const layerPos = document.querySelector("#layer-pos");
 const deviceBtn = document.querySelector("#device-btn");
 
-const fieldMenus = [
-  { trigger: animationTrigger, menu: animationMenu },
-  { trigger: positioningTrigger, menu: positioningMenu },
-];
+const fieldMenus = [{ trigger: positioningTrigger, menu: positioningMenu }];
 
 const APPLY_URL =
   "https://demo.myresman.com/Portal/Applicants/ApplyFromMarketing?accountID=500&propertyID=4fb18691-c894-4b84-805b-c62da481ca63";
@@ -157,20 +150,9 @@ document.querySelectorAll(".chip[data-tab-only]").forEach((chip) => {
   });
 });
 
-bindMenu(animationTrigger, animationMenu, (option) => {
-  animationValue.textContent = option.textContent;
-});
-
 bindMenu(positioningTrigger, positioningMenu, (option) => {
   positioningValue.textContent = option.textContent;
   pageBody.dataset.position = option.dataset.position;
-});
-
-parallaxSwitch.addEventListener("click", () => {
-  const on = parallaxSwitch.getAttribute("aria-checked") !== "true";
-  parallaxSwitch.classList.toggle("on", on);
-  parallaxSwitch.setAttribute("aria-checked", String(on));
-  blockWrap.classList.toggle("has-parallax", on);
 });
 
 document.querySelectorAll("#width-source button").forEach((button) => {

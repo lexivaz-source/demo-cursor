@@ -38,10 +38,6 @@
   justify-content: flex-end;
 }
 
-.block-wrap.has-parallax {
-  transform: translateY(-6px);
-}
-
 .block-wrap {
   width: 100%;
   max-width: 560px;
