@@ -310,6 +310,7 @@ body {
 .color-menu[hidden],
 .field-menu[hidden],
 .combo-menu[hidden],
+.preset-menu[hidden],
 .warn[hidden] {
   display: none;
 }
@@ -744,6 +745,177 @@ body {
   color: var(--blue-400);
 }
 
+.preset-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 282px;
+  margin: 0 auto;
+}
+
+.preset-label {
+  margin: 0;
+  color: #000;
+  font: var(--body);
+  letter-spacing: var(--body-tracking);
+}
+
+.preset-trigger {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 282px;
+  height: 66px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  cursor: pointer;
+}
+
+.preset-choice {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.preset-preview {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 87px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--secondary-bg);
+}
+
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.preset-chip-label {
+  color: inherit;
+  font: 400 10px/1 Lato, Helvetica, sans-serif;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.preset-chip-primary {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.preset-chip-secondary {
+  background: transparent;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+}
+
+.preset-chip-tertiary {
+  background: transparent;
+  color: var(--blue);
+}
+
+.preset-chip-text-link {
+  background: transparent;
+  color: var(--ink);
+}
+
+.preset-chip-icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+}
+
+.preset-chip-icon img {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.preset-chip-custom {
+  background: var(--ink-400);
+  color: var(--white);
+}
+
+.preset-name {
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  white-space: nowrap;
+}
+
+.preset-menu {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  width: 282px;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow:
+    0 3px 3px rgba(0, 0, 0, 0.1),
+    0 11px 5.5px rgba(0, 0, 0, 0.09),
+    0 24px 7px rgba(0, 0, 0, 0.05),
+    0 42px 8.5px rgba(0, 0, 0, 0.01);
+}
+
+.preset-menu [data-preset] {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 66px;
+  gap: 15px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  cursor: pointer;
+}
+
+.preset-menu button[aria-selected="true"] {
+  border-color: var(--blue-400);
+}
+
+.preset-menu-footer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 20px 10px 15px;
+  border-top: 1px solid var(--line);
+}
+
+.preset-menu-footer button {
+  width: auto;
+  padding: 0;
+  border: 0;
+  color: var(--blue-400);
+}
+
 .icon-button {
   appearance: none;
   border: 0;
@@ -759,6 +931,7 @@ body {
 
 .color-trigger:hover .icon-button,
 .field-trigger:hover .icon-button,
+.preset-trigger:hover .icon-button,
 .icon-button:hover:not(:disabled) {
   background: var(--secondary-bg);
 }
@@ -802,6 +975,8 @@ body {
 .segmented button:focus-visible,
 .icon-bar button:focus-visible,
 .color-trigger:focus-visible,
+.preset-trigger:focus-visible,
+.preset-menu button:focus-visible,
 .qa-color:focus-visible,
 .icon-button:focus-visible,
 .powered-by:focus-visible {

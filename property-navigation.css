@@ -1,0 +1,338 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: min(720px, calc(100vh - 48px));
+  overflow: hidden;
+}
+
+.tab-panels {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.page-body-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+}
+
+.page-body-center[data-position="top-left"] {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.page-body-center[data-position="top-right"] {
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.page-body-center[data-position="bottom-left"] {
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.page-body-center[data-position="bottom-right"] {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.block-wrap.has-parallax {
+  transform: translateY(-6px);
+}
+
+.page-card {
+  position: relative;
+}
+
+.block-wrap {
+  margin-top: 65px;
+  padding: 8px;
+}
+
+.open-btn,
+.cta-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 200px;
+  min-height: 44px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--white);
+  font: 700 15px/1 Lato, Helvetica, sans-serif;
+  letter-spacing: 0.75px;
+  cursor: pointer;
+}
+
+.open-btn .btn-icon,
+.cta-btn .btn-icon {
+  display: none;
+  width: 24px;
+  height: 24px;
+}
+
+.open-btn .btn-icon img,
+.cta-btn .btn-icon img {
+  display: block;
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.open-btn.is-combo .btn-icon,
+.open-btn.is-icon .btn-icon,
+.cta-btn.is-combo .btn-icon,
+.cta-btn.is-icon .btn-icon {
+  display: inline-flex;
+}
+
+.open-btn.is-link,
+.cta-btn.is-link {
+  min-width: 0;
+  padding: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.open-btn.is-link .btn-icon img,
+.cta-btn.is-link .btn-icon img {
+  filter: none;
+}
+
+.open-btn.is-icon,
+.cta-btn.is-icon {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+}
+
+.open-btn.is-icon .btn-label,
+.cta-btn.is-icon .btn-label,
+.open-btn.preset-icon .btn-label,
+.cta-btn.preset-icon .btn-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.open-btn.preset-primary,
+.cta-btn.preset-primary {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.open-btn.preset-secondary,
+.cta-btn.preset-secondary {
+  background: transparent;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+}
+
+.open-btn.preset-tertiary,
+.cta-btn.preset-tertiary {
+  background: transparent;
+  color: var(--blue);
+}
+
+.open-btn.preset-text-link,
+.cta-btn.preset-text-link {
+  min-width: 0;
+  padding: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.open-btn.preset-icon,
+.cta-btn.preset-icon {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  background: var(--blue);
+}
+
+.open-btn.preset-icon .btn-icon,
+.cta-btn.preset-icon .btn-icon {
+  display: inline-flex;
+}
+
+.open-btn.preset-custom,
+.cta-btn.preset-custom {
+  background: var(--ink-400);
+  color: var(--white);
+}
+
+.cta-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  width: 282px;
+  margin: 0 auto;
+  gap: 6px;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  cursor: grab;
+}
+
+.item-row.dragging {
+  opacity: 0.45;
+}
+
+.item-row .icon-24 {
+  flex: 0 0 auto;
+}
+
+.tab.tab-icon {
+  cursor: pointer;
+}
+
+.tab.tab-icon[aria-pressed="true"] {
+  background: var(--line);
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-panel {
+  position: relative;
+  width: min(420px, 86%);
+  padding: 28px;
+  border-radius: 4px;
+  background: var(--white);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+}
+
+.modal-close {
+  position: absolute;
+  top: -32px;
+  right: 0;
+  border: 0;
+  background: transparent;
+  color: var(--white);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 24px;
+  padding: 12px 20px;
+  border: 1px solid #959595;
+  border-radius: 5px;
+  background: var(--white);
+  color: #222;
+  font: 400 14px/1.45 Lato, Helvetica, sans-serif;
+  cursor: pointer;
+}
+
+.modal-menu {
+  list-style: none;
+  width: 100%;
+  max-height: 220px;
+  margin: -16px 0 24px;
+  padding: 5px;
+  overflow: auto;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 6px 6px rgba(0, 0, 0, 0.09),
+    0 13px 8px rgba(0, 0, 0, 0.05),
+    0 24px 9px rgba(0, 0, 0, 0.01);
+}
+
+.modal-menu[hidden] {
+  display: none;
+}
+
+.modal-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 30px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  text-align: left;
+  cursor: pointer;
+}
+
+.modal-menu button:hover,
+.modal-menu button[aria-selected="true"] {
+  background: #f0f0f0;
+}
+
+.cta-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+#custom-sort[hidden] {
+  display: none;
+}
+
+.open-btn:focus-visible,
+.cta-btn:focus-visible,
+.modal-close:focus-visible,
+.modal-dropdown:focus-visible,
+.modal-menu button:focus-visible,
+.item-row:focus-visible,
+.tab.tab-icon:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.modal-close:focus-visible {
+  outline-color: var(--white);
+}
