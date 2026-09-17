@@ -150,7 +150,7 @@ body {
 
 .page-footer {
   background: var(--ink);
-  min-height: 64px;
+  min-height: 160px;
   padding: 16px 20px;
   display: flex;
   align-items: flex-end;
@@ -158,6 +158,7 @@ body {
 
 .block-wrap {
   position: relative;
+  margin-top: 65px;
   outline: 2px solid var(--blue);
   outline-offset: 6px;
   border-radius: 4px;
@@ -180,7 +181,7 @@ body {
 
 .quick-actions {
   position: absolute;
-  right: 0;
+  left: 0;
   bottom: calc(100% + 10px);
   display: flex;
   align-items: center;
@@ -196,9 +197,20 @@ body {
 
 .qa-divider {
   flex: 0 0 auto;
+  width: 0;
+  height: 33px;
+  position: relative;
+}
+
+.qa-divider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 33px;
   background: var(--line);
+  transform: translateX(-50%);
 }
 
 .panel {
