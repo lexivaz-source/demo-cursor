@@ -203,6 +203,14 @@ body {
   background: #fff;
 }
 
+.qa-divider {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 33px;
+  margin-inline: calc(15px - 4px);
+  background: var(--line);
+}
+
 .panel {
   position: sticky;
   top: 24px;
