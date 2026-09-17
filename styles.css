@@ -12,10 +12,16 @@
   --blue: #015eea;
   --blue-400: #347eee;
   --blue-50: #e6effd;
+  --secondary-bg: #f0f0f0;
   --shadow:
     0 11px 24px rgba(0, 0, 0, 0.1),
     0 44px 44px rgba(0, 0, 0, 0.09),
     0 98px 59px rgba(0, 0, 0, 0.05);
+  --qa-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 6px 6px rgba(0, 0, 0, 0.09),
+    0 13px 8px rgba(0, 0, 0, 0.05),
+    0 24px 9px rgba(0, 0, 0, 0.01);
   --title: 700 15px/1 Lato, Helvetica, sans-serif;
   --title-tracking: 0.75px;
   --body: 400 15px/1 Lato, Helvetica, sans-serif;
@@ -178,36 +184,20 @@ body {
   bottom: calc(100% + 10px);
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 6px;
+  gap: 16px;
+  width: 302px;
+  height: 55px;
+  padding: 0 11px;
   background: var(--white);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
-
-.qa-color {
-  width: 32px;
-  height: 32px;
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--white);
-  cursor: pointer;
-}
-
-.qa-color-inner {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  background: #fff;
+  border-radius: 10px;
+  box-shadow: var(--qa-shadow);
+  overflow: hidden;
 }
 
 .qa-divider {
   flex: 0 0 auto;
   width: 1px;
   height: 33px;
-  margin-inline: calc(15px - 4px);
   background: var(--line);
 }
 
@@ -739,8 +729,8 @@ body {
 
 .color-trigger:hover .icon-button,
 .field-trigger:hover .icon-button,
-.icon-button:hover {
-  background: var(--line);
+.icon-button:hover:not(:disabled) {
+  background: var(--secondary-bg);
 }
 
 .icon-button:disabled {

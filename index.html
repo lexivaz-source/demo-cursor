@@ -36,25 +36,37 @@
           <div class="page-body">Page content above the footer…</div>
           <footer class="page-footer" id="footer-strip">
             <div class="block-wrap" id="block-wrap">
-              <div class="quick-actions">
-                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit block">
+              <div class="quick-actions" role="toolbar" aria-label="Block quick actions">
+                <button type="button" class="icon-button" id="qa-add" aria-label="Add">
                   <span class="icon-24" aria-hidden="true">
-                    <img src="assets/icon-edit.svg" alt="" width="24" height="24" />
+                    <img src="assets/icon-qa-add.svg" alt="" width="24" height="24" />
                   </span>
                 </button>
-                <button type="button" class="qa-color" id="qa-color" aria-label="Quick text color">
-                  <span class="qa-color-inner" id="qa-swatch"></span>
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-image" aria-label="Insert image">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-image.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Copy">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" />
+                  </span>
                 </button>
                 <span class="qa-divider" aria-hidden="true"></span>
                 <button
                   type="button"
-                  class="icon-button danger"
+                  class="icon-button"
                   id="qa-delete"
                   disabled
                   aria-label="Delete is available to super admins only"
                 >
                   <span class="icon-24" aria-hidden="true">
-                    <img src="assets/icon-trash.svg" alt="" width="24" height="24" />
+                    <img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" />
                   </span>
                 </button>
               </div>

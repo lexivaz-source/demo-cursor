@@ -4,7 +4,6 @@ const gaToggle = document.querySelector("#ga-toggle");
 const analyticsWarn = document.querySelector("#analytics-warn");
 const footerStrip = document.querySelector("#footer-strip");
 const qaDelete = document.querySelector("#qa-delete");
-const qaSwatch = document.querySelector("#qa-swatch");
 const colorSwatch = document.querySelector("#color-swatch");
 const colorName = document.querySelector("#color-name");
 const colorMenu = document.querySelector("#color-menu");
@@ -90,7 +89,6 @@ function setRole(superAdmin) {
 function setColor(name, hex) {
   state.color = { name, hex };
   poweredBy.style.color = hex;
-  qaSwatch.style.background = hex;
   colorSwatch.style.background = hex;
   colorName.textContent = name;
   colorMenu.querySelectorAll("[data-color]").forEach((option) => {
@@ -169,14 +167,20 @@ if (siteStyles) {
   });
 }
 
+document.querySelector("#qa-add").addEventListener("click", () => {
+  announce("Add is a canvas action in this file.");
+});
+
 document.querySelector("#qa-edit").addEventListener("click", () => {
   showTab("content");
 });
 
-document.querySelector("#qa-color").addEventListener("click", () => {
-  showTab("design");
-  colorMenu.hidden = false;
-  colorTrigger.setAttribute("aria-expanded", "true");
+document.querySelector("#qa-image").addEventListener("click", () => {
+  announce("Insert image is a canvas action in this file.");
+});
+
+document.querySelector("#qa-copy").addEventListener("click", () => {
+  announce("Copy is a canvas action in this file.");
 });
 
 function setAnimation(label) {
