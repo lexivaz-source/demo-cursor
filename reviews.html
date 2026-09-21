@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reviews V2 — Editor</title>
+    <meta
+      name="description"
+      content="Reviews V2 editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="reviews.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-state="carousel">Carousel</button>
+          <button type="button" class="chip" data-state="widgets">Widgets</button>
+          <button type="button" class="chip" data-state="listView">List View</button>
+          <button type="button" class="chip" data-tab-only="design">Design</button>
+          <button type="button" class="chip" data-tab-only="block">Block</button>
+        </div>
+
+        <p class="canvas-kicker">Section canvas · Reviews V2</p>
+
+        <article class="page-card" id="page-card">
+          <div class="page-body page-body-center" id="page-body">
+            <div class="block-wrap" id="block-wrap">
+              <div class="quick-actions" role="toolbar" aria-label="Block quick actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Duplicate">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" id="qa-delete" aria-label="Delete">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+
+              <div class="text-block-above" id="text-block-above">
+                <p class="text-block-kicker">Text block</p>
+                <h2>Resident Reviews</h2>
+              </div>
+
+              <div class="reviews-block" id="reviews-block">
+                <div class="preview-layout" id="preview-carousel">
+                  <div class="reviews-carousel" id="carousel-grid"></div>
+                  <div class="nav-arrows" id="nav-arrows" data-style="chevron" data-align="bottom-center">
+                    <span class="nav-btn" data-nav="prev" aria-hidden="true"></span>
+                    <span class="nav-btn" data-nav="next" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+                <div class="preview-layout" id="preview-widgets" hidden>
+                  <div class="review-widget" id="widget-card">
+                    <div class="widget-stars" id="widget-stars"></div>
+                    <p class="widget-score" id="widget-score">
+                      <span id="widget-rating">4.8 out of 5</span><span class="widget-count" id="widget-count"> based on 124 reviews</span>
+                    </p>
+                    <p class="widget-yelp" id="widget-yelp">Includes Yelp</p>
+                    <p class="widget-link" id="widget-link">Not linked</p>
+                  </div>
+                </div>
+
+                <div class="preview-layout" id="preview-listView" hidden>
+                  <div class="reviews-list" id="reviews-list"></div>
+                  <button type="button" class="load-more preset-primary" id="load-more">Load more</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint">
+          Headings stay in a Text block above Reviews. Widget linking includes None. Block matches Gallery.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main" id="panel-main">
+          <header class="panel-header">
+            <h1>Reviews V2</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+            <button class="tab active" type="button" role="tab" id="tab-content" aria-selected="true" aria-controls="panel-content">
+              Content
+            </button>
+            <button class="tab" type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design">
+              Design
+            </button>
+            <button class="tab" type="button" role="tab" id="tab-block" aria-selected="false" aria-controls="panel-block">
+              Block
+            </button>
+            <button
+              class="tab tab-icon"
+              type="button"
+              id="device-btn"
+              aria-pressed="false"
+              aria-label="Device overrides"
+            >
+              <span class="icon-28">
+                <img src="assets/icon-device.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="section-label">Layout</p>
+              <div class="field">
+                <span class="field-label" id="layout-label">Type</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="layout-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="layout-label layout-value"
+                >
+                  <span id="layout-value">Carousel</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="layout-menu" hidden role="listbox" aria-labelledby="layout-label">
+                  <li>
+                    <button type="button" role="option" data-layout="carousel" aria-selected="true">Carousel</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-layout="widgets" aria-selected="false">Widgets</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-layout="listView" aria-selected="false">List View</button>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="stack" data-show="carousel,listView">
+                <p class="section-label">Alignment</p>
+                <div class="segmented segmented-pair" id="align-source" role="group" aria-label="Alignment">
+                  <button type="button" class="active" data-align="left">Left</button>
+                  <button type="button" data-align="center">Center</button>
+                </div>
+              </div>
+
+              <hr class="panel-divider" data-show="carousel,listView" />
+
+              <div class="stack" data-show="carousel,listView">
+                <p class="section-label">Display</p>
+                <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="name-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="name-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="name-label">Resident name</span>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="read-more-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="read-more-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="read-more-label">Enable read more</span>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="profile-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="profile-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="profile-label">Profile image</span>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="source-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="source-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="source-label">Source</span>
+                  </div>
+                </div>
+                </div>
+              </div>
+
+              <div class="stack" data-show="widgets" hidden>
+                <p class="section-label">Display</p>
+                <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="count-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="count-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="count-label">Review count</span>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="yelp-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="yelp-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="yelp-label">Yelp reviews</span>
+                  </div>
+                </div>
+                </div>
+              </div>
+
+              <div class="stack" data-show="carousel">
+                <hr class="panel-divider" />
+                <p class="section-label">Columns</p>
+                <div class="inline-field">
+                  <span class="inline-field-label" id="cols-label">Number of Columns</span>
+                  <div class="field compact-field">
+                    <button
+                      type="button"
+                      class="field-trigger"
+                      id="cols-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded="false"
+                      aria-labelledby="cols-label cols-value"
+                    >
+                      <span id="cols-value">2</span>
+                      <span class="icon-button" aria-hidden="true">
+                        <span class="icon-24">
+                          <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </span>
+                    </button>
+                    <ul class="field-menu" id="cols-menu" hidden role="listbox" aria-labelledby="cols-label">
+                      <li>
+                        <button type="button" role="option" data-cols="1" aria-selected="false">1</button>
+                      </li>
+                      <li>
+                        <button type="button" role="option" data-cols="2" aria-selected="true">2</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="inline-field">
+                  <span class="inline-field-label" id="max-label">Reviews Shown</span>
+                  <div class="field compact-field">
+                    <button
+                      type="button"
+                      class="field-trigger"
+                      id="max-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded="false"
+                      aria-labelledby="max-label max-value"
+                    >
+                      <span id="max-value">3</span>
+                      <span class="icon-button" aria-hidden="true">
+                        <span class="icon-24">
+                          <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </span>
+                    </button>
+                    <ul class="field-menu" id="max-menu" hidden role="listbox" aria-labelledby="max-label">
+                      <li><button type="button" role="option" data-max="2" aria-selected="false">2</button></li>
+                      <li><button type="button" role="option" data-max="3" aria-selected="true">3</button></li>
+                      <li><button type="button" role="option" data-max="4" aria-selected="false">4</button></li>
+                      <li><button type="button" role="option" data-max="5" aria-selected="false">5</button></li>
+                      <li><button type="button" role="option" data-max="6" aria-selected="false">6</button></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack" data-show="widgets" hidden>
+                <hr class="panel-divider" />
+                <p class="section-label">Link</p>
+                <div class="field">
+                  <span class="field-label" id="action-label">Link to</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="action-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="action-label action-value"
+                  >
+                    <span id="action-value">None</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="action-menu" hidden role="listbox" aria-labelledby="action-label">
+                    <li>
+                      <button type="button" role="option" data-action="none" aria-selected="true">None</button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-action="existing_screen" aria-selected="false">
+                        Existing Screen
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-action="external_url" aria-selected="false">
+                        External URL
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-action="open_lightbox" aria-selected="false">
+                        Open Screen in Lightbox
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="field" id="link-screen" hidden>
+                  <span class="field-label" id="slug-label">Select screen</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="slug-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="slug-label slug-value"
+                  >
+                    <span id="slug-value">/reviews</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="slug-menu" hidden role="listbox" aria-labelledby="slug-label">
+                    <li>
+                      <button type="button" role="option" data-slug="/reviews" aria-selected="true">/reviews</button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-slug="/home" aria-selected="false">/home</button>
+                    </li>
+                  </ul>
+                </div>
+
+                <label class="field" id="link-url" hidden>
+                  <span class="field-label">External URL</span>
+                  <input type="text" id="ext-url" value="" placeholder="https://" />
+                </label>
+
+                <div class="toggle-row" id="link-new-tab" hidden>
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="new-tab-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="new-tab-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="new-tab-label">Open in new tab</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Colors</p>
+              <p class="section-label">Review Color</p>
+              <div class="color-card" id="card-color-field"></div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Star rating color</p>
+              <div class="color-card" id="star-color-field"></div>
+
+              <hr class="panel-divider" />
+
+              <div class="radius-field">
+                <p class="section-label" id="radius-label">Corner Radius</p>
+                <div class="radius-row">
+                  <div class="radius-bar">
+                    <img src="assets/icon-crop-free.svg" alt="" width="28" height="28" />
+                    <input type="text" inputmode="numeric" id="radius" value="8" aria-labelledby="radius-label" />
+                  </div>
+                  <button
+                    type="button"
+                    class="icon-button radius-corners"
+                    id="radius-individual"
+                    aria-pressed="false"
+                    aria-expanded="false"
+                    aria-controls="radius-individual-panel"
+                    aria-label="Edit individual corners"
+                  >
+                    <img src="assets/icon-rounded-top-right.svg" alt="" width="28" height="28" />
+                  </button>
+                </div>
+                <div class="radius-individual" id="radius-individual-panel" hidden>
+                  <label class="radius-corner">
+                    <img class="radius-corner-tl" src="assets/icon-rounded-top-right.svg" alt="" width="24" height="24" />
+                    <input type="text" inputmode="numeric" id="radius-tl" value="8" aria-label="Top left radius" />
+                  </label>
+                  <label class="radius-corner">
+                    <img src="assets/icon-rounded-top-right.svg" alt="" width="24" height="24" />
+                    <input type="text" inputmode="numeric" id="radius-tr" value="8" aria-label="Top right radius" />
+                  </label>
+                  <label class="radius-corner">
+                    <img class="radius-corner-bl" src="assets/icon-rounded-top-right.svg" alt="" width="24" height="24" />
+                    <input type="text" inputmode="numeric" id="radius-bl" value="8" aria-label="Bottom left radius" />
+                  </label>
+                  <label class="radius-corner">
+                    <img class="radius-corner-br" src="assets/icon-rounded-top-right.svg" alt="" width="24" height="24" />
+                    <input type="text" inputmode="numeric" id="radius-br" value="8" aria-label="Bottom right radius" />
+                  </label>
+                </div>
+              </div>
+
+              <hr class="panel-divider" data-show="carousel" />
+
+              <div class="shadow-block" data-show="carousel">
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="shadow-toggle"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="shadow-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="shadow-label">Drop shadow</span>
+                  </div>
+                </div>
+                <div class="shadow-fields" id="drop-shadow-fields">
+                  <div class="color-card" id="shadow-color-field"></div>
+                  <div class="shadow-opacity">
+                    <label class="field shadow-opacity-field">
+                      <span class="field-label" id="shadow-opacity-label">Opacity</span>
+                      <input type="number" id="shadow-opacity" value="15" min="0" max="100" />
+                    </label>
+                    <input
+                      type="range"
+                      class="shadow-slider"
+                      id="shadow-opacity-range"
+                      min="0"
+                      max="100"
+                      value="15"
+                      aria-labelledby="shadow-opacity-label"
+                    />
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-x-label">X Position</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-x" value="0" aria-labelledby="shadow-x-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-y-label">Y Position</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-y" value="17" aria-labelledby="shadow-y-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-blur-label">Blur</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-blur" value="25" min="0" aria-labelledby="shadow-blur-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-spread-label">Spread</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-spread" value="0" aria-labelledby="shadow-spread-label" />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="panel-divider" data-show="carousel" />
+
+              <div class="field">
+                <span class="field-label" id="star-style-label">Star design</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="star-style-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="star-style-label star-style-value"
+                >
+                  <span id="star-style-value">Solid</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="star-style-menu" hidden role="listbox" aria-labelledby="star-style-label">
+                  <li>
+                    <button type="button" role="option" data-star-style="solid" aria-selected="true">Solid</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-star-style="outline" aria-selected="false">
+                      Solid and Outlines
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-star-style="square" aria-selected="false">Square</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-star-style="circle" aria-selected="false">Circle</button>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="stack" data-show="carousel">
+                <hr class="panel-divider" />
+                <p class="section-label">Navigation</p>
+                <p class="section-label" id="nav-style-heading">Nav Style</p>
+                <div class="color-card nav-style-card">
+                  <button
+                    type="button"
+                    class="color-trigger"
+                    id="nav-style-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="nav-style-heading nav-style-value"
+                  >
+                    <span class="nav-style-chip" id="nav-style-preview" aria-hidden="true">
+                      <img src="assets/icon-nav-chevron-left.svg" alt="" width="16" height="24" />
+                      <img src="assets/icon-nav-chevron-right.svg" alt="" width="16" height="24" />
+                    </span>
+                    <span class="color-name" id="nav-style-value">Chevron</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu nav-style-menu" id="nav-style-menu" hidden role="listbox" aria-labelledby="nav-style-heading">
+                    <li>
+                      <button type="button" role="option" data-nav-style="chevron" aria-selected="true">
+                        <span class="nav-style-chip" aria-hidden="true">
+                          <img src="assets/icon-nav-chevron-left.svg" alt="" width="16" height="24" />
+                          <img src="assets/icon-nav-chevron-right.svg" alt="" width="16" height="24" />
+                        </span>
+                        Chevron
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-nav-style="arrows" aria-selected="false">
+                        <span class="nav-style-chip" aria-hidden="true">
+                          <img src="assets/icon-nav-arrow-left.svg" alt="" width="16" height="24" />
+                          <img src="assets/icon-nav-arrow-right.svg" alt="" width="16" height="24" />
+                        </span>
+                        Arrows
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-nav-style="text" aria-selected="false">
+                        <span class="nav-style-chip" aria-hidden="true">
+                          <img src="assets/icon-nav-text.svg" alt="" width="16.3768" height="24" />
+                        </span>
+                        Text
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-nav-style="custom" aria-selected="false">
+                        <span class="nav-style-chip" aria-hidden="true">
+                          <img src="assets/icon-nav-custom.svg" alt="" width="24" height="24" />
+                        </span>
+                        Custom
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <p class="section-label">Nav Alignment</p>
+                <div class="icon-bar align-4" id="nav-align-source" role="group" aria-label="Nav Alignment">
+                  <button type="button" data-nav-align="bottom-left" aria-label="Bottom Left">
+                    <span class="icon-24">
+                      <img src="assets/icon-halign-1.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <button type="button" class="active" data-nav-align="bottom-center" aria-label="Bottom Center">
+                    <span class="icon-24">
+                      <img src="assets/icon-halign-2.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <button type="button" data-nav-align="bottom-right" aria-label="Bottom Right">
+                    <span class="icon-24">
+                      <img src="assets/icon-halign-3.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <button type="button" data-nav-align="sides" aria-label="Vertically Centered">
+                    <span class="icon-24">
+                      <img src="assets/icon-halign-5.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                </div>
+                <p class="section-label">Nav Color</p>
+                <div class="color-card" id="nav-color-field"></div>
+              </div>
+
+              <div class="stack" data-show="listView" hidden>
+                <hr class="panel-divider" />
+                <p class="section-label">List view</p>
+                <div class="preset-field" id="load-more-preset-field"></div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Background</p>
+              <div class="field">
+                <span class="field-label" id="bg-label">Type of background</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="bg-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="bg-label bg-value"
+                >
+                  <span id="bg-value">Solid Color</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="bg-menu" hidden role="listbox" aria-labelledby="bg-label">
+                  <li>
+                    <button type="button" role="option" data-bg="solid" aria-selected="true">Solid Color</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-bg="gradient" aria-selected="false">Gradient</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-bg="image" aria-selected="false">Image</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-bg="gallery" aria-selected="false">Gallery</button>
+                  </li>
+                </ul>
+              </div>
+              <p class="section-label" id="bg-color-label">Background color</p>
+              <div class="color-card" id="bg-color-field"></div>
+              <button type="button" class="media-card" id="bg-image-field" hidden>
+                <span class="media-thumb" aria-hidden="true"></span>
+                <span class="media-copy">
+                  <span class="media-name">Courtyard photo</span>
+                  <span class="media-meta">Replace image</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+              <div class="field">
+                <span class="field-label" id="animation-label">Animation</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="animation-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="animation-label animation-value"
+                >
+                  <span id="animation-value">None</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                  <li><button type="button" role="option" data-animation="" aria-selected="true">None</button></li>
+                  <li>
+                    <button type="button" role="option" data-animation="slide-y" aria-selected="false">
+                      Slide From Bottom
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">
+                      Shrink
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">
+                      Zoom In
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-out" aria-selected="false">
+                      Zoom Out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <p class="section-label">Speed</p>
+              <div class="icon-bar speed-bar" id="speed-source" role="group" aria-label="Speed">
+                <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
+                  <span class="icon-24"><img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" data-speed="fast" aria-label="Fast speed">
+                  <span class="icon-24"><img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="parallax-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="parallax-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="parallax-label">Parallax</span>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Width</p>
+              <div class="segmented has-tune" id="block-width-source" role="group" aria-label="Width">
+                <button type="button" data-block-width="50">50%</button>
+                <button type="button" data-block-width="75">75%</button>
+                <button type="button" class="active" data-block-width="100">100%</button>
+                <button type="button" class="tune" id="block-width-tune" aria-label="Custom width">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-block-width-field" hidden>
+                <span class="field-label">Width</span>
+                <input type="number" id="custom-block-width" value="100" min="10" max="100" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Positioning</p>
+              <div class="field">
+                <span class="field-label" id="positioning-label">Position</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="positioning-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="positioning-label positioning-value"
+                >
+                  <span id="positioning-value">Default</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="positioning-menu" hidden role="listbox" aria-labelledby="positioning-label">
+                  <li>
+                    <button type="button" role="option" data-position="default" aria-selected="true">Default</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="absolute" aria-selected="false">Absolute</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="fixed" aria-selected="false">Fixed</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="relative" aria-selected="false">Relative</button>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" data-pad="0">—</button>
+                <button type="button" data-pad="8">S</button>
+                <button type="button" class="active" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="16" min="0" max="80" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <div class="block-layer-row">
+                <span class="block-layer-label" id="layer-pos-label">Layer Position</span>
+                <label class="field layer-field">
+                  <span class="sr-only">Layer</span>
+                  <input type="number" id="layer-pos" value="1" min="0" aria-labelledby="layer-pos-label" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+    <script src="reviews.js"></script>
+  </body>
+</html>
