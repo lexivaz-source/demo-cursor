@@ -21,6 +21,7 @@ const sourceStatus = document.querySelector("#source-status");
 const fallbackToggle = document.querySelector("#fallback-toggle");
 const fallbackTextField = document.querySelector("#fallback-text-field");
 const fallbackText = document.querySelector("#fallback-text");
+const hideToggle = document.querySelector("#hide-toggle");
 const bgTrigger = document.querySelector("#bg-trigger");
 const bgMenu = document.querySelector("#bg-menu");
 const bgValue = document.querySelector("#bg-value");
@@ -117,6 +118,7 @@ const state = {
   forceEmpty: false,
   fallbackOn: true,
   fallbackText: "Check back soon for current specials.",
+  hideSpecial: false,
   layout: "module",
   align: "left",
   background: "solid",
@@ -573,8 +575,8 @@ function mountAllColors() {
 
 function render() {
   const special = resolvedSpecial();
-  const showFallback = !special && state.fallbackOn;
-  const hideBlock = !special && !state.fallbackOn;
+  const hideBlock = state.hideSpecial || (!special && !state.fallbackOn);
+  const showFallback = !hideBlock && !special && state.fallbackOn;
 
   const picked = selectedSpecial();
   const liveSelected = isLiveSpecial(picked);
@@ -592,6 +594,9 @@ function render() {
   fallbackToggle.setAttribute("aria-checked", String(state.fallbackOn));
   fallbackTextField.hidden = !state.fallbackOn;
   fallbackText.value = state.fallbackText;
+
+  hideToggle.classList.toggle("on", state.hideSpecial);
+  hideToggle.setAttribute("aria-checked", String(state.hideSpecial));
 
   setChoice("#layout-source", "layout", state.layout);
   setChoice("#text-align-source", "align", state.align);
@@ -756,6 +761,7 @@ function setReviewState(name) {
     state.specialId = "month-free";
     state.forceEmpty = false;
     state.fallbackOn = true;
+    state.hideSpecial = false;
     setLayoutDefaults("module");
     state.align = "left";
     state.buttonAlign = "left";
@@ -764,21 +770,23 @@ function setReviewState(name) {
   if (name === "manual") {
     state.specialId = "gift-card";
     state.forceEmpty = false;
+    state.hideSpecial = false;
     setTab("content");
   }
   if (name === "fallback") {
     state.forceEmpty = true;
     state.fallbackOn = true;
+    state.hideSpecial = false;
     setTab("content");
   }
   if (name === "hidden") {
-    state.forceEmpty = true;
-    state.fallbackOn = false;
+    state.hideSpecial = true;
     setTab("content");
   }
   if (name === "banner") {
     state.specialId = "month-free";
     state.forceEmpty = false;
+    state.hideSpecial = false;
     setLayoutDefaults("banner");
     state.align = "center";
     state.buttonAlign = "center";
@@ -909,6 +917,11 @@ customWidth.addEventListener("input", () => {
 
 fallbackToggle.addEventListener("click", () => {
   state.fallbackOn = !state.fallbackOn;
+  render();
+});
+
+hideToggle.addEventListener("click", () => {
+  state.hideSpecial = !state.hideSpecial;
   render();
 });
 

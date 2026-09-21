@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=pos-modes" />
-    <link rel="stylesheet" href="specials.css?v=pos-modes" />
+    <link rel="stylesheet" href="styles.css?v=hide-hint" />
+    <link rel="stylesheet" href="specials.css?v=hide-hint" />
   </head>
   <body>
     <a class="skip-link" href="#floater">Skip to block settings</a>
@@ -80,7 +80,7 @@
               </div>
 
               <p class="hidden-canvas" id="hidden-canvas" hidden>
-                Hidden on the live site — no active special
+                Hidden on the live site
               </p>
             </div>
           </div>
@@ -180,6 +180,23 @@
               <span class="field-label">Fallback Message Text</span>
               <textarea id="fallback-text" rows="6">Check back soon for current specials.</textarea>
             </label>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch"
+                id="hide-toggle"
+                role="switch"
+                aria-checked="false"
+                aria-labelledby="hide-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="hide-label">Hide Special</span>
+                <p class="hint" id="hide-hint">Hide this section, even when a special or fallback message is available.</p>
+              </div>
+            </div>
           </div>
 
           <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
@@ -552,6 +569,6 @@
     </main>
 
     <p class="sr-only" id="live" aria-live="polite"></p>
-    <script src="specials.js?v=pos-modes"></script>
+    <script src="specials.js?v=hide-hint"></script>
   </body>
 </html>
