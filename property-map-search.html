@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Map Search — Editor</title>
+    <meta
+      name="description"
+      content="Property Map Search editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="property-map-search.css?v=10" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-state="content-type">Content · Content Type</button>
+          <button type="button" class="chip" data-state="empty-link">Content · empty Link to</button>
+          <button type="button" class="chip" data-state="portfolio">Content · Portfolio</button>
+          <button type="button" class="chip" data-state="hover-details">Hover · Details</button>
+          <button type="button" class="chip" data-state="hover-number">Hover · Number Only</button>
+          <button type="button" class="chip" data-state="small-off">Small buttons off</button>
+          <button type="button" class="chip" data-tab-only="design">Design</button>
+          <button type="button" class="chip" data-tab-only="block">Block</button>
+          <button type="button" class="chip" data-state="mobile">Canvas · mobile</button>
+          <button type="button" class="chip" data-state="empty-props">Empty properties</button>
+        </div>
+
+        <p class="canvas-kicker">Section canvas · Property Map Search</p>
+
+        <article class="page-card" id="page-card">
+          <div class="page-body page-body-center">
+            <div class="block-wrap" id="block-wrap">
+              <div class="quick-actions" role="toolbar" aria-label="Block quick actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Duplicate">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" id="qa-delete" aria-label="Delete">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+
+              <div class="map-block" id="map-block">
+                <p class="nav-toast" id="nav-toast" role="status" hidden></p>
+                <div class="map-parent">
+                  <div class="svg-parent">
+                    <div class="warn-canvas">
+                      <div class="warn-chip">No Link to — a state click does nothing on the live site.</div>
+                    </div>
+                    <svg class="us-map" viewBox="0 0 200 128" aria-label="United States map" role="img">
+                      <path class="idle" d="M18,58 28,50 32,38 42,28 58,22 78,20 98,18 118,20 138,24 152,30 168,38 178,48 176,60 168,70 158,78 170,88 166,98 148,104 132,98 118,104 102,100 88,106 72,98 58,92 42,86 28,76 20,68Z"/>
+                      <path class="active" data-abbr="WA" data-name="Washington" data-count="4" d="M32,38 42,28 58,22 62,36 48,42 34,44Z"/>
+                      <path class="active" data-abbr="OR" data-name="Oregon" data-count="2" d="M34,44 48,42 62,36 64,52 38,56Z"/>
+                      <path class="active" data-abbr="CA" data-name="California" data-count="8" d="M38,56 64,52 62,78 48,92 36,82 34,66Z"/>
+                      <path class="idle" d="M62,36 78,32 92,36 88,52 64,52Z"/>
+                      <path class="idle" d="M64,52 88,52 86,72 62,78Z"/>
+                      <path class="idle" d="M88,52 108,50 110,70 86,72Z"/>
+                      <path class="active" data-abbr="TX" data-name="Texas" data-count="12" d="M86,72 110,70 118,86 108,104 92,108 84,94 78,82Z"/>
+                      <path class="idle" d="M92,36 118,34 122,50 108,50 88,52Z"/>
+                      <path class="idle" d="M108,50 122,50 128,70 110,70Z"/>
+                      <path class="active" data-abbr="IL" data-name="Illinois" data-count="3" d="M122,50 136,48 138,72 126,74 122,62Z"/>
+                      <path class="idle" d="M136,48 152,46 154,62 138,64Z"/>
+                      <path class="active" data-abbr="NY" data-name="New York" data-count="5" d="M152,30 168,38 166,50 154,46 148,36Z"/>
+                      <path class="idle" d="M138,64 154,62 158,78 148,84 132,80 138,72Z"/>
+                      <path class="active" data-abbr="FL" data-name="Florida" data-count="9" d="M148,84 158,78 166,98 154,104 148,94Z"/>
+                      <path class="active" data-abbr="NC" data-name="North Carolina" data-count="6" d="M138,72 154,62 166,70 158,78 148,84 132,80Z"/>
+                      <path class="active" data-abbr="GA" data-name="Georgia" data-count="4" d="M132,80 148,84 148,94 132,92Z"/>
+                      <path class="idle" d="M118,20 138,24 142,34 122,36 118,28Z"/>
+                      <path class="idle" d="M78,20 98,18 102,32 82,34Z"/>
+                      <path class="active" data-abbr="AK" data-name="Alaska" data-count="1" d="M8,96 28,92 36,108 22,118 6,112Z"/>
+                      <path class="idle" d="M42,112 58,110 64,118 48,122Z"/>
+                      <path class="border" d="M18,58 28,50 32,38 42,28 58,22 78,20 98,18 118,20 138,24 152,30 168,38 178,48 176,60 168,70 158,78 170,88 166,98 148,104 132,98 118,104 102,100 88,106 72,98 58,92 42,86 28,76 20,68Z"/>
+                    </svg>
+                    <div class="count-bubble" id="count-bubble">12</div>
+                    <div class="corner-label" id="corner-label">
+                      <span class="state-name" id="hover-name">Texas</span>
+                      <span class="state-count" id="hover-count">12 Properties</span>
+                    </div>
+                    <div class="empty-map">
+                      <strong>You don't have any properties to show here.</strong>
+                      <span>No properties were found. Go to your dashboard to create or manage properties.</span>
+                    </div>
+                  </div>
+                  <div class="small-col" aria-label="Small state buttons">
+                    <button type="button" class="small-btn" data-abbr="MA" data-name="Massachusetts" data-count="3">MA</button>
+                    <button type="button" class="small-btn" data-abbr="CT" data-name="Connecticut" data-count="2">CT</button>
+                    <button type="button" class="small-btn" data-abbr="NJ" data-name="New Jersey" data-count="4">NJ</button>
+                    <button type="button" class="small-btn" data-abbr="MD" data-name="Maryland" data-count="2">MD</button>
+                  </div>
+                </div>
+                <div class="mobile-select">
+                  <button type="button" id="mobile-toggle" aria-expanded="false" aria-controls="mobile-list">
+                    <span>Select a State</span>
+                    <span class="icon-24" aria-hidden="true">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <ul class="mobile-list" id="mobile-list" hidden>
+                    <li><button type="button" data-abbr="CA" data-name="California" data-count="8">California · 8 Properties</button></li>
+                    <li><button type="button" data-abbr="FL" data-name="Florida" data-count="9">Florida · 9 Properties</button></li>
+                    <li><button type="button" data-abbr="TX" data-name="Texas" data-count="12">Texas · 12 Properties</button></li>
+                    <li><button type="button" data-abbr="NY" data-name="New York" data-count="5">New York · 5 Properties</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint">
+          Content Type opens the Link to page with ?state=. Portfolio opens that state’s page. Link to stays hidden for Portfolio.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main">
+          <header class="panel-header">
+            <h1>Property Map Search</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+            <button class="tab active" type="button" role="tab" id="tab-content" aria-selected="true" aria-controls="panel-content">
+              Content
+            </button>
+            <button class="tab" type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design">
+              Design
+            </button>
+            <button class="tab" type="button" role="tab" id="tab-block" aria-selected="false" aria-controls="panel-block">
+              Block
+            </button>
+            <button class="tab tab-icon" type="button" id="device-btn" aria-pressed="false" aria-label="Device overrides">
+              <span class="icon-28">
+                <img src="assets/icon-device.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="warn" id="link-warn" hidden>
+                <strong>No destination page.</strong> Pick a Link to page or state clicks do nothing.
+              </p>
+
+              <div class="source-block">
+                <p class="section-label">Property Source</p>
+                <div class="choice-block">
+                  <div class="segmented segmented-pair" id="source-source" role="group" aria-label="Property list">
+                    <button type="button" class="active" data-source="content">Content Type</button>
+                    <button type="button" data-source="portfolio">Portfolio</button>
+                  </div>
+                  <p class="field-help" id="source-hint">
+                    Pull properties from your content library. <a class="text-link" href="#">Manage Properties</a>.
+                  </p>
+                </div>
+              </div>
+
+              <div id="destination-section">
+                <hr class="panel-divider" />
+                <div class="destination-block">
+                  <p class="section-label">Destination</p>
+                  <div class="field" id="link-field">
+                    <span class="field-label" id="link-label">State links</span>
+                    <button
+                      type="button"
+                      class="field-trigger"
+                      id="link-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded="false"
+                      aria-labelledby="link-label link-value"
+                    >
+                      <span id="link-value">properties</span>
+                      <span class="icon-button" aria-hidden="true">
+                        <span class="icon-24">
+                          <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </span>
+                    </button>
+                    <ul class="field-menu" id="link-menu" hidden role="listbox" aria-labelledby="link-label">
+                      <li><button type="button" role="option" data-link="" aria-selected="false">Select a page</button></li>
+                      <li><button type="button" role="option" data-link="properties" aria-selected="true">properties</button></li>
+                      <li><button type="button" role="option" data-link="communities" aria-selected="false">communities</button></li>
+                      <li><button type="button" role="option" data-link="property-search" aria-selected="false">property-search</button></li>
+                      <li><button type="button" role="option" data-link="map" aria-selected="false">map</button></li>
+                    </ul>
+                    <span class="field-help">Choose where visitors go when they select a state.</span>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="hover-block">
+              <p class="section-label">Hover Details</p>
+              <div class="field">
+                <span class="field-label" id="hover-label">State Hover</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="hover-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="hover-label hover-value"
+                >
+                  <span id="hover-value">Label Only</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="hover-menu" hidden role="listbox" aria-labelledby="hover-label">
+                  <li><button type="button" role="option" data-hover="details" aria-selected="false">State with Details</button></li>
+                  <li><button type="button" role="option" data-hover="label" aria-selected="true">Label Only</button></li>
+                  <li><button type="button" role="option" data-hover="number" aria-selected="false">Number Only</button></li>
+                </ul>
+                <span class="field-help" id="hover-hint">
+                  Choose what visitors see when they hover over a state.
+                </span>
+              </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch on"
+                  id="small-toggle"
+                  role="switch"
+                  aria-checked="true"
+                  aria-labelledby="small-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="small-label">Small State Display</span>
+                  <p class="hint">
+                    Display smaller states as buttons next to the map.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Active color</p>
+              <div class="color-card" id="active-color-field"></div>
+
+              <p class="section-label">Hover color</p>
+              <div class="color-card" id="map-hover-color-field"></div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Hover Text style</p>
+              <div class="field">
+                <span class="field-label" id="title-font-label">Title Text Style</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="title-font-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="title-font-label title-font-value"
+                >
+                  <span id="title-font-value">Heading 2</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="title-font-menu" hidden role="listbox" aria-labelledby="title-font-label">
+                  <li><button type="button" role="option" data-font="h1" aria-selected="false">Heading 1</button></li>
+                  <li><button type="button" role="option" data-font="h2" aria-selected="true">Heading 2</button></li>
+                  <li><button type="button" role="option" data-font="h3" aria-selected="false">Heading 3</button></li>
+                  <li><button type="button" role="option" data-font="h4" aria-selected="false">Heading 4</button></li>
+                  <li><button type="button" role="option" data-font="h5" aria-selected="false">Heading 5</button></li>
+                  <li><button type="button" role="option" data-font="h6" aria-selected="false">Heading 6</button></li>
+                  <li><button type="button" role="option" data-font="custom" aria-selected="false">Custom</button></li>
+                </ul>
+              </div>
+
+              <div class="custom-font" id="custom-title-fields" hidden>
+                <div class="field">
+                  <span class="field-label" id="title-family-label">Family</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="title-family-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="title-family-label title-family-value"
+                  >
+                    <span id="title-family-value">Lato</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="title-family-menu" hidden role="listbox" aria-labelledby="title-family-label">
+                    <li><button type="button" role="option" data-family="Lato" aria-selected="true">Lato</button></li>
+                    <li><button type="button" role="option" data-family="Roboto" aria-selected="false">Roboto</button></li>
+                    <li><button type="button" role="option" data-family="Georgia" aria-selected="false">Georgia</button></li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <span class="field-label" id="title-weight-label">Weight</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="title-weight-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="title-weight-label title-weight-value"
+                  >
+                    <span id="title-weight-value">Bold</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="title-weight-menu" hidden role="listbox" aria-labelledby="title-weight-label">
+                    <li><button type="button" role="option" data-weight="400" aria-selected="false">Regular</button></li>
+                    <li><button type="button" role="option" data-weight="500" aria-selected="false">Medium</button></li>
+                    <li><button type="button" role="option" data-weight="700" aria-selected="true">Bold</button></li>
+                  </ul>
+                </div>
+                <label class="field">
+                  <span class="field-label">Size</span>
+                  <input type="number" id="title-size" value="28" min="10" max="72" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Line height</span>
+                  <input type="number" id="title-line" value="1.2" min="0.8" max="2.4" step="0.1" />
+                </label>
+              </div>
+
+              <div class="field">
+                <span class="field-label" id="subtitle-font-label">Subtitle Text Style</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="subtitle-font-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="subtitle-font-label subtitle-font-value"
+                >
+                  <span id="subtitle-font-value">H4</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="subtitle-font-menu" hidden role="listbox" aria-labelledby="subtitle-font-label">
+                  <li><button type="button" role="option" data-font="h2" aria-selected="false">H2</button></li>
+                  <li><button type="button" role="option" data-font="h3" aria-selected="false">H3</button></li>
+                  <li><button type="button" role="option" data-font="h4" aria-selected="true">H4</button></li>
+                  <li><button type="button" role="option" data-font="h5" aria-selected="false">H5</button></li>
+                  <li><button type="button" role="option" data-font="h6" aria-selected="false">H6</button></li>
+                  <li><button type="button" role="option" data-font="paragraph" aria-selected="false">Paragraph</button></li>
+                  <li><button type="button" role="option" data-font="custom" aria-selected="false">Custom</button></li>
+                </ul>
+              </div>
+
+              <div class="custom-font" id="custom-subtitle-fields" hidden>
+                <div class="field">
+                  <span class="field-label" id="subtitle-family-label">Family</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="subtitle-family-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="subtitle-family-label subtitle-family-value"
+                  >
+                    <span id="subtitle-family-value">Lato</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="subtitle-family-menu" hidden role="listbox" aria-labelledby="subtitle-family-label">
+                    <li><button type="button" role="option" data-family="Lato" aria-selected="true">Lato</button></li>
+                    <li><button type="button" role="option" data-family="Roboto" aria-selected="false">Roboto</button></li>
+                    <li><button type="button" role="option" data-family="Georgia" aria-selected="false">Georgia</button></li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <span class="field-label" id="subtitle-weight-label">Weight</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="subtitle-weight-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="subtitle-weight-label subtitle-weight-value"
+                  >
+                    <span id="subtitle-weight-value">Bold</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="subtitle-weight-menu" hidden role="listbox" aria-labelledby="subtitle-weight-label">
+                    <li><button type="button" role="option" data-weight="400" aria-selected="false">Regular</button></li>
+                    <li><button type="button" role="option" data-weight="500" aria-selected="false">Medium</button></li>
+                    <li><button type="button" role="option" data-weight="700" aria-selected="true">Bold</button></li>
+                  </ul>
+                </div>
+                <label class="field">
+                  <span class="field-label">Size</span>
+                  <input type="number" id="subtitle-size" value="20" min="10" max="72" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Line height</span>
+                  <input type="number" id="subtitle-line" value="1.2" min="0.8" max="2.4" step="0.1" />
+                </label>
+              </div>
+
+              <div id="button-style-panel">
+                <hr class="panel-divider" />
+                <div class="preset-field" id="button-preset-field"></div>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+              <p class="section-label">Animation</p>
+              <div class="field">
+                <span class="field-label" id="animation-label">Behavior</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="animation-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="animation-label animation-value"
+                >
+                  <span id="animation-value">Slide From Bottom</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                  <li><button type="button" role="option" data-animation="" aria-selected="false">None</button></li>
+                  <li><button type="button" role="option" data-animation="slide-y" aria-selected="true">Slide From Bottom</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">Shrink</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">Zoom In</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-out" aria-selected="false">Zoom Out</button></li>
+                </ul>
+              </div>
+
+              <p class="section-label">Speed</p>
+              <div class="icon-bar speed-bar" id="speed-source" role="group" aria-label="Speed">
+                <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
+                  <span class="icon-24"><img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" data-speed="fast" aria-label="Fast speed">
+                  <span class="icon-24"><img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="parallax-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="parallax-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="parallax-label">Parallax</span>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Width</p>
+              <div class="segmented has-tune" id="block-width-source" role="group" aria-label="Width">
+                <button type="button" data-block-width="50">50%</button>
+                <button type="button" data-block-width="75">75%</button>
+                <button type="button" class="active" data-block-width="100">100%</button>
+                <button type="button" class="tune" aria-label="Custom width">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-block-width-field" hidden>
+                <span class="field-label">Width</span>
+                <input type="number" id="custom-block-width" value="100" min="10" max="100" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Positioning</p>
+              <div class="field">
+                <span class="field-label" id="positioning-label">Position</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="positioning-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="positioning-label positioning-value"
+                >
+                  <span id="positioning-value">Default</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="positioning-menu" hidden role="listbox" aria-labelledby="positioning-label">
+                  <li><button type="button" role="option" data-position="default" aria-selected="true">Default</button></li>
+                  <li><button type="button" role="option" data-position="absolute" aria-selected="false">Absolute</button></li>
+                  <li><button type="button" role="option" data-position="fixed" aria-selected="false">Fixed</button></li>
+                  <li><button type="button" role="option" data-position="relative" aria-selected="false">Relative</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" class="active" data-pad="0">—</button>
+                <button type="button" data-pad="8">S</button>
+                <button type="button" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="0" min="0" max="80" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <div class="layer-row">
+                <span class="layer-row-label" id="layer-pos-label">Layer Position</span>
+                <label class="field layer-field">
+                  <span class="sr-only">Layer</span>
+                  <input type="number" id="layer-pos" value="1" min="0" aria-labelledby="layer-pos-label" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+    <script src="property-map-search.js?v=9"></script>
+  </body>
+</html>
