@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Center Pricing Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="contact-center.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#pricing">Skip to pricing</a>
+    <header class="nav">
+      <div class="nav-brand">
+        <img src="assets/contact-center/logo.svg" alt="" />
+        <button type="button" class="product-switch" aria-label="Contact Center">
+          <img src="assets/contact-center/icon-call.svg" alt="" />
+          <span>Contact Center</span>
+          <img src="assets/contact-center/icon-chevron.svg" alt="" />
+        </button>
+      </div>
+      <form class="search" role="search">
+        <img src="assets/contact-center/icon-sparkle.svg" alt="" />
+        <input type="search" placeholder="Search or ask a question" aria-label="Search or ask a question" />
+      </form>
+      <div class="nav-tools">
+        <button type="button" class="my-work">
+          <img src="assets/contact-center/icon-bell-active.svg" alt="" />
+          <span>My Work</span>
+          <span class="work-count">5</span>
+        </button>
+        <div class="tool-cluster">
+          <button type="button" class="icon-hit" aria-label="Notifications">
+            <img src="assets/contact-center/icon-bell.svg" alt="" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Settings">
+            <img src="assets/contact-center/icon-settings.svg" alt="" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Account">
+            <img src="assets/contact-center/icon-account.svg" alt="" />
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Riverside Commons <span class="badge-pill">TMLP enabled</span></h1>
+          <p class="eyebrow">Guest Card</p>
+        </div>
+        <div class="property">
+          <label class="property-label" id="property-label" for="property-button">Property</label>
+          <button type="button" class="property-button" id="property-button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="property-label property-value">
+            <span id="property-value">Riverside Commons</span>
+            <img src="assets/contact-center/icon-dropdown.svg" alt="" />
+          </button>
+          <ul class="property-menu" id="property-menu" role="listbox" hidden>
+            <li><button type="button" role="option" data-property="Riverside Commons" aria-selected="true">Riverside Commons</button></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="section-rule" />
+
+      <div class="layout">
+        <section class="panel" aria-labelledby="contact-title">
+          <h2 class="panel-title" id="contact-title">Contact</h2>
+          <div class="contact-card">
+            <div class="person">
+              <span class="icon-chip"><img src="assets/contact-center/icon-person.svg" alt="" /></span>
+              <div>
+                <strong>Jordan Ellis</strong>
+                <p>512-555-0142 · jordan.ellis@email.com</p>
+              </div>
+            </div>
+            <div class="hairline"></div>
+            <div class="metrics">
+              <article class="metric">
+                <div>
+                  <strong>Move In</strong>
+                  <p id="move-in">09/01/2026</p>
+                </div>
+              </article>
+              <article class="metric">
+                <div>
+                  <strong>Unit of Interest</strong>
+                  <p id="unit-interest">1915</p>
+                </div>
+                <button type="button" class="clear-button" id="clear-interest" aria-label="Clear unit of interest">
+                  <img src="assets/contact-center/icon-close.svg" alt="" />
+                </button>
+              </article>
+              <article class="metric">
+                <div>
+                  <strong>Desired Term</strong>
+                  <p id="desired-term">10 month</p>
+                </div>
+                <button type="button" class="clear-button" id="clear-term" aria-label="Clear desired term">
+                  <img src="assets/contact-center/icon-close.svg" alt="" />
+                </button>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="pricing" aria-labelledby="pricing-title">
+          <div class="panel-head">
+            <h2 class="panel-title" id="pricing-title">Optimized Pricing</h2>
+            <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+          </div>
+          <div class="pricing-stack" id="pricing-groups"></div>
+        </section>
+      </div>
+    </main>
+    <div class="flyout-root" id="flyout-root" hidden>
+      <aside class="flyout" role="dialog" aria-modal="false" aria-labelledby="flyout-title">
+        <header class="flyout-header">
+          <span class="flyout-chip"><img src="assets/contact-center/icon-calculator.svg" alt="" /></span>
+          <div>
+            <h2 id="flyout-title">Pricing Calculator</h2>
+            <p id="flyout-property">Riverside Commons</p>
+          </div>
+          <button type="button" class="flyout-close" id="flyout-close" aria-label="Close pricing calculator">
+            <img src="assets/contact-center/icon-flyout-close.svg" alt="" />
+          </button>
+        </header>
+        <div class="flyout-body">
+        <div class="flyout-rule"></div>
+        <p class="flyout-note">
+          <img src="assets/contact-center/icon-info.svg" alt="" />
+          <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
+        </p>
+        <div class="flyout-matrix-head">
+          <h3>Rent Matrix</h3>
+          <label class="flyout-unit">
+            <span>Unit</span>
+            <select id="flyout-unit"></select>
+          </label>
+        </div>
+        <div class="flyout-matrix" id="flyout-matrix"></div>
+        <h3 class="flyout-section">Quote Details</h3>
+        <div class="quote-fields">
+          <div>
+            <strong>Unit</strong>
+            <p><span id="flyout-quote-unit">1915 (S2)</span> <button type="button" class="edit-unit" id="flyout-edit-unit" aria-label="Edit unit"><img src="assets/contact-center/icon-edit.svg" alt="" /></button></p>
+          </div>
+          <div>
+            <strong>Move In</strong>
+            <p id="flyout-move-in">09/01/2026</p>
+          </div>
+          <div>
+            <strong>Lease Term</strong>
+            <p id="flyout-term">10 Months</p>
+          </div>
+          <div>
+            <strong>Base Rent</strong>
+            <p id="flyout-base">$2,615</p>
+          </div>
+        </div>
+        <div class="flyout-rule"></div>
+        <div class="addon-table" id="flyout-addons"></div>
+        <p class="flyout-special">
+          <img src="assets/contact-center/icon-star.svg" alt="" />
+          <span><strong>Property special:</strong> One month free on 12-month lease (display only — does not affect total)</span>
+        </p>
+        </div>
+        <footer class="flyout-footer">
+          <div class="flyout-rule"></div>
+          <div class="flyout-footer-row">
+            <div>
+              <p>Total Monthly Leasing Price</p>
+              <p class="flyout-total" id="flyout-total">Unit 1915 (S2) - <strong>$2,755/mon</strong></p>
+            </div>
+            <div class="flyout-actions">
+              <button type="button" class="flyout-cancel" id="flyout-cancel">Cancel</button>
+              <button type="button" class="btn btn-green" id="flyout-save">Save</button>
+            </div>
+          </div>
+        </footer>
+      </aside>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <script src="contact-center.js"></script>
+  </body>
+</html>
