@@ -508,9 +508,7 @@ img {
 .btn-secondary:hover,
 .btn-secondary:focus-visible,
 .clear-button:hover,
-.clear-button:focus-visible,
-.price-copy:hover,
-.price-copy:focus-visible {
+.clear-button:focus-visible {
   background: var(--surface-alt);
 }
 
@@ -755,6 +753,11 @@ img {
   background: transparent;
 }
 
+.price-copy:hover,
+.price-copy:focus-visible {
+  background: #AEDDFD;
+}
+
 .flyout-root {
   position: fixed;
   top: 0;
@@ -764,7 +767,7 @@ img {
   width: min(772px, 100vw);
   height: 100vh;
   height: 100dvh;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.16);
 }
 
