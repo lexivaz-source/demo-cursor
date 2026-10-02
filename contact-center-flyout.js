@@ -62,7 +62,7 @@ const state = {
   flyoutUnit: "1813",
   flyoutSelected: { unit: "1813", term: "10 month", dateIndex: 0 },
   addons: { pet: 1, bike: 0, charges: 1, due: 0, expenses: 0, moto: 0 },
-  feesOpen: true,
+  feesOpen: false,
   savedAddons: null,
 };
 
@@ -171,7 +171,6 @@ function openFlyout(unitId) {
     term: state.selected?.term || state.desiredTerm || "10 month",
     dateIndex: state.selected?.dateIndex ?? 0,
   };
-  state.feesOpen = true;
   state.unitPickerOpen = false;
   state.flyoutOpen = true;
   lastFocus = document.activeElement;
@@ -615,7 +614,7 @@ document.querySelector("#refresh").addEventListener("click", () => {
   state.activePlan = "s2";
   state.optionsOpen = true;
   state.openUnit = "1915";
-  state.feesOpen = true;
+  state.feesOpen = false;
   state.selected = { unit: "1915", term: "10 month", dateIndex: 0 };
   state.flyoutUnit = "1813";
   state.flyoutSelected = { unit: "1813", term: "10 month", dateIndex: 0 };
