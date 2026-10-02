@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Center — Optimized Pricing Flyout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="contact-center-flyout.css?v=20261002c" />
+  </head>
+  <body>
+    <a class="skip-link" href="#pricing">Skip to pricing</a>
+    <header class="nav">
+      <div class="nav-brand">
+        <img src="assets/contact-center/logo.svg" alt="" />
+        <button type="button" class="product-switch" aria-label="Contact Center">
+          <img src="assets/contact-center/icon-call.svg" alt="" />
+          <span>Contact Center</span>
+          <img src="assets/contact-center/icon-chevron.svg" alt="" />
+        </button>
+      </div>
+      <form class="search" role="search">
+        <img src="assets/contact-center/icon-sparkle.svg" alt="" />
+        <input type="search" placeholder="Search or ask a question" aria-label="Search or ask a question" />
+      </form>
+      <div class="nav-tools">
+        <button type="button" class="my-work">
+          <img src="assets/contact-center/icon-bell-active.svg" alt="" />
+          <span>My Work</span>
+          <span class="work-count">5</span>
+        </button>
+        <div class="tool-cluster">
+          <button type="button" class="icon-hit" aria-label="Notifications">
+            <img src="assets/contact-center/icon-bell.svg" alt="" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Settings">
+            <img src="assets/contact-center/icon-settings.svg" alt="" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Account">
+            <img src="assets/contact-center/icon-account.svg" alt="" />
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Riverside Commons <span class="badge-pill">TMLP enabled</span></h1>
+          <p class="eyebrow">Guest Card</p>
+        </div>
+        <div class="property">
+          <label class="property-label" id="property-label" for="property-button">Property</label>
+          <button type="button" class="property-button" id="property-button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="property-label property-value">
+            <span id="property-value">Riverside Commons</span>
+            <img src="assets/contact-center/icon-dropdown.svg" alt="" />
+          </button>
+          <ul class="property-menu" id="property-menu" role="listbox" hidden>
+            <li><button type="button" role="option" data-property="Riverside Commons" aria-selected="true">Riverside Commons</button></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="section-rule" />
+
+      <div class="layout layout--flyout">
+        <aside class="sidebar" aria-label="Contact">
+          <section class="side-card" aria-labelledby="contact-title">
+            <div class="side-card-head">
+              <h2 class="panel-title" id="contact-title">Contact</h2>
+            </div>
+            <div class="panel-rule"></div>
+
+            <div class="contact-card">
+              <div class="person">
+                <span class="icon-chip"><img src="assets/contact-center/icon-person.svg" alt="" width="20" height="20" /></span>
+                <div>
+                  <strong>Jordan Ellis</strong>
+                  <p>512-555-0142 · jordan.ellis@email.com</p>
+                </div>
+              </div>
+              <div class="hairline"></div>
+              <div class="metrics metrics--stack">
+                <article class="metric">
+                  <strong>Move In</strong>
+                  <p id="move-in">09/01/2026</p>
+                </article>
+                <article class="metric">
+                  <div class="metric-row">
+                    <div>
+                      <strong>Unit of Interest</strong>
+                      <p id="unit-interest">1813</p>
+                    </div>
+                    <button type="button" class="clear-button" id="clear-interest" aria-label="Clear unit of interest">
+                      <img src="assets/contact-center/icon-close.svg" alt="" width="16" height="16" />
+                    </button>
+                  </div>
+                </article>
+                <article class="metric">
+                  <div class="metric-row">
+                    <div>
+                      <strong>Desired Term</strong>
+                      <p id="desired-term">10 month</p>
+                    </div>
+                    <button type="button" class="clear-button" id="clear-term" aria-label="Clear desired term">
+                      <img src="assets/contact-center/icon-close.svg" alt="" width="16" height="16" />
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+        </aside>
+
+        <section class="pricing-panel" id="pricing" aria-labelledby="pricing-title">
+          <div class="pricing-head">
+            <h2 class="panel-title" id="pricing-title">Optimized Pricing</h2>
+            <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+          </div>
+          <div class="panel-rule"></div>
+          <div class="pricing-stack" id="pricing-groups"></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="flyout-root" id="flyout-root" hidden>
+      <div class="flyout-backdrop" id="flyout-backdrop"></div>
+      <aside class="flyout" id="flyout" role="dialog" aria-modal="true" aria-labelledby="flyout-title" tabindex="-1">
+        <header class="flyout-header">
+          <span class="icon-chip icon-chip--lg">
+            <img src="assets/contact-center/icon-calculator.svg" alt="" width="32" height="32" />
+          </span>
+          <div class="flyout-heading">
+            <h2 id="flyout-title">Pricing Calculator</h2>
+            <p id="flyout-property">Riverside Commons</p>
+          </div>
+          <button type="button" class="flyout-close" id="flyout-close" aria-label="Close pricing calculator">
+            <img src="assets/contact-center/icon-flyout-close.svg" alt="" width="20" height="20" />
+          </button>
+        </header>
+        <div class="panel-rule"></div>
+
+        <div class="flyout-body">
+          <p class="info-banner info-banner--flyout">
+            <img src="assets/contact-center/icon-info-banner.svg" alt="" width="16" height="16" />
+            <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
+          </p>
+
+          <div class="rent-matrix-head">
+            <h3>Rent Matrix</h3>
+            <div class="unit-picker">
+              <label class="property-label" id="unit-picker-label" for="unit-picker-button">Unit</label>
+              <button type="button" class="property-button" id="unit-picker-button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="unit-picker-label unit-picker-value">
+                <span id="unit-picker-value">1813 (S2)</span>
+                <img src="assets/contact-center/icon-dropdown.svg" alt="" />
+              </button>
+              <ul class="property-menu" id="unit-picker-menu" role="listbox" hidden></ul>
+            </div>
+          </div>
+
+          <div class="flyout-terms" id="flyout-terms"></div>
+
+          <h3 class="quote-details-title">Quote Details</h3>
+          <div class="quote-details" id="quote-details">
+            <article class="quote-field">
+              <strong>Unit</strong>
+              <p>
+                <span id="quote-unit">1813 (S2)</span>
+                <button type="button" class="edit-affordance" id="quote-edit-unit" aria-label="Edit unit">
+                  <img src="assets/contact-center/icon-edit.svg" alt="" width="20" height="20" />
+                </button>
+              </p>
+            </article>
+            <article class="quote-field">
+              <strong>Move In</strong>
+              <p id="quote-move-in">09/01/2026</p>
+            </article>
+            <article class="quote-field">
+              <strong>Lease Term</strong>
+              <p id="quote-term">10 Months</p>
+            </article>
+            <article class="quote-field">
+              <strong>Base Rent</strong>
+              <p id="quote-base">10 Months</p>
+            </article>
+          </div>
+          <div class="panel-rule"></div>
+
+          <div class="fees-card fees-card--flyout" id="fees-card">
+            <button type="button" class="fees-toggle" id="fees-toggle" aria-expanded="true" aria-controls="fees-body">
+              <img src="assets/contact-center/icon-fees-leading.svg" alt="" width="20" height="20" />
+              <span class="fees-copy">
+                <strong id="fees-total-label">$1,758.00 Total Monthly Price*</strong>
+                <span>Recurring Fees</span>
+              </span>
+              <img class="fees-chevron" src="assets/contact-center/icon-expand-less.svg" alt="" width="20" height="20" />
+            </button>
+            <div class="fees-body" id="fees-body">
+              <div class="hairline"></div>
+              <div class="fee-row fee-row--strong">
+                <span>Base Rent</span>
+                <span id="fee-base">$1,629</span>
+              </div>
+              <div class="hairline"></div>
+              <div class="fee-group">
+                <strong>Access</strong>
+                <div class="fee-row"><span>Access Device</span><span>$15</span></div>
+                <div class="fee-row"><span>Access Device Replacement</span><span>$10</span></div>
+              </div>
+              <div class="hairline"></div>
+              <div class="fee-group">
+                <strong>Utilities</strong>
+                <div class="fee-row"><span>Electricity</span><span>$40</span></div>
+                <div class="fee-row"><span>Gas/Heat</span><span>$50</span></div>
+                <div class="fee-row"><span>Internet/Wifi</span><span>$20</span></div>
+                <div class="fee-row"><span>Pest Control</span><span>$40</span></div>
+                <div class="fee-row"><span>Valet Trash</span><span>Varies</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="addons-card addons-card--flyout">
+            <div class="addons-table-head">
+              <span>Personalized Add-Ons</span>
+              <span>Count</span>
+              <span>Monthly</span>
+            </div>
+            <div class="addon-list" id="addon-list"></div>
+          </div>
+
+          <p class="special-banner">
+            <img src="assets/contact-center/icon-star-special.svg" alt="" width="16" height="16" />
+            <span><strong>Property special:</strong> One month free on 12-month lease (display only — does not affect total)</span>
+          </p>
+        </div>
+
+        <footer class="flyout-footer">
+          <div>
+            <p class="total-label">Total Monthly Leasing Price</p>
+            <p class="total-value" id="calc-total"><span class="total-unit">Unit 1813 (S2) - </span><span class="total-amount">$2,900/mon</span></p>
+          </div>
+          <div class="calculator-actions flyout-actions">
+            <button type="button" class="link-cancel" id="calc-cancel">Cancel</button>
+            <button type="button" class="btn btn-green btn-save-flyout" id="calc-save">Save</button>
+          </div>
+        </footer>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+    <script src="contact-center-flyout.js?v=20261002b"></script>
+  </body>
+</html>
