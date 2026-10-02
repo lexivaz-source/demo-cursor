@@ -985,7 +985,8 @@ img {
   line-height: 16px;
 }
 
-.fees-body[hidden] {
+.fees-body[hidden],
+.fees-card.is-collapsed .fees-body {
   display: none !important;
 }
 

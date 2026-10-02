@@ -171,6 +171,7 @@ function openFlyout(unitId) {
     term: state.selected?.term || state.desiredTerm || "10 month",
     dateIndex: state.selected?.dateIndex ?? 0,
   };
+  state.feesOpen = false;
   state.unitPickerOpen = false;
   state.flyoutOpen = true;
   lastFocus = document.activeElement;
@@ -201,7 +202,9 @@ function syncContact() {
 
 function syncFees() {
   feesBody.hidden = !state.feesOpen;
+  feesBody.setAttribute("aria-hidden", String(!state.feesOpen));
   feesToggle.setAttribute("aria-expanded", String(state.feesOpen));
+  document.querySelector("#fees-card")?.classList.toggle("is-collapsed", !state.feesOpen);
   feesToggle.querySelector(".fees-chevron").src = state.feesOpen
     ? "assets/contact-center/icon-expand-less.svg"
     : "assets/contact-center/icon-expand-more.svg";
