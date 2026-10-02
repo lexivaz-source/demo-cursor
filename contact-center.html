@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="contact-center.css" />
+    <link rel="stylesheet" href="contact-center.css?v=20261002" />
   </head>
   <body>
     <a class="skip-link" href="#pricing">Skip to pricing</a>
@@ -67,10 +67,6 @@
         <section class="pricing-panel" id="pricing" aria-labelledby="pricing-title">
           <h2 class="panel-title" id="pricing-title">Optimized Pricing</h2>
           <div class="panel-rule"></div>
-          <p class="info-banner">
-            <img src="assets/contact-center/icon-notification-info.svg" alt="" width="16" height="16" />
-            <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
-          </p>
           <div class="pricing-stack" id="pricing-groups"></div>
         </section>
 
@@ -123,9 +119,23 @@
                 </article>
               </div>
             </div>
+          </section>
+
+          <section class="side-card calculator-card" aria-labelledby="calculator-title">
+            <div class="side-card-head">
+              <span class="icon-chip icon-chip--plain">
+                <img src="assets/contact-center/icon-calculator-green.svg" alt="" width="24" height="24" />
+              </span>
+              <h2 class="panel-title" id="calculator-title">Pricing Calculator</h2>
+            </div>
+            <div class="panel-rule"></div>
+            <p class="info-banner">
+              <img src="assets/contact-center/icon-notification-info.svg" alt="" width="16" height="16" />
+              <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
+            </p>
 
             <div class="fees-card" id="fees-card">
-              <button type="button" class="fees-toggle" id="fees-toggle" aria-expanded="true" aria-controls="fees-body">
+              <button type="button" class="fees-toggle" id="fees-toggle" aria-expanded="false" aria-controls="fees-body">
                 <span class="icon-chip icon-chip--success">
                   <img src="assets/contact-center/icon-fees.svg" alt="" width="20" height="20" />
                 </span>
@@ -133,9 +143,9 @@
                   <strong>Recurring Fees</strong>
                   <span id="fees-subtitle">Total Monthly Price $2,615</span>
                 </span>
-                <img class="fees-chevron" src="assets/contact-center/icon-expand-less.svg" alt="" width="20" height="20" />
+                <img class="fees-chevron" src="assets/contact-center/icon-expand-more.svg" alt="" width="20" height="20" />
               </button>
-              <div class="fees-body" id="fees-body">
+              <div class="fees-body" id="fees-body" hidden>
                 <div class="hairline"></div>
                 <div class="fee-row fee-row--strong">
                   <span>Base Rent</span>
@@ -158,16 +168,6 @@
                 </div>
               </div>
             </div>
-          </section>
-
-          <section class="side-card calculator-card" aria-labelledby="calculator-title">
-            <div class="side-card-head">
-              <span class="icon-chip icon-chip--plain">
-                <img src="assets/contact-center/icon-calculator-green.svg" alt="" width="24" height="24" />
-              </span>
-              <h2 class="panel-title" id="calculator-title">Pricing Calculator</h2>
-            </div>
-            <div class="panel-rule"></div>
 
             <div class="addons-card">
               <div class="addons-head">
@@ -194,6 +194,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" hidden></div>
-    <script src="contact-center.js"></script>
+    <script src="contact-center.js?v=20261002"></script>
   </body>
 </html>

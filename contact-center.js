@@ -1,7 +1,7 @@
 const plans = [
-  { id: "s1", name: "Studio S1" },
-  { id: "s2", name: "Studio S2" },
-  { id: "s3", name: "Studio S3" },
+  { id: "s1", name: "Studio S1", detail: "Studio | 1 Bath | 565 Sq Ft" },
+  { id: "s2", name: "Studio S2", detail: "Studio | 1 Bath | 565 Sq Ft" },
+  { id: "s3", name: "Studio S3", detail: "Studio | 1 Bath | 580 Sq Ft" },
 ];
 
 const studioUnits = [
@@ -33,7 +33,6 @@ const addons = [
   { id: "moto", name: "Motorcycle Parking", price: 70 },
   { id: "parking", name: "Parking", price: 70 },
   { id: "stepped", name: "Parking Stepped", price: 85 },
-  { id: "tandem", name: "Parking - Tandem", price: 95 },
 ];
 
 const RECURRING_FEES = 170;
@@ -51,8 +50,8 @@ const state = {
   optionsOpen: true,
   openUnit: "1915",
   selected: { unit: "1915", term: "10 month", dateIndex: 0 },
-  addons: { pet: 1, bike: 0, charges: 0, due: 0, moto: 0, parking: 0, stepped: 0, tandem: 0 },
-  feesOpen: true,
+  addons: { pet: 1, bike: 0, charges: 0, due: 0, moto: 0, parking: 0, stepped: 0 },
+  feesOpen: false,
   savedAddons: null,
 };
 
@@ -230,7 +229,10 @@ function unitCard(unit) {
 function planCard(plan) {
   const selected = state.optionsOpen && state.activePlan === plan.id;
   return `<article class="plan-card${selected ? " is-selected" : ""}">
-    <h4>${plan.name}</h4>
+    <div class="plan-copy">
+      <h4>${plan.name}</h4>
+      <p>${plan.detail}</p>
+    </div>
     <div class="plan-slot">
       ${icon("image")}
       <span>Image not available</span>
@@ -244,7 +246,7 @@ function planCard(plan) {
 function groupCard(group) {
   const open = state.openGroups.has(group.id);
   const actions = `<div class="quote-actions">
-      <button type="button" class="btn btn-green" data-select-group="${group.id}">Select</button>
+      <button type="button" class="btn btn-green" data-show-units="${group.id}">Show Units</button>
       <button type="button" class="chevron-button" data-toggle-group="${group.id}" aria-expanded="${open}" aria-label="${open ? "Collapse" : "Expand"} ${group.title}">
         ${icon(open ? "less" : "more")}
       </button>
@@ -309,7 +311,7 @@ groupsEl.addEventListener("click", (event) => {
   const plan = event.target.closest("[data-toggle-plan]");
   const unitToggle = event.target.closest("[data-toggle-unit]");
   const selectPrice = event.target.closest("[data-select-price]");
-  const selectGroup = event.target.closest("[data-select-group]");
+  const showUnits = event.target.closest("[data-show-units]");
 
   if (selectPrice) {
     state.selected = {
@@ -351,8 +353,9 @@ groupsEl.addEventListener("click", (event) => {
     return;
   }
 
-  if (selectGroup) {
-    showToast(`${selectGroup.getAttribute("data-select-group") === "studio" ? "Studio" : "1 Bed"} selected`);
+  if (showUnits) {
+    state.openGroups.add(showUnits.getAttribute("data-show-units"));
+    render();
   }
 });
 
@@ -415,13 +418,13 @@ document.querySelector("#calc-cancel").addEventListener("click", () => {
 });
 
 document.querySelector("#refresh").addEventListener("click", () => {
-  state.addons = { pet: 1, bike: 0, charges: 0, due: 0, moto: 0, parking: 0, stepped: 0, tandem: 0 };
+  state.addons = { pet: 1, bike: 0, charges: 0, due: 0, moto: 0, parking: 0, stepped: 0 };
   state.savedAddons = { ...state.addons };
   state.openGroups = new Set(["studio"]);
   state.activePlan = "s2";
   state.optionsOpen = true;
   state.openUnit = "1915";
-  state.feesOpen = true;
+  state.feesOpen = false;
   state.selected = { unit: "1915", term: "10 month", dateIndex: 0 };
   applySelectionToContact("1915", "10 month", 0);
   showToast("Pricing refreshed");

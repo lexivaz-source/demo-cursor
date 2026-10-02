@@ -519,12 +519,23 @@ img {
   border-color: var(--border-active);
 }
 
+.plan-copy {
+  text-align: center;
+}
+
 .plan-card h4 {
   margin: 0;
   font-size: 14px;
   font-weight: 700;
   line-height: 20px;
-  text-align: center;
+}
+
+.plan-copy p {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
 }
 
 .plan-slot {
