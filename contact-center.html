@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Center Pricing Calculator</title>
+    <title>Contact Center — Optimized Pricing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -64,122 +64,135 @@
       <hr class="section-rule" />
 
       <div class="layout">
-        <section class="panel" aria-labelledby="contact-title">
-          <h2 class="panel-title" id="contact-title">Contact</h2>
-          <div class="contact-card">
-            <div class="person">
-              <span class="icon-chip"><img src="assets/contact-center/icon-person.svg" alt="" /></span>
-              <div>
-                <strong>Jordan Ellis</strong>
-                <p>512-555-0142 · jordan.ellis@email.com</p>
-              </div>
-            </div>
-            <div class="hairline"></div>
-            <div class="metrics">
-              <article class="metric">
-                <div>
-                  <strong>Move In</strong>
-                  <p id="move-in">09/01/2026</p>
-                </div>
-              </article>
-              <article class="metric">
-                <div>
-                  <strong>Unit of Interest</strong>
-                  <p id="unit-interest">1915</p>
-                </div>
-                <button type="button" class="clear-button" id="clear-interest" aria-label="Clear unit of interest">
-                  <img src="assets/contact-center/icon-close.svg" alt="" />
-                </button>
-              </article>
-              <article class="metric">
-                <div>
-                  <strong>Desired Term</strong>
-                  <p id="desired-term">10 month</p>
-                </div>
-                <button type="button" class="clear-button" id="clear-term" aria-label="Clear desired term">
-                  <img src="assets/contact-center/icon-close.svg" alt="" />
-                </button>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel" id="pricing" aria-labelledby="pricing-title">
-          <div class="panel-head">
-            <h2 class="panel-title" id="pricing-title">Optimized Pricing</h2>
-            <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
-          </div>
+        <section class="pricing-panel" id="pricing" aria-labelledby="pricing-title">
+          <h2 class="panel-title" id="pricing-title">Optimized Pricing</h2>
+          <div class="panel-rule"></div>
+          <p class="info-banner">
+            <img src="assets/contact-center/icon-notification-info.svg" alt="" width="16" height="16" />
+            <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
+          </p>
           <div class="pricing-stack" id="pricing-groups"></div>
         </section>
+
+        <aside class="sidebar" aria-label="Contact and pricing">
+          <section class="side-card" aria-labelledby="contact-title">
+            <div class="side-card-head">
+              <span class="icon-chip icon-chip--plain">
+                <img src="assets/contact-center/icon-contact-green.svg" alt="" width="24" height="24" />
+              </span>
+              <h2 class="panel-title" id="contact-title">Contact</h2>
+              <button type="button" class="btn btn-secondary" id="refresh">Refresh</button>
+            </div>
+            <div class="panel-rule"></div>
+
+            <div class="contact-card">
+              <div class="person">
+                <span class="icon-chip"><img src="assets/contact-center/icon-person.svg" alt="" width="20" height="20" /></span>
+                <div>
+                  <strong>Jordan Ellis</strong>
+                  <p>512-555-0142 · jordan.ellis@email.com</p>
+                </div>
+              </div>
+              <div class="hairline"></div>
+              <div class="metrics">
+                <article class="metric">
+                  <strong>Move In</strong>
+                  <p id="move-in">09/01/2026</p>
+                </article>
+                <article class="metric">
+                  <div class="metric-row">
+                    <div>
+                      <strong>Unit</strong>
+                      <p id="unit-interest">1915</p>
+                    </div>
+                    <button type="button" class="clear-button" id="clear-interest" aria-label="Clear unit of interest">
+                      <img src="assets/contact-center/icon-close.svg" alt="" width="16" height="16" />
+                    </button>
+                  </div>
+                </article>
+                <article class="metric">
+                  <div class="metric-row">
+                    <div>
+                      <strong>Term</strong>
+                      <p id="desired-term">10 month</p>
+                    </div>
+                    <button type="button" class="clear-button" id="clear-term" aria-label="Clear desired term">
+                      <img src="assets/contact-center/icon-close.svg" alt="" width="16" height="16" />
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="fees-card" id="fees-card">
+              <button type="button" class="fees-toggle" id="fees-toggle" aria-expanded="true" aria-controls="fees-body">
+                <span class="icon-chip icon-chip--success">
+                  <img src="assets/contact-center/icon-fees.svg" alt="" width="20" height="20" />
+                </span>
+                <span class="fees-copy">
+                  <strong>Recurring Fees</strong>
+                  <span id="fees-subtitle">Total Monthly Price $2,615</span>
+                </span>
+                <img class="fees-chevron" src="assets/contact-center/icon-expand-less.svg" alt="" width="20" height="20" />
+              </button>
+              <div class="fees-body" id="fees-body">
+                <div class="hairline"></div>
+                <div class="fee-row fee-row--strong">
+                  <span>Base Rent</span>
+                  <span id="fee-base">$2,445</span>
+                </div>
+                <div class="hairline"></div>
+                <div class="fee-group">
+                  <strong>Access</strong>
+                  <div class="fee-row"><span>Access Device</span><span>$15</span></div>
+                  <div class="fee-row"><span>Access Device Replacement</span><span>$10</span></div>
+                </div>
+                <div class="hairline"></div>
+                <div class="fee-group">
+                  <strong>Utilities</strong>
+                  <div class="fee-row"><span>Electricity</span><span>$40</span></div>
+                  <div class="fee-row"><span>Gas / Heat</span><span>$50</span></div>
+                  <div class="fee-row"><span>Internet / Wifi</span><span>$20</span></div>
+                  <div class="fee-row"><span>Pest Control</span><span>$35</span></div>
+                  <div class="fee-row"><span>Trash Valet</span><span>Varies</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="side-card calculator-card" aria-labelledby="calculator-title">
+            <div class="side-card-head">
+              <span class="icon-chip icon-chip--plain">
+                <img src="assets/contact-center/icon-calculator-green.svg" alt="" width="24" height="24" />
+              </span>
+              <h2 class="panel-title" id="calculator-title">Pricing Calculator</h2>
+            </div>
+            <div class="panel-rule"></div>
+
+            <div class="addons-card">
+              <div class="addons-head">
+                <span class="icon-chip"><img src="assets/contact-center/icon-addons.svg" alt="" width="20" height="20" /></span>
+                <strong>Personalized Add-Ons</strong>
+              </div>
+              <div class="hairline"></div>
+              <div class="addon-list" id="addon-list"></div>
+            </div>
+
+            <footer class="calculator-footer">
+              <div>
+                <p class="total-label">Total Monthly Leasing Price</p>
+                <p class="total-value" id="calc-total">$2,900/mon</p>
+              </div>
+              <div class="calculator-actions">
+                <button type="button" class="link-cancel" id="calc-cancel">Cancel</button>
+                <button type="button" class="btn btn-green" id="calc-save">Save</button>
+              </div>
+            </footer>
+          </section>
+        </aside>
       </div>
     </main>
-    <div class="flyout-root" id="flyout-root" hidden>
-      <aside class="flyout" role="dialog" aria-modal="false" aria-labelledby="flyout-title">
-        <header class="flyout-header">
-          <span class="flyout-chip"><img src="assets/contact-center/icon-calculator.svg" alt="" /></span>
-          <div>
-            <h2 id="flyout-title">Pricing Calculator</h2>
-            <p id="flyout-property">Riverside Commons</p>
-          </div>
-          <button type="button" class="flyout-close" id="flyout-close" aria-label="Close pricing calculator">
-            <img src="assets/contact-center/icon-flyout-close.svg" alt="" />
-          </button>
-        </header>
-        <div class="flyout-body">
-        <div class="flyout-rule"></div>
-        <p class="flyout-note">
-          <img src="assets/contact-center/icon-info.svg" alt="" />
-          <span>Fee selections apply to this property and carry over when you change units or floorplans.</span>
-        </p>
-        <div class="flyout-matrix-head">
-          <h3>Rent Matrix</h3>
-          <label class="flyout-unit">
-            <span>Unit</span>
-            <select id="flyout-unit"></select>
-          </label>
-        </div>
-        <div class="flyout-matrix" id="flyout-matrix"></div>
-        <h3 class="flyout-section">Quote Details</h3>
-        <div class="quote-fields">
-          <div>
-            <strong>Unit</strong>
-            <p><span id="flyout-quote-unit">1915 (S2)</span> <button type="button" class="edit-unit" id="flyout-edit-unit" aria-label="Edit unit"><img src="assets/contact-center/icon-edit.svg" alt="" /></button></p>
-          </div>
-          <div>
-            <strong>Move In</strong>
-            <p id="flyout-move-in">09/01/2026</p>
-          </div>
-          <div>
-            <strong>Lease Term</strong>
-            <p id="flyout-term">10 Months</p>
-          </div>
-          <div>
-            <strong>Base Rent</strong>
-            <p id="flyout-base">$2,615</p>
-          </div>
-        </div>
-        <div class="flyout-rule"></div>
-        <div class="addon-table" id="flyout-addons"></div>
-        <p class="flyout-special">
-          <img src="assets/contact-center/icon-star.svg" alt="" />
-          <span><strong>Property special:</strong> One month free on 12-month lease (display only — does not affect total)</span>
-        </p>
-        </div>
-        <footer class="flyout-footer">
-          <div class="flyout-rule"></div>
-          <div class="flyout-footer-row">
-            <div>
-              <p>Total Monthly Leasing Price</p>
-              <p class="flyout-total" id="flyout-total">Unit 1915 (S2) - <strong>$2,755/mon</strong></p>
-            </div>
-            <div class="flyout-actions">
-              <button type="button" class="flyout-cancel" id="flyout-cancel">Cancel</button>
-              <button type="button" class="btn btn-green" id="flyout-save">Save</button>
-            </div>
-          </div>
-        </footer>
-      </aside>
-    </div>
+
     <div class="toast" id="toast" role="status" hidden></div>
     <script src="contact-center.js"></script>
   </body>
