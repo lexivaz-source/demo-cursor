@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fee Mapping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="fee-mapping.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <div class="nav-brand">
+        <img src="assets/fee-mapping/logo.svg" alt="" width="24" height="44" />
+        <button type="button" class="product-switch" aria-label="Lead Management">
+          <img src="assets/fee-mapping/icon-groups.svg" alt="" width="24" height="24" />
+          <span>Lead Management</span>
+          <img src="assets/fee-mapping/icon-chevron.svg" alt="" width="24" height="24" />
+        </button>
+      </div>
+      <form class="search" role="search">
+        <img src="assets/fee-mapping/icon-sparkle.svg" alt="" width="24" height="24" />
+        <input type="search" placeholder="Search or ask a question" aria-label="Search or ask a question" />
+      </form>
+      <div class="nav-tools">
+        <button type="button" class="my-work">
+          <img src="assets/fee-mapping/icon-bell-active.svg" alt="" width="24" height="24" />
+          <span>My Work</span>
+          <span class="work-count" aria-label="5 items">5</span>
+        </button>
+        <div class="tool-cluster">
+          <button type="button" class="icon-hit" aria-label="Notifications">
+            <img src="assets/fee-mapping/icon-bell.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Settings">
+            <img src="assets/fee-mapping/icon-settings.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="icon-hit" aria-label="Account">
+            <img src="assets/fee-mapping/icon-account.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page" id="main">
+      <div class="page-header">
+        <h1 class="page-title">Fee Mapping</h1>
+      </div>
+
+      <section class="metrics" aria-label="Mapping metrics">
+        <button type="button" class="metric-card is-selected" data-metric="type" aria-pressed="true">
+          <div class="metric-top">
+            <div>
+              <p class="metric-label">Type</p>
+              <p class="metric-value">14</p>
+            </div>
+            <span class="metric-icon metric-icon--success">
+              <img src="assets/fee-mapping/icon-type.svg" alt="" width="20" height="20" />
+            </span>
+          </div>
+          <p class="metric-meta">
+            <img src="assets/fee-mapping/icon-dot.svg" alt="" width="8" height="8" />
+            <span>10 Unmapped</span>
+          </p>
+        </button>
+        <button type="button" class="metric-card" data-metric="category" aria-pressed="false">
+          <div class="metric-top">
+            <div>
+              <p class="metric-label">Category</p>
+              <p class="metric-value">4</p>
+            </div>
+            <span class="metric-icon metric-icon--subtle">
+              <img src="assets/fee-mapping/icon-category.svg" alt="" width="20" height="20" />
+            </span>
+          </div>
+          <p class="metric-meta">
+            <img src="assets/fee-mapping/icon-dot.svg" alt="" width="8" height="8" />
+            <span>3 Unmapped</span>
+          </p>
+        </button>
+        <button type="button" class="metric-card" data-metric="group" aria-pressed="false">
+          <div class="metric-top">
+            <div>
+              <p class="metric-label">Group</p>
+              <p class="metric-value">4</p>
+            </div>
+            <span class="metric-icon metric-icon--subtle">
+              <img src="assets/fee-mapping/icon-category.svg" alt="" width="20" height="20" />
+            </span>
+          </div>
+          <p class="metric-meta">
+            <img src="assets/fee-mapping/icon-dot.svg" alt="" width="8" height="8" />
+            <span>3 Unmapped</span>
+          </p>
+        </button>
+        <button type="button" class="metric-card" data-metric="frequency" aria-pressed="false">
+          <div class="metric-top">
+            <div>
+              <p class="metric-label">Frequency</p>
+              <p class="metric-value">5</p>
+            </div>
+            <span class="metric-icon metric-icon--info">
+              <img src="assets/fee-mapping/icon-frequency.svg" alt="" width="20" height="20" />
+            </span>
+          </div>
+          <p class="metric-meta">
+            <img src="assets/fee-mapping/icon-dot.svg" alt="" width="8" height="8" />
+            <span>4 Unmapped</span>
+          </p>
+        </button>
+        <button type="button" class="metric-card" data-metric="due-date" aria-pressed="false">
+          <div class="metric-top">
+            <div>
+              <p class="metric-label">Due Date</p>
+              <p class="metric-value">3</p>
+            </div>
+            <span class="metric-icon metric-icon--error">
+              <img src="assets/fee-mapping/icon-due-date.svg" alt="" width="20" height="20" />
+            </span>
+          </div>
+          <p class="metric-meta">
+            <img src="assets/fee-mapping/icon-dot.svg" alt="" width="8" height="8" />
+            <span>2 Unmapped</span>
+          </p>
+        </button>
+        <button type="button" class="metric-add" aria-label="Add metric">
+          <img src="assets/fee-mapping/icon-add.svg" alt="" width="25" height="25" />
+        </button>
+      </section>
+
+      <div class="toolbar">
+        <div class="toolbar-filters">
+          <button type="button" class="filter-chip" data-filter="accounts" aria-haspopup="listbox" aria-expanded="false">
+            <span>Accounts: <strong>All</strong></span>
+            <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="filter-chip" data-filter="properties" aria-haspopup="listbox" aria-expanded="false">
+            <span>Properties: <strong>All</strong></span>
+            <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="filter-chip" data-filter="level" aria-haspopup="listbox" aria-expanded="false">
+            <span>Level: <strong>Unit</strong></span>
+            <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="filter-chip" data-filter="status" aria-haspopup="listbox" aria-expanded="false">
+            <span>Status: <strong>All</strong></span>
+            <span class="status-count" aria-hidden="true">
+              <img src="assets/fee-mapping/icon-status-badge.svg" alt="" width="16" height="16" />
+              10
+            </span>
+            <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+        <div class="toolbar-actions">
+          <label class="table-search">
+            <img src="assets/fee-mapping/icon-search.svg" alt="" width="24" height="24" />
+            <input type="search" id="table-search" placeholder="Search" aria-label="Search fees" />
+          </label>
+        </div>
+      </div>
+
+      <div class="notice" id="unsaved-notice" hidden>
+        <img src="assets/fee-mapping/icon-warning.svg" alt="" width="24" height="24" />
+        <p>
+          <span id="unsaved-count">3</span> unsaved edits. Rows stay in the status they were saved under until you save
+          or discard, so the counts above move but nothing reshuffles under you.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="fee-table" aria-label="Fee alias mapping">
+          <thead>
+            <tr>
+              <th class="col-check">
+                <input type="checkbox" id="select-all" aria-label="Select all rows" />
+              </th>
+              <th class="col-fee">Fee Name</th>
+              <th class="col-level">Level</th>
+              <th class="col-account">Account</th>
+              <th class="col-property">Property</th>
+              <th class="col-status">Status</th>
+              <th class="col-suggested">Suggested Mapping</th>
+              <th class="col-map">Map to</th>
+              <th class="col-applies">Applies to</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="fee-rows"></tbody>
+        </table>
+      </div>
+
+      <footer class="pagination">
+        <div class="pagination-left">
+          <input type="text" class="page-input" value="1" aria-label="Current page" />
+          <span class="page-total">/ 100</span>
+          <button type="button" class="page-arrow" aria-label="Previous page">
+            <img src="assets/fee-mapping/icon-chevron-left.svg" alt="" width="24" height="24" />
+          </button>
+          <button type="button" class="page-arrow" aria-label="Next page">
+            <img src="assets/fee-mapping/icon-chevron-right.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+        <div class="pagination-right">
+          <span>Rows per page</span>
+          <button type="button" class="rows-select" aria-haspopup="listbox" aria-expanded="false">
+            <span>50</span>
+            <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <div class="filter-menu" id="filter-menu" hidden></div>
+    <div class="combo-menu" id="combo-menu" hidden role="listbox"></div>
+    <div class="property-tooltip" id="property-tooltip" role="tooltip" hidden></div>
+    <div class="suggested-tooltip" id="suggested-tooltip" role="tooltip" hidden></div>
+
+    <div class="bulk-bar" id="bulk-bar" hidden>
+      <span class="bulk-count"><span id="selected-count">0</span> Selected</span>
+      <span class="bulk-divider" aria-hidden="true"></span>
+      <button type="button" class="bulk-map" id="bulk-map" aria-haspopup="listbox" aria-expanded="false">
+        <span>Map to: <strong>Choose Value</strong></span>
+        <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
+      </button>
+      <ul class="bulk-menu" id="bulk-menu" role="listbox" hidden></ul>
+      <button type="button" class="btn-primary btn-primary--sm" id="bulk-save">Save</button>
+      <span class="bulk-divider" aria-hidden="true"></span>
+      <button type="button" class="bulk-close" id="bulk-close" aria-label="Clear selection">
+        <img src="assets/fee-mapping/icon-close.svg" alt="" width="24" height="24" />
+      </button>
+    </div>
+
+    <script src="fee-mapping.js"></script>
+  </body>
+</html>
