@@ -596,7 +596,13 @@ const comboMenu = document.getElementById("combo-menu");
 const propertyTooltip = document.getElementById("property-tooltip");
 const suggestedTooltip = document.getElementById("suggested-tooltip");
 const pageTotal = document.querySelector(".page-total");
+const tableWrap = document.querySelector(".table-wrap");
 const TOOLTIP_SELECTOR = ".property-cell[data-tooltip], .suggested-card[data-tooltip]";
+
+function syncTableScrollEdge() {
+  if (!tableWrap) return;
+  tableWrap.classList.toggle("is-scrolled", tableWrap.scrollLeft > 0);
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -1168,6 +1174,7 @@ function render() {
   updateBulkBar();
   updateUnsaved();
   updatePagination();
+  syncTableScrollEdge();
   if (state.openCombo) {
     const { kind, rowId } = state.openCombo;
     const row = rowById(rowId);
@@ -1656,6 +1663,7 @@ document.addEventListener("keydown", (event) => {
 window.addEventListener("resize", () => {
   if (state.openFilter) closeFilterMenu();
   if (state.openCombo) closeComboMenu();
+  syncTableScrollEdge();
 });
 
 window.addEventListener(
@@ -1667,5 +1675,10 @@ window.addEventListener(
   },
   true
 );
+
+if (tableWrap) {
+  tableWrap.addEventListener("scroll", syncTableScrollEdge, { passive: true });
+  syncTableScrollEdge();
+}
 
 render();

@@ -544,7 +544,8 @@ img {
 .fee-table {
   width: 100%;
   min-width: 1520px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
 }
 
@@ -593,6 +594,51 @@ img {
 
 .col-fee {
   width: 214px;
+}
+
+/* Sticky select + Fee Name columns (horizontal scroll) */
+.fee-table .col-check,
+.fee-table .col-fee {
+  position: sticky;
+}
+
+.fee-table .col-check {
+  left: 0;
+  z-index: 1;
+}
+
+.fee-table .col-fee {
+  left: 56px;
+  z-index: 2;
+}
+
+.table-wrap.is-scrolled .fee-table .col-fee {
+  box-shadow: 2px 0 0 var(--border);
+}
+
+.fee-table thead .col-check,
+.fee-table thead .col-fee {
+  z-index: 3;
+  background: var(--surface-alt);
+}
+
+.fee-table thead .col-fee {
+  z-index: 4;
+}
+
+.fee-table tbody .col-check,
+.fee-table tbody .col-fee {
+  background: var(--surface);
+}
+
+.fee-table tbody tr:nth-child(even) .col-check,
+.fee-table tbody tr:nth-child(even) .col-fee {
+  background: var(--surface-subtle);
+}
+
+.fee-table tbody tr.is-selected .col-check,
+.fee-table tbody tr.is-selected .col-fee {
+  background: #f0fdf4;
 }
 
 .col-account,
