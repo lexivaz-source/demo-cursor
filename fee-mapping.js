@@ -590,6 +590,8 @@ const bulkSave = document.getElementById("bulk-save");
 const bulkClose = document.getElementById("bulk-close");
 const unsavedNotice = document.getElementById("unsaved-notice");
 const unsavedCount = document.getElementById("unsaved-count");
+const useAllSuggested = document.getElementById("use-all-suggested");
+const saveMapping = document.getElementById("save-mapping");
 const tableSearch = document.getElementById("table-search");
 const filterMenu = document.getElementById("filter-menu");
 const comboMenu = document.getElementById("combo-menu");
@@ -745,19 +747,26 @@ function propertyDisplay(row) {
   };
 }
 
+function hasSuggestion(row) {
+  return Boolean(row.suggestion) && row.confidence != null;
+}
+
 function renderSuggested(row) {
-  if (!row.suggestion || row.confidence == null) {
-    return `<button type="button" class="suggested-card is-empty" disabled aria-label="No suggestion">-</button>`;
+  if (!hasSuggestion(row)) {
+    return `<span class="suggested-empty">-</span>`;
   }
 
   const active =
     state.suggestedActive.has(row.id) || mappingOf(row) === row.suggestion ? " is-active" : "";
   const pct = `${Math.round(row.confidence * 100)}%`;
   return `
-    <button type="button" class="suggested-card${active}" data-action="suggest" data-id="${row.id}" data-tooltip="Use this suggested mapping" aria-pressed="${Boolean(active)}" aria-describedby="suggested-tooltip">
-      <span class="suggested-title">${escapeHtml(row.suggestion)}</span>
-      <span class="suggested-pct">${escapeHtml(pct)}</span>
-    </button>
+    <div class="suggested-cell">
+      <button type="button" class="suggested-card${active}" data-action="suggest" data-id="${row.id}" data-tooltip="Use this suggested mapping" aria-pressed="${Boolean(active)}" aria-describedby="suggested-tooltip">
+        <span class="suggested-title">${escapeHtml(row.suggestion)}</span>
+        <span class="suggested-pct">${escapeHtml(pct)}</span>
+      </button>
+      <img class="suggested-arrow" src="assets/fee-mapping/icon-sync-alt.svg" alt="" width="24" height="24" />
+    </div>
   `;
 }
 
@@ -785,19 +794,6 @@ function renderAppliesSelect(row) {
       <span>${escapeHtml(label)}</span>
       <img src="assets/fee-mapping/icon-dropdown.svg" alt="" width="24" height="24" />
     </button>
-  `;
-}
-
-function renderActions(row) {
-  return `
-    <div class="row-actions">
-      <button type="button" class="action-btn action-btn--accept" data-action="accept" data-id="${row.id}" aria-label="Accept mapping for ${escapeHtml(row.raw)}">
-        <img src="assets/fee-mapping/icon-check.svg" alt="" width="20" height="20" />
-      </button>
-      <button type="button" class="action-btn action-btn--reject" data-action="reject" data-id="${row.id}" aria-label="Clear mapping for ${escapeHtml(row.raw)}">
-        <img src="assets/fee-mapping/icon-close-action.svg" alt="" width="20" height="20" />
-      </button>
-    </div>
   `;
 }
 
@@ -845,7 +841,6 @@ function renderRow(row) {
       <td class="col-suggested">${renderSuggested(row)}</td>
       <td class="col-map">${renderMapSelect(row)}</td>
       <td class="col-applies">${renderAppliesSelect(row)}</td>
-      <td class="col-actions">${renderActions(row)}</td>
     </tr>
   `;
 }
@@ -1114,6 +1109,8 @@ function updateUnsaved() {
   const dirty = Object.keys(state.overrides).length;
   unsavedCount.textContent = String(dirty);
   unsavedNotice.hidden = dirty === 0;
+  saveMapping.disabled = dirty === 0;
+  saveMapping.setAttribute("aria-disabled", String(dirty === 0));
 }
 
 function updateBulkMenuOptions() {
@@ -1167,12 +1164,13 @@ function render() {
   const rows = visibleRows();
   tbody.innerHTML =
     rows.length === 0
-      ? `<tr><td colspan="10" class="empty-row">No values match this filter.</td></tr>`
+      ? `<tr><td colspan="9" class="empty-row">No values match this filter.</td></tr>`
       : rows.map(renderRow).join("");
   updateMetrics();
   updateFilterChips();
   updateBulkBar();
   updateUnsaved();
+  updateUseAllSuggestedButton();
   updatePagination();
   syncTableScrollEdge();
   if (state.openCombo) {
@@ -1212,6 +1210,85 @@ function applySuggestion(rowId) {
   if (!row || !row.suggestion) return;
   state.suggestedActive.add(rowId);
   state.overrides[rowId] = row.suggestion;
+  render();
+}
+
+/** Visible rows that have a suggestion to apply. */
+function eligibleSuggestedRows() {
+  return visibleRows().filter(hasSuggestion);
+}
+
+/**
+ * True when every eligible visible row has its suggestion applied via
+ * suggestedActive + Map to matching the suggestion (the use-all / card path).
+ */
+function allVisibleSuggestionsApplied() {
+  const eligible = eligibleSuggestedRows();
+  if (eligible.length === 0) return false;
+  return eligible.every(
+    (row) => state.suggestedActive.has(row.id) && mappingOf(row) === row.suggestion
+  );
+}
+
+function useAllSuggestedMappings() {
+  let changed = false;
+  eligibleSuggestedRows().forEach((row) => {
+    state.suggestedActive.add(row.id);
+    state.overrides[row.id] = row.suggestion;
+    changed = true;
+  });
+  if (changed) render();
+}
+
+/**
+ * Undo suggestion applications on visible rows that were set via suggested cards /
+ * use-all: mapping equals suggestion and suggestedActive is set.
+ * Clears the override key (reverts Map to to saved/null) and deselects the card.
+ * Does not touch rows mapped to the suggestion only via the Map to dropdown.
+ */
+function removeAllSuggestedMappings() {
+  let changed = false;
+  visibleRows().forEach((row) => {
+    if (!hasSuggestion(row)) return;
+    if (!state.suggestedActive.has(row.id)) return;
+    if (mappingOf(row) !== row.suggestion) return;
+
+    state.suggestedActive.delete(row.id);
+    if (
+      Object.prototype.hasOwnProperty.call(state.overrides, row.id) &&
+      state.overrides[row.id] === row.suggestion
+    ) {
+      delete state.overrides[row.id];
+    }
+    changed = true;
+  });
+  if (changed) render();
+}
+
+function updateUseAllSuggestedButton() {
+  if (!useAllSuggested) return;
+  const removeMode = allVisibleSuggestionsApplied();
+  useAllSuggested.classList.toggle("is-remove-mode", removeMode);
+  useAllSuggested.setAttribute("aria-pressed", String(removeMode));
+  if (removeMode) {
+    useAllSuggested.innerHTML = `
+      Remove All Suggested Mapping
+      <img src="assets/fee-mapping/icon-close.svg" alt="" width="20" height="20" />
+    `;
+  } else {
+    useAllSuggested.textContent = "Use All Suggested Mapping";
+  }
+}
+
+function commitAllMappings() {
+  const pendingIds = Object.keys(state.overrides);
+  if (pendingIds.length === 0) return;
+  pendingIds.forEach((rowId) => {
+    const value = state.overrides[rowId] || null;
+    state.saved[rowId] = value;
+    delete state.overrides[rowId];
+    syncSuggestedActive(rowId, value);
+  });
   render();
 }
 
@@ -1480,16 +1557,6 @@ tbody.addEventListener("click", (event) => {
   if (action === "applies") {
     event.stopPropagation();
     openComboMenu("applies", id, button);
-    return;
-  }
-
-  if (action === "accept") {
-    acceptRow(id);
-    return;
-  }
-
-  if (action === "reject") {
-    rejectRow(id);
   }
 });
 
@@ -1513,26 +1580,15 @@ comboMenu.addEventListener("click", (event) => {
   }
 });
 
-function acceptRow(rowId) {
-  const row = rowById(rowId);
-  if (!row) return;
-  let value = mappingOf(row);
-  if (!value && row.suggestion) {
-    value = row.suggestion;
-  }
-  state.saved[rowId] = value || null;
-  delete state.overrides[rowId];
-  syncSuggestedActive(rowId, value || null);
-  render();
-}
+useAllSuggested.addEventListener("click", () => {
+  if (allVisibleSuggestionsApplied()) removeAllSuggestedMappings();
+  else useAllSuggestedMappings();
+});
 
-function rejectRow(rowId) {
-  const row = rowById(rowId);
-  if (!row) return;
-  state.overrides[rowId] = null;
-  state.suggestedActive.delete(rowId);
-  render();
-}
+saveMapping.addEventListener("click", () => {
+  if (saveMapping.disabled) return;
+  commitAllMappings();
+});
 
 selectAll.addEventListener("change", () => {
   const visible = visibleRows();

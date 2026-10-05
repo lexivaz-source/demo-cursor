@@ -205,28 +205,62 @@ img {
   line-height: 44px;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 48px;
   padding: 0 24px;
-  border: 0;
   border-radius: 8px;
-  background: var(--green);
-  color: var(--text-inverse);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
+  white-space: nowrap;
 }
 
-.btn-primary--sm {
+.btn-primary {
+  border: 0;
+  background: var(--green);
+  color: var(--text-inverse);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.btn-primary--sm,
+.btn-secondary--sm {
   height: 36px;
-  padding: 0 20px;
+  padding: 0 12px;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   filter: brightness(0.96);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--canvas);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  background: #ededed;
+  color: #a3a3a3;
+  border-color: #ededed;
+  cursor: not-allowed;
+}
+
+#use-all-suggested {
+  gap: 8px;
+}
+
+#use-all-suggested img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .metrics {
@@ -305,17 +339,6 @@ img {
   font-size: 12px;
   line-height: 16px;
   color: var(--text-secondary);
-}
-
-.metric-add {
-  width: 43px;
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dashed var(--border-strong);
-  border-radius: 8px;
-  background: var(--canvas);
 }
 
 .toolbar {
@@ -655,45 +678,16 @@ img {
 }
 
 .col-suggested {
-  width: 240px;
+  width: 251px;
+}
+
+.fee-table td.col-suggested {
+  padding-right: 0;
 }
 
 .col-map,
 .col-applies {
   width: 220px;
-}
-
-.col-actions {
-  width: 120px;
-}
-
-.row-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background: transparent;
-  border-radius: 8px;
-}
-
-.action-btn--accept {
-  border: 1px solid #16a34a;
-}
-
-.action-btn--reject {
-  border: 1px solid #dc2626;
-}
-
-.action-btn:hover {
-  background: var(--canvas);
 }
 
 .fee-table td {
@@ -787,12 +781,21 @@ img {
   color: var(--text-error);
 }
 
+.suggested-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
 .suggested-card {
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: 100%;
-  max-width: 208px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 201px;
+  max-width: 201px;
   padding: 8px 12px;
   text-align: left;
   background: var(--surface);
@@ -800,14 +803,23 @@ img {
   border-radius: 12px;
 }
 
+.suggested-arrow {
+  flex-shrink: 0;
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 .suggested-card.is-active {
   background: var(--info-subtle);
   border-color: var(--text-brand);
 }
 
-.suggested-card.is-empty {
+.suggested-empty {
   color: var(--text);
-  cursor: default;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
 }
 
 .suggested-title {

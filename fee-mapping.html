@@ -15,9 +15,9 @@
     <header class="nav">
       <div class="nav-brand">
         <img src="assets/fee-mapping/logo.svg" alt="" width="24" height="44" />
-        <button type="button" class="product-switch" aria-label="Lead Management">
+        <button type="button" class="product-switch" aria-label="Central">
           <img src="assets/fee-mapping/icon-groups.svg" alt="" width="24" height="24" />
-          <span>Lead Management</span>
+          <span>Central</span>
           <img src="assets/fee-mapping/icon-chevron.svg" alt="" width="24" height="24" />
         </button>
       </div>
@@ -126,9 +126,6 @@
             <span>2 Unmapped</span>
           </p>
         </button>
-        <button type="button" class="metric-add" aria-label="Add metric">
-          <img src="assets/fee-mapping/icon-add.svg" alt="" width="25" height="25" />
-        </button>
       </section>
 
       <div class="toolbar">
@@ -155,6 +152,10 @@
           </button>
         </div>
         <div class="toolbar-actions">
+          <button type="button" class="btn-secondary btn-secondary--sm" id="use-all-suggested" aria-pressed="false">
+            Use All Suggested Mapping
+          </button>
+          <button type="button" class="btn-primary btn-primary--sm" id="save-mapping" disabled>Save Mapping</button>
           <label class="table-search">
             <img src="assets/fee-mapping/icon-search.svg" alt="" width="24" height="24" />
             <input type="search" id="table-search" placeholder="Search" aria-label="Search fees" />
@@ -185,7 +186,6 @@
               <th class="col-suggested">Suggested Mapping</th>
               <th class="col-map">Map to</th>
               <th class="col-applies">Applies to</th>
-              <th class="col-actions">Actions</th>
             </tr>
           </thead>
           <tbody id="fee-rows"></tbody>
