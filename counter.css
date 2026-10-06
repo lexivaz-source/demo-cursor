@@ -1,0 +1,253 @@
+.workspace {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 48px;
+  width: min(1240px, calc(100% - 2.5rem));
+}
+
+.canvas {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.panel {
+  position: sticky;
+  top: 24px;
+  flex: 0 0 320px;
+  width: 320px;
+  height: min(820px, calc(100vh - 48px));
+  overflow: hidden;
+  background: var(--white);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.tab-panels {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.page-body-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 460px;
+  background: linear-gradient(160deg, #1e2743 0%, #2d3a5c 100%);
+  color: #fff;
+}
+
+.block-wrap {
+  width: max-content;
+  max-width: 100%;
+  margin-top: 65px;
+  text-align: center;
+  box-sizing: border-box;
+  animation-duration: var(--anim-ms, 0.8s);
+}
+
+.block-wrap.has-parallax {
+  transform: translateY(-6px);
+}
+
+.quick-actions {
+  gap: 8px;
+}
+
+.counter-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  font-size: var(--counter-size, 90px);
+  font-weight: 600;
+  color: var(--counter-color, #ffffff);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: inherit;
+}
+
+.block-wrap[data-align="left"] {
+  text-align: left;
+}
+
+.block-wrap[data-align="center"] {
+  text-align: center;
+}
+
+.block-wrap[data-align="right"] {
+  text-align: right;
+}
+
+.counter-prefix,
+.counter-suffix {
+  font-size: 0.85em;
+}
+
+.counter-number {
+  min-width: 2ch;
+}
+
+.counter-number input {
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  width: 3.5ch;
+  text-align: center;
+  padding: 0 4px;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.counter-number input::-webkit-outer-spin-button,
+.counter-number input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.counter-number input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.inline-hint {
+  margin: 14px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font: var(--disclaimer);
+  letter-spacing: var(--disclaimer-tracking);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 282px;
+  margin: 0 auto;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  gap: 6px;
+}
+
+.chip-row button {
+  appearance: none;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-400);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  cursor: pointer;
+}
+
+.chip-row button.active {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.chip-row button.tune {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.advanced-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack);
+}
+
+.field[hidden],
+.inline-field[hidden],
+.advanced-body[hidden],
+.suffix-options[hidden],
+.prefix-options[hidden],
+#custom-padding-field[hidden],
+#custom-block-width-field[hidden] {
+  display: none !important;
+}
+
+.icon-bar.speed-bar button {
+  flex: 1;
+  width: auto;
+}
+
+/* Block tab Layer Position (overrides shared .layer-row list-row styles) */
+#panel-block .layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 282px;
+  height: 40px;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  grid-template-columns: unset;
+  column-gap: unset;
+}
+
+#panel-block .layer-row-label {
+  color: var(--ink-400);
+  font: var(--body);
+  letter-spacing: var(--body-tracking);
+}
+
+#panel-block .layer-field {
+  width: 110px;
+  margin: 0;
+}
+
+.suffix-options,
+.prefix-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack);
+}
+
+.setting-row[aria-expanded="true"] .icon-24 {
+  transform: rotate(90deg);
+}
+
+.setting-row .icon-24 {
+  transition: transform 0.15s ease;
+}
+
+/* Evenly distribute Text Alignment options (scoped; global .icon-bar stays fixed-gap) */
+#align-source.icon-bar {
+  gap: 6px;
+}
+
+#align-source.icon-bar button {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+}
+
+@media (max-width: 800px) {
+  .workspace {
+    width: min(1240px, calc(100% - 1.5rem));
+  }
+
+  .panel {
+    height: min(720px, calc(100vh - 48px));
+  }
+}

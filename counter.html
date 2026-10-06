@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter — Editor</title>
+    <meta
+      name="description"
+      content="Counter block editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="counter.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-mode="inline">Selected · inline edit</button>
+          <button type="button" class="chip" data-mode="quick">Selected · quick actions</button>
+          <button type="button" class="chip" data-mode="custom">Content · custom suffix</button>
+          <button type="button" class="chip" data-mode="design">Design</button>
+          <button type="button" class="chip" data-mode="block">Block</button>
+        </div>
+
+        <p class="canvas-kicker" id="canvas-kicker">Section canvas · Counter</p>
+
+        <article class="page-card" id="page-card">
+          <div class="page-body page-body-center">
+            <div class="block-wrap" id="block-wrap" data-align="center">
+              <div class="quick-actions" role="toolbar" aria-label="Counter quick actions" id="quick-actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24"><img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" aria-label="Clone">
+                  <span class="icon-24"><img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" aria-label="Delete">
+                  <span class="icon-24"><img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <div class="counter-display" id="counter-display">
+                <span class="counter-prefix" id="display-prefix"></span>
+                <span class="counter-number" id="number-slot">
+                  <input type="number" id="inline-input" value="620" aria-label="Final number" />
+                  <span id="static-number" hidden>620</span>
+                </span>
+                <span class="counter-suffix" id="display-suffix">+</span>
+              </div>
+              <p class="inline-hint" id="inline-hint">Click number to edit · Enter to save</p>
+            </div>
+          </div>
+        </article>
+
+        <p class="canvas-hint" id="canvas-hint">
+          Final number is editable inline when selected. Suffix and prefix use the same presets as Content.
+          Block matches Specials: Animation, Speed, Parallax, Width, Positioning, Padding, Layer Position.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main">
+          <header class="panel-header">
+            <h1>Counter</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-label="Block settings">
+            <button
+              class="tab active"
+              type="button"
+              role="tab"
+              id="tab-content"
+              aria-selected="true"
+              aria-controls="panel-content"
+            >
+              Content
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-design"
+              aria-selected="false"
+              aria-controls="panel-design"
+            >
+              Design
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-block"
+              aria-selected="false"
+              aria-controls="panel-block"
+            >
+              Block
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <!-- CONTENT -->
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="section-label">Animation</p>
+
+              <label class="field">
+                <span class="field-label">Start Number</span>
+                <input type="number" id="start-val" value="0" />
+              </label>
+
+              <label class="field">
+                <span class="field-label">Final Number</span>
+                <input type="number" id="end-val" value="620" />
+                <span class="field-help">Also editable inline on canvas when selected.</span>
+              </label>
+
+              <label class="field">
+                <span class="field-label">Animation Duration</span>
+                <input type="number" id="duration" value="3000" />
+                <span class="field-help">Duration in milliseconds</span>
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Formatting</p>
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch on"
+                  id="suffix-toggle"
+                  role="switch"
+                  aria-checked="true"
+                  aria-labelledby="suffix-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="suffix-label">Suffix</span>
+                </div>
+              </div>
+              <div class="suffix-options" id="suffix-options">
+                <div class="chip-row" id="suffix-grid" role="group" aria-label="Suffix preset">
+                  <button type="button" data-val="K">K</button>
+                  <button type="button" data-val="M">M</button>
+                  <button type="button" data-val="B">B</button>
+                  <button type="button" data-val="%">%</button>
+                  <button type="button" class="active" data-val="+">+</button>
+                  <button type="button" class="tune" data-val="custom" id="suffix-custom-btn" aria-label="Custom suffix">
+                    <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                  </button>
+                </div>
+                <label class="field" id="suffix-custom-field" hidden>
+                  <span class="field-label">Custom suffix</span>
+                  <input type="text" id="suffix-custom-input" value="k+" placeholder="e.g. bps, years" />
+                  <span class="field-help">~13% of production counters use a non-preset suffix.</span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="prefix-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="prefix-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="prefix-label">Prefix</span>
+                </div>
+              </div>
+              <div class="prefix-options" id="prefix-options" hidden>
+                <div class="chip-row" id="prefix-grid" role="group" aria-label="Prefix preset">
+                  <button type="button" data-val="$">$</button>
+                  <button type="button" data-val="+">+</button>
+                  <button type="button" class="tune" data-val="custom" id="prefix-custom-btn" aria-label="Custom prefix">
+                    <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                  </button>
+                </div>
+                <label class="field" id="prefix-custom-field" hidden>
+                  <span class="field-label">Custom prefix</span>
+                  <input type="text" id="prefix-custom-input" placeholder="e.g. ~" />
+                </label>
+              </div>
+
+              <button class="setting-row" type="button" id="advanced-toggle" aria-expanded="false" aria-controls="advanced-body">
+                <span>Advanced formatting</span>
+                <span class="icon-button" aria-hidden="true">
+                  <span class="icon-24"><img src="assets/icon-row-chevron.svg" alt="" width="24" height="24" /></span>
+                </span>
+              </button>
+              <div class="advanced-body" id="advanced-body" hidden>
+                <label class="field">
+                  <span class="field-label">Decimal Places</span>
+                  <input type="number" id="decimals" value="0" min="0" max="4" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Decimal character</span>
+                  <input type="text" id="decimal-char" value="." maxlength="1" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Thousands separator</span>
+                  <input type="text" id="separator" value="," maxlength="1" />
+                </label>
+              </div>
+            </div>
+
+            <!-- DESIGN -->
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Font Color</p>
+              <div class="color-card">
+                <button
+                  class="color-trigger"
+                  type="button"
+                  id="color-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-label="Font color"
+                >
+                  <span class="swatch" id="color-swatch" style="background: #ffffff"></span>
+                  <span class="color-name" id="color-name">White</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="color-menu" hidden role="listbox" aria-label="Font colors">
+                  <li>
+                    <button type="button" data-color="White" data-hex="#ffffff" aria-selected="true">
+                      <span class="swatch" style="background: #fff"></span>White
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-color="Primary" data-hex="#ff005a" aria-selected="false">
+                      <span class="swatch" style="background: #ff005a"></span>Primary
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-color="Secondary" data-hex="#1e2743" aria-selected="false">
+                      <span class="swatch" style="background: #1e2743"></span>Secondary
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" data-color="Custom" data-hex="#d2d2d2" aria-selected="false">
+                      <span class="swatch" style="background: #d2d2d2"></span>Custom
+                    </button>
+                  </li>
+                  <li class="color-menu-footer">
+                    <button type="button" class="color-site-styles">Edit Site Styles</button>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="field">
+                <span class="field-label" id="heading-label">Font Style</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="heading-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="heading-label heading-value"
+                >
+                  <span id="heading-value">H4</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="heading-menu" hidden role="listbox" aria-labelledby="heading-label">
+                  <li><button type="button" role="option" data-heading="" aria-selected="false">Default</button></li>
+                  <li><button type="button" role="option" data-heading="h1" aria-selected="false">H1</button></li>
+                  <li><button type="button" role="option" data-heading="h2" aria-selected="false">H2</button></li>
+                  <li><button type="button" role="option" data-heading="h3" aria-selected="false">H3</button></li>
+                  <li><button type="button" role="option" data-heading="h4" aria-selected="true">H4</button></li>
+                  <li><button type="button" role="option" data-heading="h5" aria-selected="false">H5</button></li>
+                  <li><button type="button" role="option" data-heading="h6" aria-selected="false">H6</button></li>
+                  <li><button type="button" role="option" data-heading="custom" aria-selected="false">Custom</button></li>
+                </ul>
+              </div>
+
+              <div class="inline-field" id="custom-font-size" hidden>
+                <span class="inline-field-label" id="font-size-label">Custom Font Size</span>
+                <div class="combo" role="group" aria-labelledby="font-size-label">
+                  <input type="text" inputmode="decimal" id="font-size" value="90" aria-label="Font size" />
+                  <button
+                    type="button"
+                    class="combo-unit"
+                    id="unit-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Font size unit"
+                  >
+                    <span id="unit-value">px</span>
+                    <span class="icon-24" aria-hidden="true">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <ul class="field-menu combo-menu" id="unit-menu" hidden role="listbox" aria-label="Font size units">
+                    <li><button type="button" role="option" data-unit="px" aria-selected="true">px</button></li>
+                    <li><button type="button" role="option" data-unit="rem" aria-selected="false">rem</button></li>
+                    <li><button type="button" role="option" data-unit="em" aria-selected="false">em</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Text Alignment</p>
+              <div class="icon-bar" id="align-source" role="group" aria-label="Text Alignment">
+                <button type="button" data-align="left" aria-label="Align left">
+                  <span class="icon-24"><img src="assets/icon-align-left.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="active" data-align="center" aria-label="Align center">
+                  <span class="icon-24"><img src="assets/icon-align-center.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" data-align="right" aria-label="Align right">
+                  <span class="icon-24"><img src="assets/icon-align-right.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- BLOCK -->
+            <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+              <p class="section-label">Animation</p>
+              <div class="field">
+                <span class="field-label" id="animation-label">Behavior</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="animation-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="animation-label animation-value"
+                >
+                  <span id="animation-value">None</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                  <li><button type="button" role="option" data-animation="" aria-selected="true">None</button></li>
+                  <li><button type="button" role="option" data-animation="slide-y" aria-selected="false">Slide From Bottom</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">Shrink</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">Zoom In</button></li>
+                  <li><button type="button" role="option" data-animation="zoom-out" aria-selected="false">Zoom Out</button></li>
+                </ul>
+              </div>
+
+              <p class="section-label">Speed</p>
+              <div class="icon-bar speed-bar" id="speed-source" role="group" aria-label="Speed">
+                <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
+                  <span class="icon-24"><img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" data-speed="fast" aria-label="Fast speed">
+                  <span class="icon-24"><img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="parallax-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="parallax-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="parallax-label">Parallax</span>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Width</p>
+              <div class="segmented has-tune" id="block-width-source" role="group" aria-label="Width">
+                <button type="button" data-block-width="50">50%</button>
+                <button type="button" data-block-width="75">75%</button>
+                <button type="button" class="active" data-block-width="100">100%</button>
+                <button type="button" class="tune" id="block-width-tune" aria-label="Custom width">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-block-width-field" hidden>
+                <span class="field-label">Width</span>
+                <input type="number" id="custom-block-width" value="100" min="10" max="100" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Positioning</p>
+              <div class="field">
+                <span class="field-label" id="positioning-label">Position</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="positioning-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="positioning-label positioning-value"
+                >
+                  <span id="positioning-value">Default</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="positioning-menu" hidden role="listbox" aria-labelledby="positioning-label">
+                  <li><button type="button" role="option" data-position="default" aria-selected="true">Default</button></li>
+                  <li><button type="button" role="option" data-position="absolute" aria-selected="false">Absolute</button></li>
+                  <li><button type="button" role="option" data-position="fixed" aria-selected="false">Fixed</button></li>
+                  <li><button type="button" role="option" data-position="relative" aria-selected="false">Relative</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" data-pad="0">—</button>
+                <button type="button" class="active" data-pad="8">S</button>
+                <button type="button" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="8" min="0" max="80" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <div class="layer-row">
+                <span class="layer-row-label" id="layer-pos-label">Layer Position</span>
+                <label class="field layer-field">
+                  <span class="sr-only">Layer</span>
+                  <input type="number" id="layer-pos" value="1" min="0" aria-labelledby="layer-pos-label" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <script src="counter.js"></script>
+  </body>
+</html>
