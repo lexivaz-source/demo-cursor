@@ -1,0 +1,673 @@
+const pageCard = document.querySelector("#page-card");
+const blockWrap = document.querySelector("#block-wrap");
+const mapArt = document.querySelector("#map-art");
+const mainPin = document.querySelector("#main-pin");
+const coordsWarn = document.querySelector("#coords-warn");
+const locProperty = document.querySelector("#loc-property");
+const locCoordinates = document.querySelector("#loc-coordinates");
+const offsetFields = document.querySelector("#offset-fields");
+const customPinField = document.querySelector("#custom-pin-field");
+const customStyle = document.querySelector("#custom-style");
+const customPaddingField = document.querySelector("#custom-padding-field");
+const customPadding = document.querySelector("#custom-padding");
+const animationValue = document.querySelector("#animation-value");
+const extraLocations = document.querySelector("#extra-locations");
+const addLocationBtn = document.querySelector("#add-location");
+const parentShell = document.querySelector("#parent-shell");
+const locationShell = document.querySelector("#location-shell");
+const locationBack = document.querySelector("#location-back");
+const locationLayerTitle = document.querySelector("#location-layer-title");
+const locEditName = document.querySelector("#loc-edit-name");
+const locEditAddr = document.querySelector("#loc-edit-addr");
+const locEditInfo = document.querySelector("#loc-edit-info");
+const locEditLink = document.querySelector("#loc-edit-link");
+const locEditPageFields = document.querySelector("#loc-edit-page-fields");
+const locEditTitle = document.querySelector("#loc-edit-title");
+const locEditSub = document.querySelector("#loc-edit-sub");
+const locEditPageValue = document.querySelector("#loc-edit-page-value");
+const floater = document.querySelector("#floater");
+const deviceBtn = document.querySelector("#device-btn");
+let extraCount = 0;
+let editingExtraId = null;
+const locations = new Map();
+const locValue = document.querySelector("#loc-value");
+const addressSearch = document.querySelector("#address-search");
+const addressSearchMenu = document.querySelector("#address-search-menu");
+const addressSearchBtn = document.querySelector("#address-search-btn");
+const latInput = document.querySelector("#lat");
+const lngInput = document.querySelector("#lng");
+const zoomInput = document.querySelector("#zoom");
+const zoomSlider = document.querySelector("#zoom-slider");
+
+const locLabels = {
+  property: "Use Property Location",
+  coordinates: "Set Custom Location",
+};
+
+const geocodeFallback = {
+  lat: "25.7617",
+  lng: "-80.1918",
+};
+
+const state = {
+  tab: "content",
+  loc: "property",
+  padding: 16,
+  animation: "fade",
+  zoom: 10,
+  hideExtras: true,
+  showInfo: false,
+  missing: false,
+};
+
+function closeMenus() {
+  document.querySelectorAll(".field-menu, .more-menu").forEach((menu) => {
+    menu.hidden = true;
+  });
+  document.querySelectorAll(".field-trigger, .more-trigger").forEach((trigger) => {
+    trigger.setAttribute("aria-expanded", "false");
+  });
+  if (addressSearch) addressSearch.setAttribute("aria-expanded", "false");
+}
+
+function fillCoordinates(lat, lng) {
+  if (latInput) latInput.value = lat;
+  if (lngInput) lngInput.value = lng;
+  state.missing = false;
+  applyCanvasFlags();
+}
+
+function pickAddressSuggestion(option) {
+  if (!option || !addressSearch) return;
+  addressSearch.value = option.textContent.trim();
+  fillCoordinates(option.dataset.lat || geocodeFallback.lat, option.dataset.lng || geocodeFallback.lng);
+  addressSearchMenu.querySelectorAll("button").forEach((item) => {
+    item.setAttribute("aria-selected", String(item === option));
+  });
+  closeMenus();
+}
+
+function filterAddressSuggestions(query) {
+  if (!addressSearchMenu) return;
+  const q = query.trim().toLowerCase();
+  let visible = 0;
+  addressSearchMenu.querySelectorAll("li").forEach((item) => {
+    const option = item.querySelector("button");
+    const match = !q || option.textContent.trim().toLowerCase().includes(q);
+    item.hidden = !match;
+    if (match) visible += 1;
+  });
+  if (visible > 0 && document.activeElement === addressSearch) {
+    addressSearchMenu.hidden = false;
+    addressSearch.setAttribute("aria-expanded", "true");
+  } else {
+    addressSearchMenu.hidden = true;
+    addressSearch.setAttribute("aria-expanded", "false");
+  }
+}
+
+function openMenu(trigger, menu) {
+  const wasOpen = !menu.hidden;
+  closeMenus();
+  if (wasOpen) return;
+  menu.hidden = false;
+  trigger.setAttribute("aria-expanded", "true");
+}
+
+function bindMenu(triggerId, menuId, onPick) {
+  const trigger = document.querySelector(`#${triggerId}`);
+  const menu = document.querySelector(`#${menuId}`);
+  if (!trigger || !menu) return;
+
+  trigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openMenu(trigger, menu);
+  });
+
+  menu.querySelectorAll("button").forEach((option) => {
+    option.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menu.querySelectorAll("button").forEach((item) => {
+        item.setAttribute("aria-selected", String(item === option));
+      });
+      const valueEl = trigger.querySelector("span:first-child");
+      if (valueEl) valueEl.textContent = option.textContent.trim();
+      closeMenus();
+      if (onPick) onPick(option);
+    });
+  });
+}
+
+function bindSwitch(el, onToggle) {
+  if (!el) return;
+  el.addEventListener("click", () => {
+    const next = el.getAttribute("aria-checked") !== "true";
+    el.classList.toggle("on", next);
+    el.setAttribute("aria-checked", String(next));
+    if (onToggle) onToggle(next);
+  });
+}
+
+function setTab(tab) {
+  closeMenus();
+  if (locationShell && !locationShell.hidden) {
+    closeLocationLayer();
+  }
+  state.tab = tab;
+  document.querySelectorAll(".tab[role='tab']").forEach((button) => {
+    const selected = button.id === `tab-${tab}`;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-selected", String(selected));
+  });
+  document.querySelectorAll(".tab-panel").forEach((panel) => {
+    panel.hidden = panel.id !== `panel-${tab}`;
+  });
+  const panels = document.querySelector(".tab-panels");
+  if (panels) panels.scrollTop = 0;
+}
+
+function setLoc(mode) {
+  state.loc = mode;
+  locProperty.hidden = mode !== "property";
+  locCoordinates.hidden = mode !== "coordinates";
+  if (locValue) locValue.textContent = locLabels[mode] || locLabels.property;
+  document.querySelectorAll("#loc-menu button").forEach((button) => {
+    button.setAttribute("aria-selected", String(button.dataset.loc === mode));
+  });
+}
+
+function applyCanvasFlags() {
+  pageCard.classList.toggle("hide-extras", state.hideExtras);
+  pageCard.classList.toggle("show-info", state.showInfo && !state.hideExtras);
+  pageCard.classList.toggle("missing", state.missing);
+  coordsWarn.hidden = !state.missing;
+}
+
+function setState(name) {
+  closeMenus();
+  document.querySelectorAll(".chip[data-state]").forEach((chip) => {
+    chip.classList.toggle("active", chip.dataset.state === name);
+  });
+  document.querySelectorAll(".chip[data-tab-only]").forEach((chip) => {
+    chip.classList.remove("active");
+  });
+
+  state.missing = false;
+  state.hideExtras = true;
+  state.showInfo = false;
+
+  if (name === "property") {
+    setLoc("property");
+    setTab("content");
+  }
+  if (name === "coordinates") {
+    setLoc("coordinates");
+    setTab("content");
+  }
+  if (name === "missing") {
+    setLoc("coordinates");
+    state.missing = true;
+    setTab("content");
+  }
+  if (name === "extras") {
+    closeLocationLayer();
+    ensureDemoExtraLocation();
+    state.hideExtras = false;
+    const first = locations.values().next().value;
+    state.showInfo = first ? first.info : true;
+    setTab("content");
+  }
+  applyCanvasFlags();
+}
+
+function setLocationLayer(open) {
+  closeMenus();
+  if (parentShell) {
+    parentShell.hidden = open;
+    parentShell.setAttribute("aria-hidden", String(open));
+  }
+  if (locationShell) {
+    locationShell.hidden = !open;
+    locationShell.setAttribute("aria-hidden", String(!open));
+  }
+  if (floater) {
+    floater.setAttribute("aria-label", open ? "Add Location" : "Block settings");
+  }
+  if (open) {
+    locationBack?.focus();
+  }
+}
+
+function locationDisplayName(data = {}) {
+  return data.name?.trim() || data.title?.trim() || "Untitled location";
+}
+
+function setLinkToPage(on) {
+  if (locEditLink) {
+    locEditLink.classList.toggle("on", on);
+    locEditLink.setAttribute("aria-checked", String(on));
+  }
+  if (locEditPageFields) locEditPageFields.hidden = !on;
+}
+
+function readLocationForm() {
+  const pageMenu = document.querySelector("#loc-edit-page-menu");
+  const selected = pageMenu?.querySelector('button[aria-selected="true"]');
+  const linkToPage = locEditLink?.classList.contains("on") ?? false;
+  return {
+    name: locEditName?.value.trim() || "",
+    title: locEditTitle?.value.trim() || "",
+    address: locEditAddr?.value.trim() || "",
+    subtitle: locEditSub?.value.trim() || "",
+    linkToPage,
+    page: selected?.textContent.trim() || locEditPageValue?.textContent.trim() || "Contact",
+    info: locEditInfo?.classList.contains("on") ?? true,
+  };
+}
+
+function writeLocationForm(data = {}) {
+  if (locEditName) locEditName.value = data.name || "";
+  if (locEditAddr) locEditAddr.value = data.address || "";
+  if (locEditTitle) locEditTitle.value = data.title || "";
+  if (locEditSub) locEditSub.value = data.subtitle || "";
+  const page = data.page || data.screen || "Contact";
+  if (locEditPageValue) locEditPageValue.textContent = page;
+  const pageMenu = document.querySelector("#loc-edit-page-menu");
+  pageMenu?.querySelectorAll("button").forEach((option) => {
+    option.setAttribute("aria-selected", String(option.textContent.trim() === page));
+  });
+  if (locEditInfo) {
+    const on = data.info !== false;
+    locEditInfo.classList.toggle("on", on);
+    locEditInfo.setAttribute("aria-checked", String(on));
+  }
+  const linkOn =
+    data.linkToPage === true ||
+    (data.linkToPage == null && Boolean(data.page || (data.screen && data.screen !== "None")));
+  setLinkToPage(Boolean(linkOn));
+}
+
+function removeLocation(id) {
+  locations.delete(id);
+  const row = extraLocations?.querySelector(`[data-extra-id="${id}"]`);
+  row?.remove();
+  if (editingExtraId === id) {
+    editingExtraId = null;
+    setLocationLayer(false);
+  }
+  state.hideExtras = locations.size === 0;
+  const first = locations.values().next().value;
+  state.showInfo = first ? first.info : false;
+  applyCanvasFlags();
+}
+
+function upsertLocationRow(id, title) {
+  if (!extraLocations) return;
+  let row = extraLocations.querySelector(`[data-extra-id="${id}"]`);
+  if (!row) {
+    row = document.createElement("div");
+    row.className = "layer-row";
+    row.dataset.extraId = String(id);
+    row.innerHTML = `
+      <span class="layer-row-label" data-ex-label></span>
+      <div class="more-wrap">
+        <button type="button" class="icon-button more-trigger" aria-label="More actions" aria-haspopup="menu" aria-expanded="false">
+          <span class="icon-24" aria-hidden="true">
+            <img src="assets/icon-more.svg" alt="" width="24" height="24" />
+          </span>
+        </button>
+        <ul class="more-menu" hidden role="menu">
+          <li><button type="button" role="menuitem" data-action="edit">Edit</button></li>
+          <li><button type="button" role="menuitem" data-action="remove" class="is-danger">Remove</button></li>
+        </ul>
+      </div>
+    `;
+    const moreTrigger = row.querySelector(".more-trigger");
+    const moreMenu = row.querySelector(".more-menu");
+    moreTrigger.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const wasOpen = !moreMenu.hidden;
+      closeMenus();
+      if (wasOpen) return;
+      moreMenu.hidden = false;
+      moreTrigger.setAttribute("aria-expanded", "true");
+    });
+    moreMenu.addEventListener("click", (event) => event.stopPropagation());
+    moreMenu.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        closeMenus();
+        if (button.dataset.action === "edit") openLocationLayer(id);
+        if (button.dataset.action === "remove") removeLocation(id);
+      });
+    });
+    extraLocations.appendChild(row);
+  }
+  const label = row.querySelector("[data-ex-label]");
+  if (label) label.textContent = title;
+}
+
+const locationSave = document.querySelector("#location-save");
+
+function openLocationLayer(id = null) {
+  editingExtraId = id;
+  const existing = id != null ? locations.get(id) : null;
+  if (existing) {
+    if (locationLayerTitle) locationLayerTitle.textContent = locationDisplayName(existing);
+    if (locationSave) locationSave.textContent = "Add Location";
+    writeLocationForm(existing);
+  } else {
+    if (locationLayerTitle) locationLayerTitle.textContent = "Add Location";
+    if (locationSave) locationSave.textContent = "Add Location";
+    writeLocationForm({
+      name: "",
+      title: "",
+      address: "",
+      subtitle: "",
+      linkToPage: false,
+      page: "Contact",
+      info: true,
+    });
+  }
+  state.hideExtras = false;
+  state.showInfo = existing ? existing.info : true;
+  applyCanvasFlags();
+  setLocationLayer(true);
+}
+
+function dismissLocationLayer() {
+  if (!locationShell || locationShell.hidden) {
+    editingExtraId = null;
+    return;
+  }
+  state.hideExtras = locations.size === 0;
+  const first = locations.values().next().value;
+  state.showInfo = first ? first.info : false;
+  applyCanvasFlags();
+  editingExtraId = null;
+  setLocationLayer(false);
+}
+
+function closeLocationLayer() {
+  if (!locationShell || locationShell.hidden) {
+    editingExtraId = null;
+    return;
+  }
+  const data = readLocationForm();
+  let id = editingExtraId;
+  if (id == null) {
+    extraCount += 1;
+    id = extraCount;
+  }
+  locations.set(id, data);
+  upsertLocationRow(id, locationDisplayName(data));
+  state.hideExtras = locations.size === 0;
+  state.showInfo = data.info;
+  applyCanvasFlags();
+  editingExtraId = null;
+  setLocationLayer(false);
+}
+
+function ensureDemoExtraLocation() {
+  if (locations.size > 0) return;
+  extraCount += 1;
+  const id = extraCount;
+  locations.set(id, {
+    name: "Leasing office",
+    title: "Leasing office",
+    address: "1200 Market St",
+    subtitle: "Mon–Fri 9–5",
+    linkToPage: true,
+    page: "Contact",
+    info: true,
+  });
+  upsertLocationRow(id, "Leasing office");
+}
+
+function applyPadding(value) {
+  state.padding = Number(value) || 0;
+  blockWrap.style.padding = `${state.padding}px`;
+}
+
+function applyAnimation(name) {
+  state.animation = name || "";
+  blockWrap.dataset.animation = state.animation;
+  if (!state.animation) return;
+  blockWrap.style.animation = "none";
+  void blockWrap.offsetWidth;
+  blockWrap.style.animation = "";
+}
+
+function clampZoom(value) {
+  const n = Number.parseInt(value, 10);
+  if (Number.isNaN(n)) return 10;
+  return Math.min(21, Math.max(1, n));
+}
+
+function setZoom(value) {
+  const zoom = clampZoom(value);
+  state.zoom = zoom;
+  if (zoomInput) zoomInput.value = String(zoom);
+  if (zoomSlider) {
+    zoomSlider.value = String(zoom);
+    zoomSlider.setAttribute("aria-valuenow", String(zoom));
+    const pct = ((zoom - 1) / (21 - 1)) * 100;
+    zoomSlider.style.setProperty("--zoom-pct", `${pct}%`);
+  }
+  if (mapArt) {
+    const scale = 0.85 + ((zoom - 1) / 20) * 0.35;
+    mapArt.style.transform = `scale(${scale.toFixed(3)})`;
+    mapArt.style.transformOrigin = "center center";
+  }
+}
+
+function runAddressSearch() {
+  if (!addressSearch) return;
+  const first = addressSearchMenu
+    ? [...addressSearchMenu.querySelectorAll("li:not([hidden]) button")][0]
+    : null;
+  if (first) {
+    pickAddressSuggestion(first);
+    return;
+  }
+  if (addressSearch.value.trim()) {
+    fillCoordinates(geocodeFallback.lat, geocodeFallback.lng);
+    closeMenus();
+    return;
+  }
+  filterAddressSuggestions(addressSearch.value);
+}
+
+function bindSegmented(groupId, datasetKey, onChange) {
+  const group = document.querySelector(`#${groupId}`);
+  if (!group) return;
+  group.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button || !button.dataset[datasetKey]) return;
+    group.querySelectorAll("button").forEach((item) => item.classList.remove("active"));
+    button.classList.add("active");
+    if (onChange) onChange(button.dataset[datasetKey], button);
+  });
+}
+
+bindMenu("loc-trigger", "loc-menu", (option) => {
+  setLoc(option.dataset.loc || "property");
+});
+bindMenu("lib-trigger", "lib-menu");
+bindMenu("animation-trigger", "animation-menu", (option) => {
+  animationValue.textContent = option.textContent.trim();
+  applyAnimation(option.dataset.animation || "");
+});
+
+if (addressSearch && addressSearchMenu) {
+  addressSearch.addEventListener("focus", (event) => {
+    event.stopPropagation();
+    filterAddressSuggestions(addressSearch.value);
+  });
+
+  addressSearch.addEventListener("click", (event) => {
+    event.stopPropagation();
+    filterAddressSuggestions(addressSearch.value);
+  });
+
+  addressSearch.addEventListener("input", () => {
+    filterAddressSuggestions(addressSearch.value);
+  });
+
+  addressSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenus();
+      return;
+    }
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    runAddressSearch();
+  });
+
+  addressSearchMenu.querySelectorAll("button").forEach((option) => {
+    option.addEventListener("click", (event) => {
+      event.stopPropagation();
+      pickAddressSuggestion(option);
+    });
+  });
+
+  if (addressSearchBtn) {
+    addressSearchBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      runAddressSearch();
+    });
+  }
+}
+
+if (zoomSlider) {
+  zoomSlider.addEventListener("input", () => setZoom(zoomSlider.value));
+}
+
+if (zoomInput) {
+  zoomInput.addEventListener("input", () => setZoom(zoomInput.value));
+  zoomInput.addEventListener("change", () => setZoom(zoomInput.value));
+}
+
+bindSegmented("pin-source", "pin", (pin) => {
+  customPinField.hidden = pin !== "custom";
+  mainPin.classList.toggle("circle", pin === "circle");
+});
+
+bindSegmented("style-source", "style", (style) => {
+  customStyle.hidden = style !== "custom";
+  mapArt.classList.toggle("silver", style === "silver");
+});
+
+bindSwitch(document.querySelector("#nudge-toggle"), (on) => {
+  offsetFields.hidden = !on;
+});
+
+bindSwitch(document.querySelector("#shadow-toggle"), (on) => {
+  document.documentElement.style.setProperty(
+    "--map-shadow",
+    on ? "0 8px 24px rgba(30, 39, 67, 0.18)" : "none"
+  );
+});
+
+if (addLocationBtn) {
+  addLocationBtn.addEventListener("click", () => openLocationLayer(null));
+}
+
+if (locationBack) {
+  locationBack.addEventListener("click", () => dismissLocationLayer());
+}
+
+if (locationSave) {
+  locationSave.addEventListener("click", () => closeLocationLayer());
+}
+
+bindSwitch(locEditInfo, (on) => {
+  state.hideExtras = false;
+  state.showInfo = on;
+  applyCanvasFlags();
+});
+
+bindSwitch(locEditLink, (on) => {
+  setLinkToPage(on);
+});
+
+bindMenu("loc-edit-page-trigger", "loc-edit-page-menu");
+
+if (locEditName) {
+  locEditName.addEventListener("input", () => {
+    if (!locationLayerTitle) return;
+    const name = locEditName.value.trim();
+    if (editingExtraId == null && !name) {
+      locationLayerTitle.textContent = "Add Location";
+      return;
+    }
+    locationLayerTitle.textContent = name || "Location";
+  });
+}
+
+deviceBtn.addEventListener("click", () => {
+  const pressed = deviceBtn.getAttribute("aria-pressed") !== "true";
+  deviceBtn.setAttribute("aria-pressed", String(pressed));
+  deviceBtn.classList.toggle("active", pressed);
+});
+
+document.querySelectorAll(".tab[role='tab']").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const name = tab.id.replace("tab-", "");
+    setTab(name);
+    document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+    if (name === "content") {
+      document.querySelector(`.chip[data-state="${state.loc}"]`)?.classList.add("active");
+    } else {
+      document.querySelector(`.chip[data-tab-only="${name}"]`)?.classList.add("active");
+    }
+  });
+});
+
+document.querySelectorAll(".chip[data-state]").forEach((chip) => {
+  chip.addEventListener("click", () => setState(chip.dataset.state));
+});
+
+document.querySelectorAll(".chip[data-tab-only]").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".chip").forEach((item) => item.classList.remove("active"));
+    chip.classList.add("active");
+    setTab(chip.dataset.tabOnly);
+  });
+});
+
+document.querySelector("#padding-source").addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  const group = document.querySelector("#padding-source");
+  group.querySelectorAll("button").forEach((item) => item.classList.remove("active"));
+  button.classList.add("active");
+  if (button.classList.contains("tune")) {
+    customPaddingField.hidden = false;
+    applyPadding(customPadding.value);
+    return;
+  }
+  customPaddingField.hidden = true;
+  applyPadding(button.dataset.pad);
+});
+
+customPadding.addEventListener("input", () => applyPadding(customPadding.value));
+
+document.querySelector("#qa-edit").addEventListener("click", () => {
+  setTab(state.tab === "block" ? "content" : state.tab);
+});
+
+document.querySelector("#min-height").addEventListener("input", (event) => {
+  const value = event.target.value.trim() || "420px";
+  mapArt.style.height = value;
+});
+
+document.addEventListener("click", () => closeMenus());
+document.querySelectorAll(".field-menu").forEach((menu) => {
+  menu.addEventListener("click", (event) => event.stopPropagation());
+});
+
+applyPadding(16);
+applyAnimation("fade");
+setZoom(10);
+setState("property");

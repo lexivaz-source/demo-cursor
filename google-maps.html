@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Maps — Editor</title>
+    <meta
+      name="description"
+      content="Google Maps editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="google-maps.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-state="property">Content · Use Property Location</button>
+          <button type="button" class="chip" data-state="coordinates">Content · Set Custom Location</button>
+          <button type="button" class="chip" data-state="missing">Missing coordinates</button>
+          <button type="button" class="chip" data-state="extras">Add Locations</button>
+          <button type="button" class="chip" data-tab-only="design">Design</button>
+          <button type="button" class="chip" data-tab-only="block">Block</button>
+        </div>
+
+        <p class="canvas-kicker">Section canvas · Google Maps</p>
+
+        <article class="page-card hide-extras" id="page-card">
+          <div class="page-body page-body-center">
+            <div class="block-wrap" id="block-wrap">
+              <div class="quick-actions" role="toolbar" aria-label="Block quick actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Duplicate">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" id="qa-delete" aria-label="Delete">
+                  <span class="icon-24" aria-hidden="true">
+                    <img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+
+              <div class="map-art" id="map-art">
+                <div class="water" style="width: 28%; height: 22%; left: 8%; top: 12%"></div>
+                <div class="road" style="width: 100%; height: 10px; top: 46%; left: 0"></div>
+                <div class="road" style="width: 10px; height: 100%; left: 38%; top: 0"></div>
+                <div class="road" style="width: 70%; height: 8px; top: 68%; left: 20%"></div>
+                <div class="pin circle" id="main-pin" style="left: 52%; top: 48%" title="Main pin"></div>
+                <div class="pin extra" style="left: 64%; top: 36%" title="Leasing office"></div>
+                <div class="info" style="left: 66%; top: 8%">
+                  <strong>Leasing office</strong><br />1200 Market St
+                </div>
+                <div class="warn-canvas">
+                  <div class="warn-chip">
+                    Coordinates are empty — visitors would see a fallback map of New York, not this
+                    property.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint">
+          Standalone location map. Content is the pin and camera; Design is pin art and map style.
+          Block uses the shared Animation and Padding settings.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main" id="parent-shell">
+          <header class="panel-header">
+            <h1>Google Maps</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+            <button
+              class="tab active"
+              type="button"
+              role="tab"
+              id="tab-content"
+              aria-selected="true"
+              aria-controls="panel-content"
+            >
+              Content
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-design"
+              aria-selected="false"
+              aria-controls="panel-design"
+            >
+              Design
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-block"
+              aria-selected="false"
+              aria-controls="panel-block"
+            >
+              Block
+            </button>
+            <button
+              class="tab tab-icon"
+              type="button"
+              id="device-btn"
+              aria-pressed="false"
+              aria-label="Device overrides"
+            >
+              <span class="icon-28">
+                <img src="assets/icon-device.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="warn" id="coords-warn" hidden>
+                <strong>Map has no coordinates.</strong> Enter latitude and longitude, or switch to
+                Use Property Location. Do not leave this blank — the live map currently falls back to
+                New York City.
+              </p>
+
+              <p class="section-label">Set Pin Location</p>
+              <div class="field">
+                <span class="field-label" id="loc-label">Set main pin with</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="loc-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="loc-label loc-value"
+                >
+                  <span id="loc-value">Use Property Location</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="loc-menu" hidden role="listbox" aria-labelledby="loc-label">
+                  <li>
+                    <button type="button" role="option" data-loc="property" aria-selected="true">
+                      Use Property Location
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-loc="coordinates" aria-selected="false">
+                      Set Custom Location
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <div id="loc-property">
+                <div class="field">
+                  <span class="field-label" id="lib-label">Property address</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="lib-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="lib-label lib-value"
+                  >
+                    <span id="lib-value">100 Biscayne Blvd</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="lib-menu" hidden role="listbox" aria-labelledby="lib-label">
+                    <li>
+                      <button type="button" role="option" aria-selected="true">100 Biscayne Blvd</button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" aria-selected="false">Leasing office</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="nested" id="loc-coordinates" hidden>
+                <p class="section-label">Search for a location</p>
+                <div class="field field-search">
+                  <div class="field-input-wrap">
+                    <input
+                      type="text"
+                      id="address-search"
+                      placeholder="Search for an address"
+                      autocomplete="off"
+                      aria-label="Search for an address"
+                      aria-autocomplete="list"
+                      aria-controls="address-search-menu"
+                      aria-expanded="false"
+                    />
+                    <button type="button" class="icon-button field-trailing" id="address-search-btn" aria-label="Search">
+                      <span class="icon-24" aria-hidden="true">
+                        <img src="assets/icon-search.svg" alt="" width="24" height="24" />
+                      </span>
+                    </button>
+                  </div>
+                  <ul
+                    class="field-menu"
+                    id="address-search-menu"
+                    hidden
+                    role="listbox"
+                    aria-label="Address suggestions"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        role="option"
+                        data-lat="25.778"
+                        data-lng="-80.190"
+                        aria-selected="false"
+                      >
+                        100 Biscayne Blvd, Miami, FL
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        role="option"
+                        data-lat="25.7617"
+                        data-lng="-80.1918"
+                        aria-selected="false"
+                      >
+                        1200 Market St, Miami, FL
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        role="option"
+                        data-lat="40.7128"
+                        data-lng="-74.0060"
+                        aria-selected="false"
+                      >
+                        200 Broadway, New York, NY
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <label class="field">
+                  <span class="field-label">Latitude</span>
+                  <input type="text" id="lat" value="25.778" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Longitude</span>
+                  <input type="text" id="lng" value="-80.190" />
+                </label>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Map Zoom</p>
+              <p class="field-help field-help-wide">Adjust how closely the map is zoomed in.</p>
+              <div class="zoom-row">
+                <label class="zoom-slider-wrap" for="zoom-slider">
+                  <span class="sr-only">Map zoom</span>
+                  <input
+                    type="range"
+                    id="zoom-slider"
+                    min="1"
+                    max="21"
+                    value="10"
+                    step="1"
+                    aria-valuemin="1"
+                    aria-valuemax="21"
+                    aria-valuenow="10"
+                  />
+                </label>
+                <label class="field zoom-value-field">
+                  <span class="sr-only">Zoom value</span>
+                  <input type="number" id="zoom" value="10" min="1" max="21" />
+                </label>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="nudge-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="nudge-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="nudge-label">Nudge map center</span>
+                  <p class="hint">Shifts the camera without moving the pin.</p>
+                </div>
+              </div>
+
+              <div class="nested" id="offset-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Offset latitude</span>
+                  <input type="text" id="off-lat" value="0.01" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Offset longitude</span>
+                  <input type="text" id="off-lng" value="0" />
+                </label>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="section-block">
+                <p class="section-label">Add Locations</p>
+                <p class="field-help field-help-wide">Add more pin locations to the map.</p>
+              </div>
+              <div class="layer-list extra-locations" id="extra-locations"></div>
+              <button type="button" class="medium-button medium-button--leading" id="add-location">
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/icon-add.svg" alt="" width="24" height="24" />
+                </span>
+                Add Location
+              </button>
+            </div>
+
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Map pin</p>
+              <div class="segmented segmented-triple" id="pin-source" role="group" aria-label="Pin style">
+                <button type="button" data-pin="solid">Solid</button>
+                <button type="button" class="active" data-pin="circle">Pin with circle</button>
+                <button type="button" data-pin="custom">Custom</button>
+              </div>
+
+              <label class="field" id="custom-pin-field" hidden>
+                <span class="field-label">Custom pin</span>
+                <input type="text" value="[Choose image]" readonly />
+              </label>
+
+              <label class="field">
+                <span class="field-label">Pin width</span>
+                <input type="number" id="pin-w" value="60" min="16" max="200" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Map style</p>
+              <div class="segmented segmented-triple" id="style-source" role="group" aria-label="Map style">
+                <button type="button" class="active" data-style="default">Default</button>
+                <button type="button" data-style="silver">Silver</button>
+                <button type="button" data-style="custom">Custom</button>
+              </div>
+
+              <div class="nested" id="custom-style" hidden>
+                <label class="field">
+                  <span class="field-label">Custom style JSON</span>
+                  <textarea id="snazzy">[]</textarea>
+                  <span class="field-help">Paste a Snazzy Maps JavaScript style array.</span>
+                </label>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <label class="field">
+                <span class="field-label">Min height</span>
+                <input type="text" id="min-height" value="500px" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="shadow-toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="shadow-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="shadow-label">Box shadow</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+              <p class="section-label">Animation</p>
+              <div class="field">
+                <span class="field-label" id="animation-label">Behavior</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="animation-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="animation-label animation-value"
+                >
+                  <span id="animation-value">Fade</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul
+                  class="field-menu"
+                  id="animation-menu"
+                  hidden
+                  role="listbox"
+                  aria-labelledby="animation-label"
+                >
+                  <li>
+                    <button type="button" role="option" data-animation="" aria-selected="false">None</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="fade" aria-selected="true">Fade</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="slide-y" aria-selected="false">
+                      Slide From Bottom
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-in" aria-selected="false">
+                      Grow
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">
+                      Shrink
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">
+                      Zoom In
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-animation="zoom-out" aria-selected="false">
+                      Zoom Out
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" data-pad="0">—</button>
+                <button type="button" data-pad="8">S</button>
+                <button type="button" class="active" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24">
+                    <img src="assets/icon-tune.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="16" min="0" max="80" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-main nested-layer" id="location-shell" hidden>
+          <header class="layer-header">
+            <button type="button" class="medium-button" id="location-back" aria-label="Back to Google Maps">
+              <span class="icon-24" aria-hidden="true">
+                <img src="assets/icon-back.svg" alt="" width="24" height="24" />
+              </span>
+            </button>
+            <h2 class="layer-title" id="location-layer-title">Add Location</h2>
+          </header>
+          <div class="layer-body">
+            <p class="section-label">Location Information</p>
+            <label class="field">
+              <span class="field-label">Location name</span>
+              <input type="text" id="loc-edit-name" value="" />
+            </label>
+            <label class="field">
+              <span class="field-label">Address</span>
+              <input type="text" id="loc-edit-addr" value="" />
+            </label>
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch on"
+                id="loc-edit-info"
+                role="switch"
+                aria-checked="true"
+                aria-labelledby="loc-edit-info-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="loc-edit-info-label">Extra info (info window)</span>
+              </div>
+            </div>
+            <label class="field">
+              <span class="field-label">Title</span>
+              <input type="text" id="loc-edit-title" value="" />
+            </label>
+            <label class="field">
+              <span class="field-label">Subtitle</span>
+              <input type="text" id="loc-edit-sub" value="" />
+            </label>
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch"
+                id="loc-edit-link"
+                role="switch"
+                aria-checked="false"
+                aria-labelledby="loc-edit-link-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="loc-edit-link-label">Link to Page</span>
+              </div>
+            </div>
+            <div class="nested" id="loc-edit-page-fields" hidden>
+              <div class="field">
+                <span class="field-label" id="loc-edit-page-label">Page</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="loc-edit-page-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="loc-edit-page-label loc-edit-page-value"
+                >
+                  <span id="loc-edit-page-value">Contact</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul
+                  class="field-menu"
+                  id="loc-edit-page-menu"
+                  hidden
+                  role="listbox"
+                  aria-labelledby="loc-edit-page-label"
+                >
+                  <li>
+                    <button type="button" role="option" aria-selected="true">Contact</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" aria-selected="false">Amenities</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="layer-footer">
+            <button type="button" class="layer-cta" id="location-save">Add Location</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+    <script src="google-maps.js"></script>
+  </body>
+</html>
