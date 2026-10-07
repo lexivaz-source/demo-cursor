@@ -38,6 +38,8 @@ const latInput = document.querySelector("#lat");
 const lngInput = document.querySelector("#lng");
 const zoomInput = document.querySelector("#zoom");
 const zoomSlider = document.querySelector("#zoom-slider");
+const pinWInput = document.querySelector("#pin-w");
+const pinWSlider = document.querySelector("#pin-w-slider");
 
 const locLabels = {
   property: "Use Property Location",
@@ -49,11 +51,21 @@ const geocodeFallback = {
   lng: "-80.1918",
 };
 
+const customBlockWidthField = document.querySelector("#custom-block-width-field");
+const customBlockWidth = document.querySelector("#custom-block-width");
+const layerPos = document.querySelector("#layer-pos");
+const positioningValue = document.querySelector("#positioning-value");
+
 const state = {
   tab: "content",
   loc: "property",
   padding: 16,
   animation: "fade",
+  speed: "normal",
+  blockWidth: 100,
+  blockWidthCustom: false,
+  position: "default",
+  layer: 1,
   zoom: 10,
   hideExtras: true,
   showInfo: false,
@@ -61,12 +73,14 @@ const state = {
 };
 
 function closeMenus() {
-  document.querySelectorAll(".field-menu, .more-menu").forEach((menu) => {
+  document.querySelectorAll(".field-menu, .more-menu, .icon-card-menu").forEach((menu) => {
     menu.hidden = true;
   });
-  document.querySelectorAll(".field-trigger, .more-trigger").forEach((trigger) => {
-    trigger.setAttribute("aria-expanded", "false");
-  });
+  document
+    .querySelectorAll(".field-trigger, .more-trigger, .icon-card-trigger, .combo-unit")
+    .forEach((trigger) => {
+      trigger.setAttribute("aria-expanded", "false");
+    });
   if (addressSearch) addressSearch.setAttribute("aria-expanded", "false");
 }
 
@@ -429,13 +443,41 @@ function applyPadding(value) {
   blockWrap.style.padding = `${state.padding}px`;
 }
 
+function applyBlockWidth() {
+  if (!blockWrap) return;
+  blockWrap.style.width = `${state.blockWidth}%`;
+  blockWrap.style.maxWidth = "100%";
+}
+
+function applyPosition() {
+  if (!blockWrap) return;
+  blockWrap.style.position = state.position === "default" ? "" : state.position;
+}
+
+function applyLayer() {
+  if (!blockWrap) return;
+  blockWrap.style.zIndex = String(state.layer);
+}
+
 function applyAnimation(name) {
   state.animation = name || "";
+  blockWrap.style.setProperty("--anim-ms", state.speed === "fast" ? "0.35s" : "0.8s");
   blockWrap.dataset.animation = state.animation;
-  if (!state.animation) return;
+  if (!state.animation) {
+    blockWrap.style.animation = "none";
+    return;
+  }
   blockWrap.style.animation = "none";
   void blockWrap.offsetWidth;
   blockWrap.style.animation = "";
+}
+
+function setSpeed(speed) {
+  state.speed = speed || "normal";
+  document.querySelectorAll("#speed-source button").forEach((button) => {
+    button.classList.toggle("active", button.dataset.speed === state.speed);
+  });
+  applyAnimation(state.animation);
 }
 
 function clampZoom(value) {
@@ -499,6 +541,48 @@ bindMenu("animation-trigger", "animation-menu", (option) => {
   applyAnimation(option.dataset.animation || "");
 });
 
+bindMenu("positioning-trigger", "positioning-menu", (option) => {
+  state.position = option.dataset.position || "default";
+  if (positioningValue) positioningValue.textContent = option.textContent.trim();
+  applyPosition();
+});
+
+document.querySelectorAll("#speed-source button").forEach((button) => {
+  button.addEventListener("click", () => setSpeed(button.dataset.speed));
+});
+
+document.querySelector("#block-width-source")?.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  const group = document.querySelector("#block-width-source");
+  group.querySelectorAll("button").forEach((item) => item.classList.remove("active"));
+  button.classList.add("active");
+  if (button.classList.contains("tune")) {
+    state.blockWidthCustom = true;
+    if (customBlockWidthField) customBlockWidthField.hidden = false;
+    state.blockWidth = Number.parseFloat(customBlockWidth?.value) || 100;
+  } else {
+    state.blockWidthCustom = false;
+    if (customBlockWidthField) customBlockWidthField.hidden = true;
+    state.blockWidth = Number.parseFloat(button.dataset.blockWidth) || 100;
+  }
+  applyBlockWidth();
+});
+
+customBlockWidth?.addEventListener("input", () => {
+  const value = Number.parseFloat(customBlockWidth.value);
+  if (!Number.isFinite(value)) return;
+  state.blockWidth = value;
+  applyBlockWidth();
+});
+
+layerPos?.addEventListener("input", () => {
+  const value = Number.parseInt(layerPos.value, 10);
+  if (!Number.isFinite(value)) return;
+  state.layer = value;
+  applyLayer();
+});
+
 if (addressSearch && addressSearchMenu) {
   addressSearch.addEventListener("focus", (event) => {
     event.stopPropagation();
@@ -548,10 +632,76 @@ if (zoomInput) {
   zoomInput.addEventListener("change", () => setZoom(zoomInput.value));
 }
 
-bindSegmented("pin-source", "pin", (pin) => {
-  customPinField.hidden = pin !== "custom";
-  mainPin.classList.toggle("circle", pin === "circle");
-});
+function setPinStyle(pin) {
+  const preview = document.querySelector("#pin-preview");
+  const value = document.querySelector("#pin-value");
+  const labels = {
+    solid: "Solid",
+    circle: "Pin with circle",
+    custom: "Custom",
+  };
+  const next = pin || "circle";
+  if (preview) {
+    preview.classList.remove("solid", "circle", "custom");
+    preview.classList.add(next);
+  }
+  if (value) value.textContent = labels[next] || labels.circle;
+  document.querySelectorAll("#pin-menu button").forEach((button) => {
+    button.setAttribute("aria-selected", String(button.dataset.pin === next));
+  });
+  if (customPinField) customPinField.hidden = next !== "custom";
+  if (mainPin) mainPin.classList.toggle("circle", next === "circle");
+}
+
+function clampPinWidth(value) {
+  const n = Number.parseInt(value, 10);
+  if (Number.isNaN(n)) return 60;
+  return Math.min(200, Math.max(16, n));
+}
+
+function setPinWidth(value) {
+  const width = clampPinWidth(value);
+  if (pinWInput) pinWInput.value = String(width);
+  if (pinWSlider) {
+    pinWSlider.value = String(width);
+    pinWSlider.setAttribute("aria-valuenow", String(width));
+    const pct = ((width - 16) / (200 - 16)) * 100;
+    pinWSlider.style.setProperty("--zoom-pct", `${pct}%`);
+  }
+  if (mainPin) {
+    const px = Math.max(12, Math.round((width / 60) * 22));
+    mainPin.style.width = `${px}px`;
+    mainPin.style.height = `${px}px`;
+    mainPin.style.marginLeft = `${-px / 2}px`;
+    mainPin.style.marginTop = `${-px}px`;
+  }
+}
+
+const pinTrigger = document.querySelector("#pin-trigger");
+const pinMenu = document.querySelector("#pin-menu");
+if (pinTrigger && pinMenu) {
+  pinTrigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openMenu(pinTrigger, pinMenu);
+  });
+  pinMenu.querySelectorAll("button").forEach((option) => {
+    option.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setPinStyle(option.dataset.pin || "circle");
+      closeMenus();
+    });
+  });
+  pinMenu.addEventListener("click", (event) => event.stopPropagation());
+}
+
+if (pinWSlider) {
+  pinWSlider.addEventListener("input", () => setPinWidth(pinWSlider.value));
+}
+
+if (pinWInput) {
+  pinWInput.addEventListener("input", () => setPinWidth(pinWInput.value));
+  pinWInput.addEventListener("change", () => setPinWidth(pinWInput.value));
+}
 
 bindSegmented("style-source", "style", (style) => {
   customStyle.hidden = style !== "custom";
@@ -657,17 +807,55 @@ document.querySelector("#qa-edit").addEventListener("click", () => {
   setTab(state.tab === "block" ? "content" : state.tab);
 });
 
-document.querySelector("#min-height").addEventListener("input", (event) => {
-  const value = event.target.value.trim() || "420px";
-  mapArt.style.height = value;
-});
+const mapHeightInput = document.querySelector("#map-height");
+const mapHeightUnitValue = document.querySelector("#map-height-unit-value");
+const mapHeightUnitTrigger = document.querySelector("#map-height-unit-trigger");
+const mapHeightUnitMenu = document.querySelector("#map-height-unit-menu");
+
+function setMapHeight() {
+  if (!mapArt || !mapHeightInput) return;
+  const raw = mapHeightInput.value.trim();
+  const unit = mapHeightUnitValue?.textContent.trim() || "px";
+  const value = raw || (unit === "px" ? "500" : "100");
+  mapArt.style.height = `${value}${unit}`;
+}
+
+if (mapHeightInput) {
+  mapHeightInput.addEventListener("input", setMapHeight);
+  mapHeightInput.addEventListener("change", setMapHeight);
+}
+
+if (mapHeightUnitTrigger && mapHeightUnitMenu) {
+  mapHeightUnitTrigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openMenu(mapHeightUnitTrigger, mapHeightUnitMenu);
+  });
+  mapHeightUnitMenu.querySelectorAll("button").forEach((option) => {
+    option.addEventListener("click", (event) => {
+      event.stopPropagation();
+      mapHeightUnitMenu.querySelectorAll("button").forEach((item) => {
+        item.setAttribute("aria-selected", String(item === option));
+      });
+      if (mapHeightUnitValue) mapHeightUnitValue.textContent = option.dataset.unit || "px";
+      closeMenus();
+      setMapHeight();
+    });
+  });
+}
 
 document.addEventListener("click", () => closeMenus());
-document.querySelectorAll(".field-menu").forEach((menu) => {
+document.querySelectorAll(".field-menu, .icon-card-menu").forEach((menu) => {
   menu.addEventListener("click", (event) => event.stopPropagation());
 });
 
 applyPadding(16);
 applyAnimation("fade");
+setSpeed("normal");
+applyBlockWidth();
+applyPosition();
+applyLayer();
 setZoom(10);
+setPinStyle("circle");
+setPinWidth(60);
+setMapHeight();
 setState("property");

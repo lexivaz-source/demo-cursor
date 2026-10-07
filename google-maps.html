@@ -77,7 +77,7 @@
         </article>
         <p class="canvas-hint">
           Standalone location map. Content is the pin and camera; Design is pin art and map style.
-          Block uses the shared Animation and Padding settings.
+          Block uses Animation, Speed, Width, Positioning, Padding, and Layer Position (no Parallax).
         </p>
       </section>
 
@@ -341,11 +341,51 @@
             </div>
 
             <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
-              <p class="section-label">Map pin</p>
-              <div class="segmented segmented-triple" id="pin-source" role="group" aria-label="Pin style">
-                <button type="button" data-pin="solid">Solid</button>
-                <button type="button" class="active" data-pin="circle">Pin with circle</button>
-                <button type="button" data-pin="custom">Custom</button>
+              <p class="section-label">Pin Style</p>
+              <div class="icon-card" id="pin-style-field">
+                <button
+                  type="button"
+                  class="icon-card-trigger"
+                  id="pin-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="pin-style-label pin-value"
+                >
+                  <span class="icon-preview pin-preview circle" id="pin-preview" aria-hidden="true"></span>
+                  <span class="icon-card-name" id="pin-value">Pin with circle</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <span class="sr-only" id="pin-style-label">Pin Style</span>
+                <ul class="icon-card-menu" id="pin-menu" hidden role="listbox" aria-labelledby="pin-style-label">
+                  <li>
+                    <button type="button" role="option" data-pin="solid" data-label="Solid" aria-selected="false">
+                      <span class="icon-preview pin-preview solid" aria-hidden="true"></span>
+                      Solid
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      role="option"
+                      data-pin="circle"
+                      data-label="Pin with circle"
+                      aria-selected="true"
+                    >
+                      <span class="icon-preview pin-preview circle" aria-hidden="true"></span>
+                      Pin with circle
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-pin="custom" data-label="Custom" aria-selected="false">
+                      <span class="icon-preview pin-preview custom" aria-hidden="true"></span>
+                      Custom
+                    </button>
+                  </li>
+                </ul>
               </div>
 
               <label class="field" id="custom-pin-field" hidden>
@@ -353,10 +393,27 @@
                 <input type="text" value="[Choose image]" readonly />
               </label>
 
-              <label class="field">
-                <span class="field-label">Pin width</span>
-                <input type="number" id="pin-w" value="60" min="16" max="200" />
-              </label>
+              <p class="section-label">Pin width</p>
+              <div class="zoom-row">
+                <label class="zoom-slider-wrap" for="pin-w-slider">
+                  <span class="sr-only">Pin width</span>
+                  <input
+                    type="range"
+                    id="pin-w-slider"
+                    min="16"
+                    max="200"
+                    value="60"
+                    step="1"
+                    aria-valuemin="16"
+                    aria-valuemax="200"
+                    aria-valuenow="60"
+                  />
+                </label>
+                <label class="field zoom-value-field">
+                  <span class="sr-only">Pin width value</span>
+                  <input type="number" id="pin-w" value="60" min="16" max="200" />
+                </label>
+              </div>
 
               <hr class="panel-divider" />
 
@@ -377,10 +434,48 @@
 
               <hr class="panel-divider" />
 
-              <label class="field">
-                <span class="field-label">Min height</span>
-                <input type="text" id="min-height" value="500px" />
-              </label>
+              <div class="inline-field" id="map-height-field">
+                <span class="inline-field-label" id="map-height-label">Map Height</span>
+                <div class="combo" role="group" aria-labelledby="map-height-label">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    id="map-height"
+                    value="500"
+                    aria-label="Map height"
+                  />
+                  <button
+                    type="button"
+                    class="combo-unit"
+                    id="map-height-unit-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label="Map height unit"
+                  >
+                    <span id="map-height-unit-value">px</span>
+                    <span class="icon-24" aria-hidden="true">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <ul
+                    class="field-menu combo-menu"
+                    id="map-height-unit-menu"
+                    hidden
+                    role="listbox"
+                    aria-label="Map height units"
+                  >
+                    <li>
+                      <button type="button" role="option" data-unit="px" aria-selected="true">px</button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-unit="%" aria-selected="false">%</button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-unit="vh" aria-selected="false">vh</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
               <hr class="panel-divider" />
 
@@ -394,7 +489,7 @@
                   aria-labelledby="shadow-label"
                 ></button>
                 <div class="toggle-copy">
-                  <span id="shadow-label">Box shadow</span>
+                  <span id="shadow-label">Drop Shadow</span>
                 </div>
               </div>
             </div>
@@ -459,6 +554,88 @@
                 </ul>
               </div>
 
+              <p class="section-label">Speed</p>
+              <div class="icon-bar speed-bar" id="speed-source" role="group" aria-label="Speed">
+                <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
+                  <span class="icon-24">
+                    <img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+                <button type="button" data-speed="fast" aria-label="Fast speed">
+                  <span class="icon-24">
+                    <img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Width</p>
+              <div class="segmented has-tune" id="block-width-source" role="group" aria-label="Width">
+                <button type="button" data-block-width="50">50%</button>
+                <button type="button" data-block-width="75">75%</button>
+                <button type="button" class="active" data-block-width="100">100%</button>
+                <button type="button" class="tune" id="block-width-tune" aria-label="Custom width">
+                  <span class="icon-24">
+                    <img src="assets/icon-tune.svg" alt="" width="24" height="24" />
+                  </span>
+                </button>
+              </div>
+              <label class="field" id="custom-block-width-field" hidden>
+                <span class="field-label">Width</span>
+                <input type="number" id="custom-block-width" value="100" min="10" max="100" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Positioning</p>
+              <div class="field">
+                <span class="field-label" id="positioning-label">Position</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="positioning-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="positioning-label positioning-value"
+                >
+                  <span id="positioning-value">Default</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul
+                  class="field-menu"
+                  id="positioning-menu"
+                  hidden
+                  role="listbox"
+                  aria-labelledby="positioning-label"
+                >
+                  <li>
+                    <button type="button" role="option" data-position="default" aria-selected="true">
+                      Default
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="absolute" aria-selected="false">
+                      Absolute
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="fixed" aria-selected="false">
+                      Fixed
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-position="relative" aria-selected="false">
+                      Relative
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
               <hr class="panel-divider" />
 
               <p class="section-label">Padding</p>
@@ -477,6 +654,16 @@
                 <span class="field-label">Padding</span>
                 <input type="number" id="custom-padding" value="16" min="0" max="80" />
               </label>
+
+              <hr class="panel-divider" />
+
+              <div class="block-layer-row">
+                <span class="block-layer-label" id="layer-pos-label">Layer Position</span>
+                <label class="field layer-field">
+                  <span class="sr-only">Layer</span>
+                  <input type="number" id="layer-pos" value="1" min="0" aria-labelledby="layer-pos-label" />
+                </label>
+              </div>
             </div>
           </div>
         </div>

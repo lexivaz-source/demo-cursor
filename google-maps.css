@@ -79,21 +79,21 @@
 }
 
 .block-wrap[data-animation="fade"] {
-  animation: maps-fade 0.45s ease;
+  animation: maps-fade var(--anim-ms, 0.45s) ease;
 }
 
 .block-wrap[data-animation="slide-y"] {
-  animation: maps-slide 0.45s ease;
+  animation: maps-slide var(--anim-ms, 0.45s) ease;
 }
 
 .block-wrap[data-animation="zoom-in"],
 .block-wrap[data-animation="zoom-in-more"] {
-  animation: maps-grow 0.45s ease;
+  animation: maps-grow var(--anim-ms, 0.45s) ease;
 }
 
 .block-wrap[data-animation="zoom-out"],
 .block-wrap[data-animation="zoom-out-in"] {
-  animation: maps-shrink 0.45s ease;
+  animation: maps-shrink var(--anim-ms, 0.45s) ease;
 }
 
 @keyframes maps-fade {
@@ -287,8 +287,160 @@
 #custom-pin-field[hidden],
 #custom-style[hidden],
 #offset-fields[hidden],
-#custom-padding-field[hidden] {
+#custom-padding-field[hidden],
+#custom-block-width-field[hidden],
+.icon-card-menu[hidden] {
   display: none;
+}
+
+.icon-bar.speed-bar button {
+  flex: 1;
+  width: auto;
+}
+
+.block-layer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 282px;
+  height: 40px;
+  margin: 0 auto;
+}
+
+.block-layer-label {
+  color: var(--ink-400);
+  font: var(--body);
+  letter-spacing: var(--body-tracking);
+}
+
+.layer-field {
+  width: 110px;
+  margin: 0;
+}
+
+.icon-card {
+  position: relative;
+  width: 282px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 7px 12px 15px;
+  background: var(--white);
+}
+
+.icon-card:has(.icon-card-menu:not([hidden])) {
+  z-index: 8;
+}
+
+.icon-card-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--secondary-bg);
+}
+
+.icon-card-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: #000;
+  font: var(--body);
+  letter-spacing: var(--body-tracking);
+}
+
+.icon-card-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 6;
+  list-style: none;
+  width: 282px;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow:
+    0 3px 3px rgba(0, 0, 0, 0.1),
+    0 11px 5.5px rgba(0, 0, 0, 0.09),
+    0 24px 7px rgba(0, 0, 0, 0.05),
+    0 42px 8.5px rgba(0, 0, 0, 0.01);
+}
+
+.icon-card-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  text-align: left;
+  cursor: pointer;
+}
+
+.icon-card-menu button:hover,
+.icon-card-menu button[aria-selected="true"] {
+  background: #f0f0f0;
+}
+
+.pin-preview {
+  position: relative;
+}
+
+.pin-preview::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  background: #e53935;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pin-preview.circle::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -55%);
+  left: 50%;
+  top: 50%;
+}
+
+.pin-preview.custom {
+  display: none;
+}
+
+.icon-card-menu button:has(.pin-preview.custom) {
+  gap: 0;
 }
 
 .field-input-wrap {
@@ -399,6 +551,24 @@
 .zoom-value-field input {
   text-align: left;
   padding: 0 14px;
+}
+
+#map-height-field .inline-field-label {
+  color: var(--ink);
+}
+
+#map-height-field .combo {
+  width: 116px;
+}
+
+#map-height-field .combo-unit {
+  gap: 0;
+  padding-right: 8px;
+}
+
+#map-height-field .combo-unit .icon-24 {
+  width: 24px;
+  height: 24px;
 }
 
 .extra-locations {
