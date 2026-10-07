@@ -73,9 +73,13 @@
   width: min(720px, 100%);
   margin-top: 65px;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible;
   background: #e8eef2;
   box-shadow: var(--map-shadow, none);
+}
+
+.block-wrap .map-art {
+  border-radius: 10px;
 }
 
 .block-wrap[data-animation="fade"] {
@@ -164,6 +168,17 @@
   background: #c5d4e0;
   border-radius: 40px;
   opacity: 0.7;
+}
+
+.pin.custom-image {
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 0;
+  transform: none;
+  border: 0;
+  box-shadow: none;
 }
 
 .pin {
@@ -289,8 +304,216 @@
 #offset-fields[hidden],
 #custom-padding-field[hidden],
 #custom-block-width-field[hidden],
-.icon-card-menu[hidden] {
+#drop-shadow-fields[hidden],
+.icon-card-menu[hidden],
+.color-menu[hidden],
+.icon-dropzone-preview[hidden],
+.icon-dropzone-empty[hidden] {
   display: none;
+}
+
+.icon-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 282px;
+  margin: 0 auto;
+}
+
+.icon-upload-label {
+  margin: 0;
+  color: var(--ink);
+  font: var(--disclaimer);
+  letter-spacing: var(--disclaimer-tracking);
+}
+
+.icon-dropzone {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 282px;
+  height: 149px;
+  margin: 0;
+  padding: 16px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f0f0f0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.icon-dropzone:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.icon-dropzone-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.icon-dropzone-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  background: var(--line);
+}
+
+.icon-dropzone-title {
+  color: var(--ink-300);
+  font: var(--body);
+  letter-spacing: var(--body-tracking);
+}
+
+.icon-dropzone-meta {
+  color: var(--ink-300);
+  font: 400 10px/normal Lato, Helvetica, sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.icon-dropzone-preview {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: var(--white);
+  border: 1px solid var(--line);
+}
+
+.icon-dropzone-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.text-action {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: var(--button-text);
+  letter-spacing: var(--button-tracking);
+  cursor: pointer;
+}
+
+.text-action.is-danger {
+  color: var(--danger);
+}
+
+.shadow-block {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 282px;
+  margin: 0 auto;
+}
+
+.shadow-block .toggle-row {
+  width: 100%;
+  margin: 0;
+}
+
+.shadow-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.shadow-block .inline-field {
+  width: 100%;
+  margin: 0;
+}
+
+.shadow-block .inline-field-label {
+  font: var(--disclaimer);
+  letter-spacing: var(--disclaimer-tracking);
+}
+
+.shadow-block .color-card {
+  width: 100%;
+  margin: 0;
+}
+
+.shadow-opacity {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.shadow-opacity-field {
+  width: 92px;
+  margin: 0 0 0 auto;
+}
+
+.shadow-opacity-field input::-webkit-outer-spin-button,
+.shadow-opacity-field input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.shadow-opacity-field input {
+  appearance: textfield;
+}
+
+.shadow-num-field {
+  width: 116px;
+  margin: 0;
+}
+
+.shadow-slider {
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.shadow-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 100px;
+  background: var(--line);
+}
+
+.shadow-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.shadow-slider::-moz-range-track {
+  height: 4px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--line);
+}
+
+.shadow-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .icon-bar.speed-bar button {

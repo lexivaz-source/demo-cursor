@@ -70,14 +70,22 @@ const state = {
   hideExtras: true,
   showInfo: false,
   missing: false,
+  dropShadow: false,
+  shadowColor: { name: "Dark", hex: "#171d3a" },
+  shadowOpacity: 15,
+  shadowX: 0,
+  shadowY: 17,
+  shadowBlur: 25,
+  shadowSpread: 0,
+  customPinUrl: "",
 };
 
 function closeMenus() {
-  document.querySelectorAll(".field-menu, .more-menu, .icon-card-menu").forEach((menu) => {
+  document.querySelectorAll(".field-menu, .more-menu, .icon-card-menu, .color-menu").forEach((menu) => {
     menu.hidden = true;
   });
   document
-    .querySelectorAll(".field-trigger, .more-trigger, .icon-card-trigger, .combo-unit")
+    .querySelectorAll(".field-trigger, .more-trigger, .icon-card-trigger, .combo-unit, .color-trigger")
     .forEach((trigger) => {
       trigger.setAttribute("aria-expanded", "false");
     });
@@ -650,7 +658,16 @@ function setPinStyle(pin) {
     button.setAttribute("aria-selected", String(button.dataset.pin === next));
   });
   if (customPinField) customPinField.hidden = next !== "custom";
-  if (mainPin) mainPin.classList.toggle("circle", next === "circle");
+  if (mainPin) {
+    mainPin.classList.toggle("circle", next === "circle");
+    if (next === "custom" && state.customPinUrl) {
+      mainPin.classList.add("custom-image");
+      mainPin.style.backgroundImage = `url("${state.customPinUrl}")`;
+    } else if (next !== "custom") {
+      mainPin.classList.remove("custom-image");
+      mainPin.style.backgroundImage = "";
+    }
+  }
 }
 
 function clampPinWidth(value) {
@@ -712,12 +729,175 @@ bindSwitch(document.querySelector("#nudge-toggle"), (on) => {
   offsetFields.hidden = !on;
 });
 
+const dropShadowFields = document.querySelector("#drop-shadow-fields");
+const shadowOpacity = document.querySelector("#shadow-opacity");
+const shadowOpacityRange = document.querySelector("#shadow-opacity-range");
+const shadowX = document.querySelector("#shadow-x");
+const shadowY = document.querySelector("#shadow-y");
+const shadowBlur = document.querySelector("#shadow-blur");
+const shadowSpread = document.querySelector("#shadow-spread");
+const shadowColorTrigger = document.querySelector("#shadow-color-trigger");
+const shadowColorMenu = document.querySelector("#shadow-color-menu");
+const shadowColorName = document.querySelector("#shadow-color-name");
+const customPinDropzone = document.querySelector("#custom-pin-dropzone");
+const customPinInput = document.querySelector("#custom-pin-input");
+const customPinPreview = document.querySelector("#custom-pin-preview");
+const customPinEmpty = document.querySelector("#custom-pin-empty");
+const customPinReplace = document.querySelector("#custom-pin-replace");
+const customPinRemove = document.querySelector("#custom-pin-remove");
+
+function clampInt(value, min, max, fallback) {
+  const parsed = Number.parseInt(value, 10);
+  if (Number.isNaN(parsed)) return fallback;
+  return Math.min(max, Math.max(min, parsed));
+}
+
+function hexToRgb(hex) {
+  const raw = hex.replace("#", "");
+  const value = raw.length === 3 ? raw.split("").map((part) => part + part).join("") : raw;
+  return {
+    r: Number.parseInt(value.slice(0, 2), 16),
+    g: Number.parseInt(value.slice(2, 4), 16),
+    b: Number.parseInt(value.slice(4, 6), 16),
+  };
+}
+
+function hexToRgba(hex, alpha) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function mapShadow() {
+  if (!state.dropShadow) return "none";
+  return `${state.shadowX}px ${state.shadowY}px ${state.shadowBlur}px ${state.shadowSpread}px ${hexToRgba(
+    state.shadowColor.hex,
+    state.shadowOpacity / 100
+  )}`;
+}
+
+function applyMapShadow() {
+  document.documentElement.style.setProperty("--map-shadow", mapShadow());
+  if (dropShadowFields) dropShadowFields.hidden = !state.dropShadow;
+}
+
+function syncShadowInputs() {
+  if (shadowOpacity && document.activeElement !== shadowOpacity) {
+    shadowOpacity.value = String(state.shadowOpacity);
+  }
+  if (shadowOpacityRange && document.activeElement !== shadowOpacityRange) {
+    shadowOpacityRange.value = String(state.shadowOpacity);
+  }
+  if (shadowX && document.activeElement !== shadowX) shadowX.value = String(state.shadowX);
+  if (shadowY && document.activeElement !== shadowY) shadowY.value = String(state.shadowY);
+  if (shadowBlur && document.activeElement !== shadowBlur) shadowBlur.value = String(state.shadowBlur);
+  if (shadowSpread && document.activeElement !== shadowSpread) {
+    shadowSpread.value = String(state.shadowSpread);
+  }
+}
+
+function bindShadowNumber(input, key, min, max) {
+  if (!input) return;
+  const apply = () => {
+    state[key] = clampInt(input.value, min, max, state[key]);
+    syncShadowInputs();
+    applyMapShadow();
+  };
+  input.addEventListener("input", apply);
+  input.addEventListener("change", apply);
+}
+
 bindSwitch(document.querySelector("#shadow-toggle"), (on) => {
-  document.documentElement.style.setProperty(
-    "--map-shadow",
-    on ? "0 8px 24px rgba(30, 39, 67, 0.18)" : "none"
-  );
+  state.dropShadow = on;
+  applyMapShadow();
 });
+
+bindShadowNumber(shadowOpacity, "shadowOpacity", 0, 100);
+bindShadowNumber(shadowX, "shadowX", -200, 200);
+bindShadowNumber(shadowY, "shadowY", -200, 200);
+bindShadowNumber(shadowBlur, "shadowBlur", 0, 200);
+bindShadowNumber(shadowSpread, "shadowSpread", -100, 100);
+
+if (shadowOpacityRange) {
+  shadowOpacityRange.addEventListener("input", () => {
+    state.shadowOpacity = clampInt(shadowOpacityRange.value, 0, 100, state.shadowOpacity);
+    syncShadowInputs();
+    applyMapShadow();
+  });
+}
+
+if (shadowColorTrigger && shadowColorMenu) {
+  shadowColorTrigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openMenu(shadowColorTrigger, shadowColorMenu);
+  });
+  shadowColorMenu.addEventListener("click", (event) => event.stopPropagation());
+  shadowColorMenu.querySelectorAll("button[data-color]").forEach((option) => {
+    option.addEventListener("click", (event) => {
+      event.stopPropagation();
+      state.shadowColor = { name: option.dataset.label || "Dark", hex: option.dataset.color };
+      if (shadowColorName) shadowColorName.textContent = state.shadowColor.name;
+      const swatch = shadowColorTrigger.querySelector(".swatch");
+      if (swatch) swatch.style.background = state.shadowColor.hex;
+      shadowColorMenu.querySelectorAll("button[data-color]").forEach((item) => {
+        item.setAttribute("aria-selected", String(item === option));
+      });
+      closeMenus();
+      applyMapShadow();
+    });
+  });
+}
+
+function setCustomPinUrl(url) {
+  state.customPinUrl = url || "";
+  const hasPin = Boolean(state.customPinUrl);
+  if (customPinPreview) {
+    customPinPreview.hidden = !hasPin;
+    customPinPreview.style.backgroundImage = hasPin ? `url("${state.customPinUrl}")` : "";
+  }
+  if (customPinEmpty) customPinEmpty.hidden = hasPin;
+  if (mainPin) {
+    if (hasPin) {
+      mainPin.classList.add("custom-image");
+      mainPin.style.backgroundImage = `url("${state.customPinUrl}")`;
+    } else {
+      mainPin.classList.remove("custom-image");
+      mainPin.style.backgroundImage = "";
+    }
+  }
+}
+
+function openCustomPinPicker() {
+  if (customPinInput) customPinInput.click();
+}
+
+if (customPinDropzone) {
+  customPinDropzone.addEventListener("click", () => openCustomPinPicker());
+}
+
+if (customPinReplace) {
+  customPinReplace.addEventListener("click", () => openCustomPinPicker());
+}
+
+if (customPinRemove) {
+  customPinRemove.addEventListener("click", () => {
+    if (customPinInput) customPinInput.value = "";
+    setCustomPinUrl("");
+  });
+}
+
+if (customPinInput) {
+  customPinInput.addEventListener("change", () => {
+    const file = customPinInput.files && customPinInput.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    if (state.customPinUrl && state.customPinUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(state.customPinUrl);
+    }
+    setCustomPinUrl(url);
+  });
+}
+
+applyMapShadow();
 
 if (addLocationBtn) {
   addLocationBtn.addEventListener("click", () => openLocationLayer(null));
@@ -844,7 +1024,7 @@ if (mapHeightUnitTrigger && mapHeightUnitMenu) {
 }
 
 document.addEventListener("click", () => closeMenus());
-document.querySelectorAll(".field-menu, .icon-card-menu").forEach((menu) => {
+document.querySelectorAll(".field-menu, .icon-card-menu, .color-menu").forEach((menu) => {
   menu.addEventListener("click", (event) => event.stopPropagation());
 });
 

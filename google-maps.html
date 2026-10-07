@@ -388,10 +388,29 @@
                 </ul>
               </div>
 
-              <label class="field" id="custom-pin-field" hidden>
-                <span class="field-label">Custom pin</span>
-                <input type="text" value="[Choose image]" readonly />
-              </label>
+              <div class="icon-upload" id="custom-pin-field" hidden>
+                <p class="icon-upload-label">Custom pin</p>
+                <button type="button" class="icon-dropzone" id="custom-pin-dropzone" aria-label="Add custom pin icon">
+                  <span class="icon-dropzone-preview" id="custom-pin-preview" hidden></span>
+                  <span class="icon-dropzone-empty" id="custom-pin-empty">
+                    <span class="icon-dropzone-add" aria-hidden="true">
+                      <img src="assets/icon-add.svg" alt="" width="28" height="28" />
+                    </span>
+                    <span class="icon-dropzone-title">Add Icon</span>
+                    <span class="icon-dropzone-meta">File Type: SVG, PNG</span>
+                  </span>
+                </button>
+                <div class="icon-dropzone-actions">
+                  <button type="button" class="text-action" id="custom-pin-replace">Replace</button>
+                  <button type="button" class="text-action is-danger" id="custom-pin-remove">Remove</button>
+                </div>
+                <input
+                  type="file"
+                  id="custom-pin-input"
+                  accept=".svg,.png,image/svg+xml,image/png"
+                  hidden
+                />
+              </div>
 
               <p class="section-label">Pin width</p>
               <div class="zoom-row">
@@ -479,17 +498,100 @@
 
               <hr class="panel-divider" />
 
-              <div class="toggle-row">
-                <button
-                  type="button"
-                  class="switch"
-                  id="shadow-toggle"
-                  role="switch"
-                  aria-checked="false"
-                  aria-labelledby="shadow-label"
-                ></button>
-                <div class="toggle-copy">
-                  <span id="shadow-label">Drop Shadow</span>
+              <div class="shadow-block">
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch"
+                    id="shadow-toggle"
+                    role="switch"
+                    aria-checked="false"
+                    aria-labelledby="shadow-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="shadow-label">Drop Shadow</span>
+                  </div>
+                </div>
+                <div class="shadow-fields" id="drop-shadow-fields" hidden>
+                  <div class="color-card" id="shadow-color-field">
+                    <button
+                      type="button"
+                      class="color-trigger"
+                      id="shadow-color-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded="false"
+                      aria-label="Drop shadow color"
+                    >
+                      <span class="swatch" style="background: #171d3a"></span>
+                      <span class="color-name" id="shadow-color-name">Dark</span>
+                      <span class="icon-button" aria-hidden="true">
+                        <span class="icon-24">
+                          <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </span>
+                    </button>
+                    <ul class="color-menu" id="shadow-color-menu" hidden role="listbox" aria-label="Drop shadow color">
+                      <li>
+                        <button type="button" role="option" data-color="#94abf9" data-label="Primary" aria-selected="false">
+                          <span class="swatch" style="background: #94abf9"></span>Primary
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" role="option" data-color="#f598ff" data-label="Secondary" aria-selected="false">
+                          <span class="swatch" style="background: #f598ff"></span>Secondary
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" role="option" data-color="#171d3a" data-label="Dark" aria-selected="true">
+                          <span class="swatch" style="background: #171d3a"></span>Dark
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" role="option" data-color="#ffffff" data-label="White" aria-selected="false">
+                          <span class="swatch" style="background: #ffffff"></span>White
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="shadow-opacity">
+                    <label class="field shadow-opacity-field">
+                      <span class="field-label" id="shadow-opacity-label">Opacity</span>
+                      <input type="number" id="shadow-opacity" value="15" min="0" max="100" />
+                    </label>
+                    <input
+                      type="range"
+                      class="shadow-slider"
+                      id="shadow-opacity-range"
+                      min="0"
+                      max="100"
+                      value="15"
+                      aria-labelledby="shadow-opacity-label"
+                    />
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-x-label">X Position</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-x" value="0" aria-labelledby="shadow-x-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-y-label">Y Position</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-y" value="17" aria-labelledby="shadow-y-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-blur-label">Blur</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-blur" value="25" min="0" aria-labelledby="shadow-blur-label" />
+                    </label>
+                  </div>
+                  <div class="inline-field">
+                    <span class="inline-field-label" id="shadow-spread-label">Spread</span>
+                    <label class="field shadow-num-field">
+                      <input type="number" id="shadow-spread" value="0" aria-labelledby="shadow-spread-label" />
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
