@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu Settings — Editor</title>
+    <meta
+      name="description"
+      content="Site Header / Menu Settings editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Lato:wght@400;700&family=Montserrat:wght@400;500;600&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="menu-settings.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace menu-workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-view="content">Content</button>
+          <button type="button" class="chip" data-view="design">Design</button>
+          <button type="button" class="chip" data-view="submenu">Submenu</button>
+          <button type="button" class="chip" data-view="mega">Mega menu open</button>
+        </div>
+
+        <p class="canvas-kicker">Section canvas · Site Header</p>
+
+        <article class="page-card menu-page" id="page-card">
+          <div class="site-mock" id="site-header">
+            <img
+              class="site-hero-img"
+              src="assets/menu-settings/hero-cabin.jpg"
+              alt=""
+              width="1800"
+              height="1440"
+            />
+            <div class="site-hero-scrim" aria-hidden="true"></div>
+
+            <header class="site-header">
+              <div class="site-header-top">
+                <div class="brand-block">
+                  <img
+                    class="brand-logo"
+                    src="assets/menu-settings/logo.png"
+                    alt="Spring Brook Wisconsin Dells"
+                    width="157"
+                    height="91"
+                  />
+                  <div class="header-utils">
+                    <a class="util-link" id="canvas-phone" href="tel:8002284349">
+                      <img src="assets/menu-settings/icon-phone.svg" alt="" width="20" height="20" />
+                      <span id="canvas-phone-text">(800) 228-4349</span>
+                    </a>
+                    <div class="action-utils" id="canvas-actions"></div>
+                  </div>
+                </div>
+                <div class="header-tools">
+                  <button type="button" class="property-search" id="canvas-search">
+                    <span>Property by Name</span>
+                    <span class="property-caret" aria-hidden="true"></span>
+                  </button>
+                  <div class="tool-icons" id="canvas-tools">
+                    <button type="button" class="tool-icon" data-tool="recent" aria-label="Recently Viewed">
+                      <img src="assets/menu-settings/icon-eye.svg" alt="" width="20" height="20" />
+                    </button>
+                    <button type="button" class="tool-icon" data-tool="favorites" aria-label="Favorites">
+                      <img src="assets/menu-settings/icon-heart.svg" alt="" width="20" height="20" />
+                    </button>
+                    <button type="button" class="tool-icon" data-tool="cart" aria-label="Cart">
+                      <img src="assets/menu-settings/icon-bag.svg" alt="" width="20" height="20" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <nav class="site-nav" id="site-nav" aria-label="Main"></nav>
+
+              <div class="mega-menu is-contained" id="mega-menu" hidden></div>
+            </header>
+
+            <div class="site-mock-body">
+              <button
+                type="button"
+                class="editor-page-overlay"
+                id="editor-page-overlay"
+                aria-label="Finish editing and return focus to the page"
+              ></button>
+
+              <div class="hero-copy">
+                <h2>Wisconsin Dells #1 Vacation Community</h2>
+              </div>
+
+              <div class="booking-bar" aria-label="Property search">
+                <div class="booking-field">
+                  <span class="booking-label">When</span>
+                  <span class="booking-value">Add Dates</span>
+                </div>
+                <div class="booking-field">
+                  <span class="booking-label">Flex Dates</span>
+                  <span class="booking-value">Find Cheaper Rates</span>
+                </div>
+                <div class="booking-field">
+                  <span class="booking-label">Property Type</span>
+                  <span class="booking-value">Find A Stay That Fits</span>
+                </div>
+                <div class="booking-field">
+                  <span class="booking-label">Guests</span>
+                  <span class="booking-value">Add Guest Types</span>
+                </div>
+                <button type="button" class="booking-search">Search</button>
+              </div>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint">
+          Canvas uses the Spring Brook website mock-up from Figma. Header toggles and submenu edits
+          update this preview live.
+        </p>
+      </section>
+
+      <aside class="panel menu-panel" id="floater" aria-label="Block settings">
+        <!-- Parent: Site Header -->
+        <div class="panel-main" id="parent-shell">
+          <header class="panel-header">
+            <h1>Site Header</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Site Header settings">
+            <button
+              class="tab active"
+              type="button"
+              role="tab"
+              id="tab-content"
+              aria-selected="true"
+              aria-controls="panel-content"
+            >
+              Content
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-design"
+              aria-selected="false"
+              aria-controls="panel-design"
+            >
+              Design
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-submenu"
+              aria-selected="false"
+              aria-controls="panel-submenu"
+            >
+              Submenu
+            </button>
+            <button
+              class="tab tab-icon"
+              type="button"
+              id="device-btn"
+              aria-pressed="false"
+              aria-label="Device overrides"
+            >
+              <span class="icon-28">
+                <img src="assets/menu-settings/icon-device.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="section-label">Main Navigation</p>
+              <ul class="nav-list" id="nav-list"></ul>
+              <button type="button" class="medium-button medium-button--leading" id="add-nav-item">
+                <span class="icon-28" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-add.svg" alt="" width="28" height="28" />
+                </span>
+                Add Item
+              </button>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Action Items</p>
+              <ul class="nav-list" id="action-list"></ul>
+              <button type="button" class="medium-button medium-button--leading" id="add-action-item">
+                <span class="icon-28" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-add.svg" alt="" width="28" height="28" />
+                </span>
+                Add Item
+              </button>
+
+              <hr class="panel-divider" />
+
+              <button type="button" class="setting-row nest-row" id="open-elements">
+                <span>Elements</span>
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-chevron-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+            </div>
+
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Navigation</p>
+              <div class="color-card" id="link-color-card">
+                <button type="button" class="color-trigger" id="link-color-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="swatch" id="link-swatch" style="background: #ffffff"></span>
+                  <span class="color-meta">
+                    <span class="color-label">Link Color</span>
+                    <span class="color-name" id="link-color-name">White</span>
+                  </span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="link-color-menu" hidden role="listbox" aria-label="Link Color">
+                  <li>
+                    <button type="button" role="option" data-color="#ffffff" data-name="White" aria-selected="true">
+                      <span class="swatch" style="background: #ffffff"></span> White
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#f5e6c8" data-name="Sand" aria-selected="false">
+                      <span class="swatch" style="background: #f5e6c8"></span> Sand
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#ff005a" data-name="Primary" aria-selected="false">
+                      <span class="swatch" style="background: #ff005a"></span> Primary
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="field">
+                <span class="field-label" id="weight-label">Link Weight</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="weight-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="weight-label weight-value"
+                >
+                  <span id="weight-value">Medium</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="weight-menu" hidden role="listbox" aria-labelledby="weight-label">
+                  <li>
+                    <button type="button" role="option" data-weight="400" aria-selected="false">Regular</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-weight="500" aria-selected="true">Medium</button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-weight="700" aria-selected="false">Bold</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-submenu" role="tabpanel" aria-labelledby="tab-submenu" hidden>
+              <p class="section-label" id="submenu-color-heading">Submenu Color</p>
+              <div class="color-card color-card--submenu" id="submenu-color-card">
+                <button
+                  type="button"
+                  class="color-trigger"
+                  id="submenu-color-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="submenu-color-heading submenu-color-name"
+                >
+                  <span class="swatch" id="submenu-swatch" style="background: #ffffff"></span>
+                  <span class="color-name" id="submenu-color-name">White</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="submenu-color-menu" hidden role="listbox" aria-label="Submenu Color">
+                  <li>
+                    <button type="button" role="option" data-color="#ffffff" data-name="White" aria-selected="true">
+                      <span class="swatch" style="background: #ffffff"></span> White
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#f5e6c8" data-name="Sand" aria-selected="false">
+                      <span class="swatch" style="background: #f5e6c8"></span> Sand
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#1e2743" data-name="Ink" aria-selected="false">
+                      <span class="swatch" style="background: #1e2743"></span> Ink
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Constraints</p>
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch on"
+                  role="switch"
+                  id="toggle-contain"
+                  aria-checked="true"
+                  aria-labelledby="contain-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="contain-label">Contain Submenu</span>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch on"
+                  role="switch"
+                  id="toggle-hover"
+                  aria-checked="true"
+                  aria-labelledby="hover-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="hover-label">Open on Hover</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill-in: Elements -->
+        <div class="panel-main" id="elements-shell" hidden>
+          <header class="panel-header panel-header-back">
+            <button type="button" class="medium-button" id="elements-back" aria-label="Back to Site Header">
+              <span class="icon-28" aria-hidden="true">
+                <img src="assets/menu-settings/icon-back.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+            <h1>Elements</h1>
+          </header>
+
+          <div class="tab-panels elements-body">
+            <p class="section-label">Menu Elements</p>
+
+            <div class="element-block">
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch on"
+                  role="switch"
+                  id="toggle-phone"
+                  aria-checked="true"
+                  aria-labelledby="phone-label"
+                ></button>
+                <div class="toggle-copy">
+                  <span id="phone-label">Phone Number</span>
+                </div>
+              </div>
+              <div class="field" id="phone-field">
+                <span class="field-label" id="phone-field-label">Select Phone Number</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="phone-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="phone-field-label phone-value"
+                >
+                  <span id="phone-value">(800) 228-4349</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24">
+                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                    </span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="phone-menu" hidden role="listbox" aria-labelledby="phone-field-label">
+                  <li>
+                    <button type="button" role="option" data-phone="(800) 228-4349" aria-selected="true">
+                      (800) 228-4349
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-phone="(608) 555-0142" aria-selected="false">
+                      (608) 555-0142
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-phone="(715) 555-0198" aria-selected="false">
+                      (715) 555-0198
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch on"
+                role="switch"
+                id="toggle-search"
+                aria-checked="true"
+                aria-labelledby="search-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="search-label">Property Search</span>
+              </div>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch on"
+                role="switch"
+                id="toggle-recent"
+                aria-checked="true"
+                aria-labelledby="recent-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="recent-label">Recently Viewed</span>
+              </div>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch on"
+                role="switch"
+                id="toggle-favorites"
+                aria-checked="true"
+                aria-labelledby="favorites-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="favorites-label">Favorites</span>
+              </div>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="toggle-row">
+              <button
+                type="button"
+                class="switch on"
+                role="switch"
+                id="toggle-cart"
+                aria-checked="true"
+                aria-labelledby="cart-label"
+              ></button>
+              <div class="toggle-copy">
+                <span id="cart-label">Cart</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill-in: Submenu Settings -->
+        <div class="panel-main" id="submenu-shell" hidden>
+          <header class="panel-header panel-header-back">
+            <button type="button" class="medium-button" id="submenu-back" aria-label="Back to Site Header">
+              <span class="icon-28" aria-hidden="true">
+                <img src="assets/menu-settings/icon-back.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+            <h1 id="submenu-title">Wisconsin Dells Rentals</h1>
+          </header>
+
+          <div class="tab-panels submenu-body">
+            <div class="submenu-item-label">
+              <span id="submenu-item-name">Wisconsin Dells Rentals</span>
+              <button type="button" class="icon-button" id="submenu-item-more" aria-label="Submenu options" aria-haspopup="menu" aria-expanded="false">
+                <span class="icon-28">
+                  <img src="assets/menu-settings/icon-more-28.svg" alt="" width="28" height="28" />
+                </span>
+              </button>
+              <ul class="context-menu" id="submenu-item-menu" hidden role="menu">
+                <li><button type="button" role="menuitem" data-action="edit-title">Edit Submenu Title</button></li>
+                <li><button type="button" role="menuitem" data-action="add-category">Add Category</button></li>
+                <li><button type="button" role="menuitem" data-action="delete-submenu" class="is-danger">Delete Submenu</button></li>
+              </ul>
+            </div>
+
+            <div class="category-stack" id="category-stack"></div>
+
+            <button type="button" class="medium-button medium-button--leading" id="add-category">
+              <span class="icon-28" aria-hidden="true">
+                <img src="assets/menu-settings/icon-add.svg" alt="" width="28" height="28" />
+              </span>
+              Add Category
+            </button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <ul class="context-menu" id="nav-item-menu" hidden role="menu">
+      <li><button type="button" role="menuitem" data-action="edit-submenu">Edit Submenu</button></li>
+      <li><button type="button" role="menuitem" data-action="rename">Rename</button></li>
+      <li><button type="button" role="menuitem" data-action="delete" class="is-danger">Delete</button></li>
+    </ul>
+
+    <ul class="context-menu" id="action-item-menu" hidden role="menu">
+      <li><button type="button" role="menuitem" data-action="rename">Rename</button></li>
+      <li><button type="button" role="menuitem" data-action="delete" class="is-danger">Delete</button></li>
+    </ul>
+
+    <ul class="context-menu" id="category-menu" hidden role="menu">
+      <li><button type="button" role="menuitem" data-action="edit-category">Edit Category Title</button></li>
+      <li><button type="button" role="menuitem" data-action="toggle-title">Hide Category title</button></li>
+    </ul>
+
+    <ul class="context-menu" id="link-item-menu" hidden role="menu">
+      <li><button type="button" role="menuitem" data-action="edit">Edit</button></li>
+      <li><button type="button" role="menuitem" data-action="move-main">Move to Main Nav</button></li>
+      <li><button type="button" role="menuitem" data-action="delete" class="is-danger">Delete</button></li>
+    </ul>
+
+    <script src="menu-settings.js"></script>
+  </body>
+</html>
