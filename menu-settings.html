@@ -208,13 +208,25 @@
             </div>
 
             <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
-              <p class="section-label">Navigation</p>
-              <div class="color-card" id="link-color-card">
-                <button type="button" class="color-trigger" id="link-color-trigger" aria-haspopup="listbox" aria-expanded="false">
-                  <span class="swatch" id="link-swatch" style="background: #ffffff"></span>
-                  <span class="color-meta">
-                    <span class="color-label">Link Color</span>
-                    <span class="color-name" id="link-color-name">White</span>
+              <p class="section-label" id="menu-type-heading">Menu Type</p>
+              <div class="field menu-type-field">
+                <button
+                  type="button"
+                  class="menu-type-trigger"
+                  id="menu-type-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="menu-type-heading menu-type-value"
+                >
+                  <span class="menu-type-preview">
+                    <span class="menu-type-name" id="menu-type-value">Horizontal 1</span>
+                    <img
+                      class="menu-type-thumb"
+                      src="assets/menu-settings/menu-type-horizontal-1.png"
+                      alt=""
+                      width="164"
+                      height="54"
+                    />
                   </span>
                   <span class="icon-button" aria-hidden="true">
                     <span class="icon-24">
@@ -222,54 +234,60 @@
                     </span>
                   </span>
                 </button>
-                <ul class="color-menu" id="link-color-menu" hidden role="listbox" aria-label="Link Color">
+                <ul class="field-menu" id="menu-type-menu" hidden role="listbox" aria-labelledby="menu-type-heading">
                   <li>
-                    <button type="button" role="option" data-color="#ffffff" data-name="White" aria-selected="true">
-                      <span class="swatch" style="background: #ffffff"></span> White
+                    <button type="button" role="option" data-menu-type="horizontal-1" aria-selected="true">
+                      Horizontal 1
                     </button>
                   </li>
                   <li>
-                    <button type="button" role="option" data-color="#f5e6c8" data-name="Sand" aria-selected="false">
-                      <span class="swatch" style="background: #f5e6c8"></span> Sand
+                    <button type="button" role="option" data-menu-type="horizontal-2" aria-selected="false">
+                      Horizontal 2
                     </button>
                   </li>
                   <li>
-                    <button type="button" role="option" data-color="#ff005a" data-name="Primary" aria-selected="false">
-                      <span class="swatch" style="background: #ff005a"></span> Primary
+                    <button type="button" role="option" data-menu-type="stacked" aria-selected="false">
+                      Stacked
                     </button>
                   </li>
                 </ul>
               </div>
 
-              <div class="field">
-                <span class="field-label" id="weight-label">Link Weight</span>
-                <button
-                  type="button"
-                  class="field-trigger"
-                  id="weight-trigger"
-                  aria-haspopup="listbox"
-                  aria-expanded="false"
-                  aria-labelledby="weight-label weight-value"
-                >
-                  <span id="weight-value">Medium</span>
-                  <span class="icon-button" aria-hidden="true">
-                    <span class="icon-24">
-                      <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
-                    </span>
-                  </span>
-                </button>
-                <ul class="field-menu" id="weight-menu" hidden role="listbox" aria-labelledby="weight-label">
-                  <li>
-                    <button type="button" role="option" data-weight="400" aria-selected="false">Regular</button>
-                  </li>
-                  <li>
-                    <button type="button" role="option" data-weight="500" aria-selected="true">Medium</button>
-                  </li>
-                  <li>
-                    <button type="button" role="option" data-weight="700" aria-selected="false">Bold</button>
-                  </li>
-                </ul>
-              </div>
+              <hr class="panel-divider" />
+
+              <button type="button" class="setting-row nest-row" id="open-layout">
+                <span>Layout</span>
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-chevron-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+
+              <hr class="panel-divider" />
+
+              <button type="button" class="setting-row nest-row" id="open-logo">
+                <span>Logo</span>
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-chevron-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+
+              <hr class="panel-divider" />
+
+              <button type="button" class="setting-row nest-row" id="open-color">
+                <span>Color</span>
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-chevron-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+
+              <hr class="panel-divider" />
+
+              <button type="button" class="setting-row nest-row" id="open-links">
+                <span>Links and Buttons</span>
+                <span class="icon-24" aria-hidden="true">
+                  <img src="assets/menu-settings/icon-chevron-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
             </div>
 
             <div class="tab-panel" id="panel-submenu" role="tabpanel" aria-labelledby="tab-submenu" hidden>
@@ -341,6 +359,116 @@
                 <div class="toggle-copy">
                   <span id="hover-label">Open on Hover</span>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drill-in: Layout (Design) -->
+        <div class="panel-main" id="layout-shell" hidden>
+          <header class="panel-header panel-header-back">
+            <button type="button" class="medium-button" id="layout-back" aria-label="Back to Site Header">
+              <span class="icon-28" aria-hidden="true">
+                <img src="assets/menu-settings/icon-back.svg" alt="" width="28" height="28" />
+              </span>
+            </button>
+            <h1>Layout</h1>
+          </header>
+
+          <div class="tab-panels layout-body">
+            <p class="section-label">Orientation</p>
+            <div class="icon-bar layout-orientation" id="layout-orientation" role="group" aria-label="Orientation">
+              <button type="button" data-orientation="left" aria-label="Align left" aria-pressed="false">
+                <span class="icon-24">
+                  <img src="assets/menu-settings/icon-align-left.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+              <button type="button" class="active" data-orientation="center" aria-label="Align center" aria-pressed="true">
+                <span class="icon-24">
+                  <img src="assets/menu-settings/icon-align-center.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+              <button type="button" data-orientation="right" aria-label="Align right" aria-pressed="false">
+                <span class="icon-24">
+                  <img src="assets/menu-settings/icon-align-right.svg" alt="" width="24" height="24" />
+                </span>
+              </button>
+            </div>
+
+            <hr class="panel-divider" />
+
+            <div class="layout-slider-block">
+              <p class="layout-slider-label" id="link-spacing-label">Link Spacing</p>
+              <div class="layout-slider-row">
+                <label class="layout-slider-wrap" for="link-spacing-slider">
+                  <span class="sr-only">Link Spacing</span>
+                  <input
+                    type="range"
+                    id="link-spacing-slider"
+                    min="0"
+                    max="40"
+                    value="10"
+                    step="1"
+                    aria-labelledby="link-spacing-label"
+                    aria-valuemin="0"
+                    aria-valuemax="40"
+                    aria-valuenow="10"
+                  />
+                </label>
+                <label class="layout-px-field" for="link-spacing-value">
+                  <span class="sr-only">Link Spacing value</span>
+                  <input type="text" id="link-spacing-value" value="10 px" inputmode="numeric" />
+                </label>
+              </div>
+            </div>
+
+            <div class="layout-slider-block">
+              <p class="layout-slider-label" id="vertical-padding-label">Vertical Padding</p>
+              <div class="layout-slider-row">
+                <label class="layout-slider-wrap" for="vertical-padding-slider">
+                  <span class="sr-only">Vertical Padding</span>
+                  <input
+                    type="range"
+                    id="vertical-padding-slider"
+                    min="0"
+                    max="40"
+                    value="20"
+                    step="1"
+                    aria-labelledby="vertical-padding-label"
+                    aria-valuemin="0"
+                    aria-valuemax="40"
+                    aria-valuenow="20"
+                  />
+                </label>
+                <label class="layout-px-field" for="vertical-padding-value">
+                  <span class="sr-only">Vertical Padding value</span>
+                  <input type="text" id="vertical-padding-value" value="20 px" inputmode="numeric" />
+                </label>
+              </div>
+            </div>
+
+            <div class="layout-slider-block">
+              <p class="layout-slider-label" id="cta-padding-label">Call to Action Padding</p>
+              <div class="layout-slider-row">
+                <label class="layout-slider-wrap" for="cta-padding-slider">
+                  <span class="sr-only">Call to Action Padding</span>
+                  <input
+                    type="range"
+                    id="cta-padding-slider"
+                    min="0"
+                    max="40"
+                    value="10"
+                    step="1"
+                    aria-labelledby="cta-padding-label"
+                    aria-valuemin="0"
+                    aria-valuemax="40"
+                    aria-valuenow="10"
+                  />
+                </label>
+                <label class="layout-px-field" for="cta-padding-value">
+                  <span class="sr-only">Call to Action Padding value</span>
+                  <input type="text" id="cta-padding-value" value="10 px" inputmode="numeric" />
+                </label>
               </div>
             </div>
           </div>

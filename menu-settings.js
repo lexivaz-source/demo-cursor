@@ -1,10 +1,12 @@
 const parentShell = document.querySelector("#parent-shell");
 const submenuShell = document.querySelector("#submenu-shell");
 const elementsShell = document.querySelector("#elements-shell");
+const layoutShell = document.querySelector("#layout-shell");
 const navList = document.querySelector("#nav-list");
 const actionList = document.querySelector("#action-list");
 const categoryStack = document.querySelector("#category-stack");
 const siteNav = document.querySelector("#site-nav");
+const siteHeader = document.querySelector("#site-header .site-header") || document.querySelector(".site-header");
 const megaMenu = document.querySelector("#mega-menu");
 const pageOverlay = document.querySelector("#editor-page-overlay");
 const phoneField = document.querySelector("#phone-field");
@@ -18,6 +20,12 @@ const actionItemMenu = document.querySelector("#action-item-menu");
 const categoryMenu = document.querySelector("#category-menu");
 const linkItemMenu = document.querySelector("#link-item-menu");
 const submenuItemMenu = document.querySelector("#submenu-item-menu");
+
+const ORIENTATION_JUSTIFY = {
+  left: "flex-start",
+  center: "center",
+  right: "flex-end",
+};
 
 const state = {
   navItems: [
@@ -37,8 +45,13 @@ const state = {
     cart: true,
   },
   phone: "(800) 228-4349",
+  menuType: "horizontal-1",
   linkColor: "#ffffff",
   linkWeight: "500",
+  orientation: "center",
+  linkSpacing: 10,
+  verticalPadding: 20,
+  ctaPadding: 10,
   submenuColor: "#ffffff",
   containSubmenu: true,
   openOnHover: true,
@@ -149,18 +162,23 @@ function setParentTab(name) {
   });
 }
 
-function showParent(tab = "content") {
-  parentShell.hidden = false;
+function hideAllShells() {
+  parentShell.hidden = true;
   submenuShell.hidden = true;
   elementsShell.hidden = true;
+  if (layoutShell) layoutShell.hidden = true;
+}
+
+function showParent(tab = "content") {
+  hideAllShells();
+  parentShell.hidden = false;
   setParentTab(tab);
 }
 
 function showSubmenu() {
   closeMenus();
-  parentShell.hidden = true;
+  hideAllShells();
   submenuShell.hidden = false;
-  elementsShell.hidden = true;
   renderCategories();
   document.querySelectorAll(".review-bar .chip").forEach((chip) => {
     chip.classList.toggle("active", chip.dataset.view === "submenu");
@@ -169,11 +187,81 @@ function showSubmenu() {
 
 function showElements() {
   closeMenus();
-  parentShell.hidden = true;
-  submenuShell.hidden = true;
+  hideAllShells();
   elementsShell.hidden = false;
   document.querySelectorAll(".review-bar .chip").forEach((chip) => {
     chip.classList.toggle("active", chip.dataset.view === "content");
+  });
+}
+
+function showLayout() {
+  closeMenus();
+  hideAllShells();
+  if (layoutShell) layoutShell.hidden = false;
+  document.querySelectorAll(".review-bar .chip").forEach((chip) => {
+    chip.classList.toggle("active", chip.dataset.view === "design");
+  });
+}
+
+function formatPx(value) {
+  return `${value} px`;
+}
+
+function parsePx(raw) {
+  const match = String(raw).match(/-?\d+/);
+  if (!match) return null;
+  return Number(match[0]);
+}
+
+function setSliderPct(slider) {
+  if (!slider) return;
+  const min = Number(slider.min) || 0;
+  const max = Number(slider.max) || 100;
+  const value = Number(slider.value) || 0;
+  const pct = max === min ? 0 : ((value - min) / (max - min)) * 100;
+  slider.style.setProperty("--layout-pct", `${pct}%`);
+  slider.setAttribute("aria-valuenow", String(value));
+}
+
+function bindLayoutSlider(sliderId, inputId, key) {
+  const slider = document.querySelector(`#${sliderId}`);
+  const input = document.querySelector(`#${inputId}`);
+  if (!slider || !input) return;
+
+  const syncFromSlider = () => {
+    state[key] = Number(slider.value);
+    input.value = formatPx(state[key]);
+    setSliderPct(slider);
+    renderCanvas();
+  };
+
+  const syncFromInput = () => {
+    const parsed = parsePx(input.value);
+    if (parsed === null) {
+      input.value = formatPx(state[key]);
+      return;
+    }
+    const min = Number(slider.min) || 0;
+    const max = Number(slider.max) || 100;
+    const clamped = Math.min(max, Math.max(min, parsed));
+    state[key] = clamped;
+    slider.value = String(clamped);
+    input.value = formatPx(clamped);
+    setSliderPct(slider);
+    renderCanvas();
+  };
+
+  slider.value = String(state[key]);
+  input.value = formatPx(state[key]);
+  setSliderPct(slider);
+  slider.addEventListener("input", syncFromSlider);
+  input.addEventListener("change", syncFromInput);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      syncFromInput();
+      input.blur();
+    }
   });
 }
 
@@ -512,6 +600,14 @@ function renderCanvas() {
 
   siteNav.style.setProperty("--nav-link", state.linkColor);
   siteNav.style.setProperty("--nav-weight", state.linkWeight);
+  siteNav.style.setProperty("--nav-link-gap", `${state.linkSpacing}px`);
+  siteNav.style.setProperty("--nav-v-pad", `${Math.max(4, Math.round(state.verticalPadding / 2))}px`);
+  siteNav.style.setProperty("--nav-justify", ORIENTATION_JUSTIFY[state.orientation] || "center");
+  if (siteHeader) {
+    siteHeader.style.setProperty("--header-v-pad", `${Math.max(6, Math.round(state.verticalPadding / 2))}px`);
+    siteHeader.style.setProperty("--cta-pad", `${Math.max(8, state.ctaPadding + 12)}px`);
+  }
+  siteNav.dataset.menuType = state.menuType;
 
   siteNav.innerHTML = state.navItems
     .map((item) => {
@@ -587,7 +683,9 @@ document.querySelector("#device-btn").addEventListener("click", () => {
 
 document.querySelector("#submenu-back").addEventListener("click", () => showParent("submenu"));
 document.querySelector("#elements-back").addEventListener("click", () => showParent("content"));
+document.querySelector("#layout-back")?.addEventListener("click", () => showParent("design"));
 document.querySelector("#open-elements").addEventListener("click", showElements);
+document.querySelector("#open-layout")?.addEventListener("click", showLayout);
 document.querySelector("#add-nav-item").addEventListener("click", addNavItem);
 document.querySelector("#add-action-item").addEventListener("click", addActionItem);
 document.querySelector("#add-category").addEventListener("click", addCategory);
@@ -763,16 +861,10 @@ bindMenu(document.querySelector("#phone-trigger"), document.querySelector("#phon
   renderCanvas();
 });
 
-bindMenu(document.querySelector("#weight-trigger"), document.querySelector("#weight-menu"), (option) => {
-  state.linkWeight = option.dataset.weight;
-  document.querySelector("#weight-value").textContent = option.textContent.trim();
-  renderCanvas();
-});
-
-bindMenu(document.querySelector("#link-color-trigger"), document.querySelector("#link-color-menu"), (option) => {
-  state.linkColor = option.dataset.color;
-  document.querySelector("#link-swatch").style.background = state.linkColor;
-  document.querySelector("#link-color-name").textContent = option.dataset.name;
+bindMenu(document.querySelector("#menu-type-trigger"), document.querySelector("#menu-type-menu"), (option) => {
+  state.menuType = option.dataset.menuType;
+  const label = document.querySelector("#menu-type-value");
+  if (label) label.textContent = option.textContent.trim();
   renderCanvas();
 });
 
@@ -782,6 +874,22 @@ bindMenu(document.querySelector("#submenu-color-trigger"), document.querySelecto
   document.querySelector("#submenu-color-name").textContent = option.dataset.name;
   renderCanvas();
 });
+
+document.querySelectorAll("#layout-orientation button").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.orientation = button.dataset.orientation;
+    document.querySelectorAll("#layout-orientation button").forEach((entry) => {
+      const selected = entry === button;
+      entry.classList.toggle("active", selected);
+      entry.setAttribute("aria-pressed", String(selected));
+    });
+    renderCanvas();
+  });
+});
+
+bindLayoutSlider("link-spacing-slider", "link-spacing-value", "linkSpacing");
+bindLayoutSlider("vertical-padding-slider", "vertical-padding-value", "verticalPadding");
+bindLayoutSlider("cta-padding-slider", "cta-padding-value", "ctaPadding");
 
 document.querySelectorAll(".review-bar .chip").forEach((chip) => {
   chip.addEventListener("click", () => {
