@@ -394,7 +394,7 @@
   box-sizing: border-box;
 }
 
-.sp-colors-panel {
+.sp-tool-panel.sp-colors-panel {
   width: 303px;
   left: 0;
   transform: none;
@@ -443,7 +443,7 @@
   right: auto;
   width: max-content;
   margin: 0;
-  padding: 12px;
+  padding: 20px;
   list-style: none;
   border: 1px solid #dbdfe0;
   border-radius: 10px;
