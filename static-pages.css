@@ -358,10 +358,6 @@
   width: 282px;
 }
 
-.sp-color-field[data-slot="accent2"] .sp-color-chip {
-  box-shadow: inset 0 -3px 0 var(--page-accent-2);
-}
-
 .sp-tool-cluster {
   display: inline-flex;
   align-items: center;
