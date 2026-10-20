@@ -241,6 +241,17 @@ function closeColorMenus() {
   });
 }
 
+/** True when the event target is inside an open Page Colors nested picker UI. */
+function isInsideColorPicker(target) {
+  const el = target instanceof Element ? target : target?.parentElement;
+  if (!el) return false;
+  return Boolean(
+    el.closest(".sp-color-menu") ||
+      el.closest(".sp-custom-color-panel") ||
+      el.closest(".sp-color-chip.color-trigger")
+  );
+}
+
 function closeOptionsPanel() {
   if (!optionsPanel) return;
   optionsPanel.hidden = true;
@@ -857,7 +868,14 @@ pagesFlyout?.querySelectorAll(".sp-pages-item").forEach((item) => {
   });
 });
 
-colorsPanel?.addEventListener("click", (event) => event.stopPropagation());
+colorsPanel?.addEventListener("click", (event) => {
+  // Keep the Page Colors panel open, but dismiss nested preset/HSV pickers
+  // when the click is elsewhere inside the panel (title, idle chips area, etc.).
+  event.stopPropagation();
+  if (!isInsideColorPicker(event.target)) {
+    closeColorMenus();
+  }
+});
 ctaPanel?.addEventListener("click", (event) => event.stopPropagation());
 radiusPanel.addEventListener("click", (event) => event.stopPropagation());
 locationPanel.addEventListener("click", (event) => event.stopPropagation());
@@ -874,6 +892,8 @@ document.addEventListener("click", (event) => {
   ) {
     return;
   }
+  // Match Button Styles / Radius / etc.: outside click closes tool panels
+  // (and nested Page Colors preset/HSV pickers via closeMenus → closeColorMenus).
   closeMenus();
 });
 
@@ -882,6 +902,14 @@ document.addEventListener("keydown", (event) => {
   closeMenus();
   closeOptionsPanel();
   closePagesFlyout();
+});
+
+// Clicks on the preview iframe do not bubble to `document`. Treat focus moving
+// into the canvas as an outside dismissal, same as other tool panels.
+window.addEventListener("blur", () => {
+  window.requestAnimationFrame(() => {
+    if (document.activeElement === iframe) closeMenus();
+  });
 });
 
 let optionsDrag = null;
