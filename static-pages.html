@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="static-pages.css?v=4" />
+    <link rel="stylesheet" href="static-pages.css?v=6" />
   </head>
   <body class="sp-body">
     <a class="skip-link" href="#page-viewport">Skip to page canvas</a>
@@ -133,11 +133,14 @@
         <button
           type="button"
           class="sp-rail-btn"
+          id="pages-trigger"
           data-rail="pages"
           aria-pressed="false"
+          aria-expanded="false"
+          aria-controls="pages-flyout"
           aria-label="Pages"
         >
-          <img src="assets/static-pages/icon-rail-1.svg" alt="" width="24" height="24" />
+          <img src="assets/static-pages/icon-rail-2.svg" alt="" width="24" height="24" />
         </button>
         <button
           type="button"
@@ -146,7 +149,7 @@
           aria-pressed="false"
           aria-label="Add block"
         >
-          <img src="assets/static-pages/icon-rail-2.svg" alt="" width="24" height="24" />
+          <img src="assets/static-pages/icon-rail-1.svg" alt="" width="24" height="24" />
         </button>
         <button
           type="button"
@@ -181,33 +184,28 @@
             aria-controls="color-menu-background"
             aria-label="Background color"
           >
-            <span class="swatch sp-swatch" id="swatch-background" style="background: #f5f6f1"></span>
+            <span class="swatch sp-swatch" id="swatch-background" style="background: #f5f6f0"></span>
             <span class="sp-color-chip-label">Background</span>
           </button>
           <ul class="color-menu sp-color-menu" id="color-menu-background" hidden role="listbox" aria-label="Background colors">
             <li>
-              <button type="button" data-color="Cream" data-hex="#f5f6f1" aria-selected="true">
-                <span class="swatch" style="background:#f5f6f1"></span>Cream
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="White" data-hex="#ffffff">
-                <span class="swatch" style="background:#fff"></span>White
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="Sand" data-hex="#f0f1e9">
-                <span class="swatch" style="background:#f0f1e9"></span>Sand
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="Primary" data-hex="#94abf9">
-                <span class="swatch" style="background:#94abf9"></span>Primary
+              <button type="button" data-color="Primary" data-hex="#00669e">
+                <span class="swatch" style="background:#00669e"></span>Primary
               </button>
             </li>
             <li>
               <button type="button" data-color="Secondary" data-hex="#f598ff">
                 <span class="swatch" style="background:#f598ff"></span>Secondary
+              </button>
+            </li>
+            <li>
+              <button type="button" data-color="Tertiary" data-hex="#f0f1eb">
+                <span class="swatch" style="background:#f0f1eb"></span>Tertiary
+              </button>
+            </li>
+            <li>
+              <button type="button" data-color="Light" data-hex="#f5f6f0" aria-selected="true">
+                <span class="swatch" style="background:#f5f6f0"></span>Light
               </button>
             </li>
             <li>
@@ -236,18 +234,13 @@
             aria-controls="color-menu-accent1"
             aria-label="Accent 1 color"
           >
-            <span class="swatch sp-swatch" id="swatch-accent1" style="background: #005a9c"></span>
+            <span class="swatch sp-swatch" id="swatch-accent1" style="background: #00669e"></span>
             <span class="sp-color-chip-label">Accent 1</span>
           </button>
           <ul class="color-menu sp-color-menu" id="color-menu-accent1" hidden role="listbox" aria-label="Accent 1 colors">
             <li>
-              <button type="button" data-color="Lake" data-hex="#005a9c" aria-selected="true">
-                <span class="swatch" style="background:#005a9c"></span>Lake
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="Primary" data-hex="#94abf9">
-                <span class="swatch" style="background:#94abf9"></span>Primary
+              <button type="button" data-color="Primary" data-hex="#00669e" aria-selected="true">
+                <span class="swatch" style="background:#00669e"></span>Primary
               </button>
             </li>
             <li>
@@ -256,18 +249,18 @@
               </button>
             </li>
             <li>
-              <button type="button" data-color="Tertiary" data-hex="#e5e9fd">
-                <span class="swatch" style="background:#e5e9fd"></span>Tertiary
+              <button type="button" data-color="Tertiary" data-hex="#f0f1eb">
+                <span class="swatch" style="background:#f0f1eb"></span>Tertiary
+              </button>
+            </li>
+            <li>
+              <button type="button" data-color="Light" data-hex="#f5f6f0">
+                <span class="swatch" style="background:#f5f6f0"></span>Light
               </button>
             </li>
             <li>
               <button type="button" data-color="Dark" data-hex="#171d3a">
                 <span class="swatch" style="background:#171d3a"></span>Dark
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="White" data-hex="#ffffff">
-                <span class="swatch" style="background:#fff"></span>White
               </button>
             </li>
             <li>
@@ -291,33 +284,28 @@
             aria-controls="color-menu-accent2"
             aria-label="Accent 2 color"
           >
-            <span class="swatch sp-swatch" id="swatch-accent2" style="background: #f0f1e9"></span>
+            <span class="swatch sp-swatch" id="swatch-accent2" style="background: #f0f1eb"></span>
             <span class="sp-color-chip-label">Accent 2</span>
           </button>
           <ul class="color-menu sp-color-menu" id="color-menu-accent2" hidden role="listbox" aria-label="Accent 2 colors">
             <li>
-              <button type="button" data-color="Sand" data-hex="#f0f1e9" aria-selected="true">
-                <span class="swatch" style="background:#f0f1e9"></span>Sand
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="Cream" data-hex="#f5f6f1">
-                <span class="swatch" style="background:#f5f6f1"></span>Cream
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="White" data-hex="#ffffff">
-                <span class="swatch" style="background:#fff"></span>White
-              </button>
-            </li>
-            <li>
-              <button type="button" data-color="Primary" data-hex="#94abf9">
-                <span class="swatch" style="background:#94abf9"></span>Primary
+              <button type="button" data-color="Primary" data-hex="#00669e">
+                <span class="swatch" style="background:#00669e"></span>Primary
               </button>
             </li>
             <li>
               <button type="button" data-color="Secondary" data-hex="#f598ff">
                 <span class="swatch" style="background:#f598ff"></span>Secondary
+              </button>
+            </li>
+            <li>
+              <button type="button" data-color="Tertiary" data-hex="#f0f1eb" aria-selected="true">
+                <span class="swatch" style="background:#f0f1eb"></span>Tertiary
+              </button>
+            </li>
+            <li>
+              <button type="button" data-color="Light" data-hex="#f5f6f0">
+                <span class="swatch" style="background:#f5f6f0"></span>Light
               </button>
             </li>
             <li>
@@ -628,7 +616,7 @@
             id="live-page"
             class="sp-iframe"
             title="Meadow View Lodge — live page"
-            src="https://spring-brook.vercel.app/properties/meadow-view-lodge"
+            src="preview/meadow-view-lodge.html"
             data-remote-path="/properties/meadow-view-lodge"
             data-remote-url="https://spring-brook.vercel.app/properties/meadow-view-lodge"
             loading="eager"
@@ -650,6 +638,137 @@
       </main>
     </div>
 
+    <aside
+      class="sp-pages-flyout"
+      id="pages-flyout"
+      role="dialog"
+      aria-labelledby="pages-flyout-title"
+      aria-modal="false"
+      hidden
+    >
+      <header class="sp-pages-flyout-header">
+        <h2 class="sp-pages-flyout-title" id="pages-flyout-title">Manage Pages</h2>
+        <button type="button" class="sp-pages-flyout-close" id="pages-close" aria-label="Close pages">
+          <img src="assets/static-pages/icon-close.svg" alt="" width="24" height="24" />
+        </button>
+      </header>
+
+      <div class="sp-pages-flyout-body">
+        <label class="sp-pages-search">
+          <span class="sr-only">Search Pages</span>
+          <input
+            type="search"
+            id="pages-search"
+            class="sp-pages-search-input"
+            placeholder="Search Pages"
+            autocomplete="off"
+          />
+          <span class="sp-pages-search-icon" aria-hidden="true">
+            <img src="assets/static-pages/icon-search.svg" alt="" width="17" height="17" />
+          </span>
+        </label>
+
+        <button type="button" class="sp-pages-add" id="pages-add">Add Page</button>
+
+        <section class="sp-pages-section" data-pages-section="module" aria-labelledby="module-pages-heading">
+          <div class="sp-pages-section-head">
+            <div class="sp-pages-section-copy">
+              <h3 class="sp-pages-section-title" id="module-pages-heading">Module Pages</h3>
+              <p class="sp-pages-section-desc">
+                Customize page layouts, content, and styles within your available permissions.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="sp-pages-section-toggle"
+              aria-expanded="true"
+              aria-controls="module-pages-list"
+              aria-label="Collapse Module Pages"
+            >
+              <img src="assets/static-pages/icon-chevron-up.svg" alt="" width="11" height="7" />
+            </button>
+          </div>
+          <ul class="sp-pages-list" id="module-pages-list">
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Home">Home</button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Golf Course">Golf Course</button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Pools &amp; Recreation">
+                Pools &amp; Recreation
+              </button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Weddings &amp; Events">
+                Weddings &amp; Events
+              </button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="About Us">About Us</button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Contact">Contact</button>
+            </li>
+          </ul>
+        </section>
+
+        <hr class="sp-pages-divider" />
+
+        <section
+          class="sp-pages-section"
+          data-pages-section="structured"
+          aria-labelledby="structured-pages-heading"
+        >
+          <div class="sp-pages-section-head">
+            <div class="sp-pages-section-copy">
+              <h3 class="sp-pages-section-title" id="structured-pages-heading">Structured Pages</h3>
+              <p class="sp-pages-section-desc">
+                Customize supported content and styles within a predefined layout.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="sp-pages-section-toggle"
+              aria-expanded="true"
+              aria-controls="structured-pages-list"
+              aria-label="Collapse Structured Pages"
+            >
+              <img src="assets/static-pages/icon-chevron-up.svg" alt="" width="11" height="7" />
+            </button>
+          </div>
+          <ul class="sp-pages-list" id="structured-pages-list">
+            <li>
+              <button
+                type="button"
+                class="sp-pages-item is-selected"
+                data-page-name="Property Page"
+                aria-current="true"
+              >
+                <span>Property Page</span>
+                <img
+                  class="sp-pages-item-chevron"
+                  src="assets/static-pages/icon-angle-right.svg"
+                  alt=""
+                  width="7"
+                  height="11"
+                />
+              </button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Booking">Booking</button>
+            </li>
+            <li>
+              <button type="button" class="sp-pages-item" data-page-name="Confirmation Page">
+                Confirmation Page
+              </button>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </aside>
+
     <div
       class="sp-options-panel"
       id="options-panel"
@@ -670,6 +789,6 @@
 
     <div class="sp-tooltip" id="sp-tooltip" role="tooltip" hidden></div>
     <p class="sr-only" id="live" aria-live="polite"></p>
-    <script src="static-pages.js?v=4"></script>
+    <script src="static-pages.js?v=5"></script>
   </body>
 </html>

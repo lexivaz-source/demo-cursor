@@ -21,6 +21,10 @@ const optionsTrigger = document.querySelector("#options-trigger");
 const optionsPanel = document.querySelector("#options-panel");
 const optionsClose = document.querySelector("#options-close");
 const optionsDragHandle = document.querySelector("#options-drag-handle");
+const pagesTrigger = document.querySelector("#pages-trigger");
+const pagesFlyout = document.querySelector("#pages-flyout");
+const pagesClose = document.querySelector("#pages-close");
+const pagesSearch = document.querySelector("#pages-search");
 const OPTIONS_PANEL_WIDTH = 320;
 const OPTIONS_PANEL_HEIGHT = 500;
 const pageAnimationValue = document.querySelector("#page-animation-value");
@@ -41,16 +45,32 @@ const LIVE_ORIGIN = "https://spring-brook.vercel.app";
 const LIVE_REMOTE = `${LIVE_ORIGIN}/properties/meadow-view-lodge`;
 const TOOLTIP_SELECTOR = ".sp-tool-btn[data-tooltip]";
 
+/** Same-origin cached previews (theme bridge) for static hosts like GitHub Pages. */
+const STATIC_PREVIEW_BY_PATH = {
+  "/properties/meadow-view-lodge": "preview/meadow-view-lodge.html",
+};
+
 /** Local static-pages-server.py proxies /properties/* same-origin; GitHub Pages cannot. */
 function usesLocalPreviewProxy() {
   const host = window.location.hostname;
   return host === "localhost" || host === "127.0.0.1";
 }
 
+function staticPreviewSrc(path) {
+  const clean = path?.startsWith("/") ? path : `/${path || LIVE_PATH}`;
+  const relative = STATIC_PREVIEW_BY_PATH[clean];
+  if (!relative) return null;
+  try {
+    return new URL(relative, window.location.href).href;
+  } catch {
+    return relative;
+  }
+}
+
 const pageColors = {
-  background: { name: "Cream", hex: "#f5f6f1" },
-  accent1: { name: "Lake", hex: "#005a9c" },
-  accent2: { name: "Sand", hex: "#f0f1e9" },
+  background: { name: "Light", hex: "#f5f6f0" },
+  accent1: { name: "Primary", hex: "#00669e" },
+  accent2: { name: "Tertiary", hex: "#f0f1eb" },
 };
 
 const pageFx = {
@@ -87,7 +107,10 @@ function previewSrc(path, absoluteUrl) {
   const clean = path?.startsWith("/") ? path : `/${path || LIVE_PATH}`;
   // Local proxy: real path so Next.js /_next assets resolve on the same origin.
   if (usesLocalPreviewProxy()) return clean;
-  // GitHub Pages / static hosts: absolute remote (root-relative paths 404 on *.github.io).
+  // GitHub Pages / static hosts: same-origin cached HTML with theme bridge when available.
+  const cached = staticPreviewSrc(clean);
+  if (cached) return cached;
+  // Fallback: live remote (cross-origin — colors won't apply without the bridge).
   if (absoluteUrl) return absoluteUrl;
   try {
     return new URL(clean, LIVE_ORIGIN).href;
@@ -169,6 +192,35 @@ function closeOptionsPanel() {
   optionsTrigger?.setAttribute("aria-expanded", "false");
 }
 
+function setPagesRailActive(active) {
+  if (!pagesTrigger) return;
+  pagesTrigger.classList.toggle("is-active", active);
+  pagesTrigger.setAttribute("aria-pressed", String(active));
+  pagesTrigger.setAttribute("aria-expanded", String(active));
+  if (active) {
+    document.querySelectorAll(".sp-rail-btn").forEach((item) => {
+      if (item === pagesTrigger) return;
+      item.classList.remove("is-active");
+      item.setAttribute("aria-pressed", "false");
+    });
+  }
+}
+
+function closePagesFlyout() {
+  if (!pagesFlyout) return;
+  pagesFlyout.hidden = true;
+  setPagesRailActive(false);
+}
+
+function openPagesFlyout() {
+  if (!pagesFlyout) return;
+  closeOptionsPanel();
+  closeMenus({ keepPages: true });
+  pagesFlyout.hidden = false;
+  setPagesRailActive(true);
+  pagesSearch?.focus();
+}
+
 function clampOptionsPosition(left, top) {
   const maxLeft = Math.max(8, window.innerWidth - OPTIONS_PANEL_WIDTH - 8);
   const maxTop = Math.max(8, window.innerHeight - OPTIONS_PANEL_HEIGHT - 8);
@@ -230,13 +282,14 @@ function closeToolPanels(exceptPanel) {
   closeFieldMenus();
 }
 
-function closeMenus() {
+function closeMenus({ keepPages = false } = {}) {
   pageMenu.hidden = true;
   pagePicker.setAttribute("aria-expanded", "false");
   closeColorMenus();
   closeToolPanels();
   closeSectionsPanel();
   hideTooltip();
+  if (!keepPages) closePagesFlyout();
 }
 
 function themePayload() {
@@ -318,11 +371,6 @@ function applyPageColors() {
   viewport.style.setProperty("--page-text", dark ? "#ffffff" : "#171d3a");
   viewport.classList.toggle("is-dark-page", dark);
   iframe.style.backgroundColor = pageColors.background.hex;
-
-  const accent2Field = document.querySelector('.sp-color-field[data-slot="accent2"]');
-  if (accent2Field) {
-    accent2Field.style.setProperty("--page-accent-2", pageColors.accent2.hex);
-  }
 
   pushThemeToPreview();
 }
@@ -476,6 +524,63 @@ optionsClose.addEventListener("click", (event) => {
   closeOptionsPanel();
 });
 
+pagesTrigger?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const willOpen = pagesFlyout?.hidden;
+  if (!willOpen) {
+    closePagesFlyout();
+    announce("Pages closed");
+    return;
+  }
+  openPagesFlyout();
+  announce("Manage Pages opened");
+});
+
+pagesClose?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  closePagesFlyout();
+  announce("Pages closed");
+});
+
+pagesFlyout?.addEventListener("click", (event) => event.stopPropagation());
+
+pagesSearch?.addEventListener("input", () => {
+  const query = pagesSearch.value.trim().toLowerCase();
+  pagesFlyout.querySelectorAll(".sp-pages-item").forEach((item) => {
+    const name = (item.dataset.pageName || item.textContent || "").toLowerCase();
+    const match = !query || name.includes(query);
+    const row = item.closest("li");
+    if (row) row.hidden = !match;
+    else item.hidden = !match;
+  });
+});
+
+pagesFlyout?.querySelectorAll(".sp-pages-section-toggle").forEach((toggle) => {
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const section = toggle.closest(".sp-pages-section");
+    if (!section) return;
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    section.classList.toggle("is-collapsed", expanded);
+    const label = section.querySelector(".sp-pages-section-title")?.textContent || "section";
+    toggle.setAttribute("aria-label", `${expanded ? "Expand" : "Collapse"} ${label}`);
+  });
+});
+
+pagesFlyout?.querySelectorAll(".sp-pages-item").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.stopPropagation();
+    pagesFlyout.querySelectorAll(".sp-pages-item").forEach((other) => {
+      const selected = other === item;
+      other.classList.toggle("is-selected", selected);
+      if (selected) other.setAttribute("aria-current", "true");
+      else other.removeAttribute("aria-current");
+    });
+    announce(`${item.dataset.pageName || item.textContent.trim()} selected`);
+  });
+});
+
 radiusPanel.addEventListener("click", (event) => event.stopPropagation());
 locationPanel.addEventListener("click", (event) => event.stopPropagation());
 animationsPanel.addEventListener("click", (event) => event.stopPropagation());
@@ -483,7 +588,12 @@ sectionsPanel.addEventListener("click", (event) => event.stopPropagation());
 optionsPanel.addEventListener("click", (event) => event.stopPropagation());
 
 document.addEventListener("click", (event) => {
-  if (event.target.closest("#options-panel") || event.target.closest("#options-trigger")) {
+  if (
+    event.target.closest("#options-panel") ||
+    event.target.closest("#options-trigger") ||
+    event.target.closest("#pages-flyout") ||
+    event.target.closest("#pages-trigger")
+  ) {
     return;
   }
   closeMenus();
@@ -493,6 +603,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
   closeMenus();
   closeOptionsPanel();
+  closePagesFlyout();
 });
 
 let optionsDrag = null;
@@ -593,6 +704,8 @@ document.querySelectorAll(".sp-device-btn").forEach((button) => {
 
 document.querySelectorAll(".sp-rail-btn").forEach((button) => {
   button.addEventListener("click", () => {
+    if (button === pagesTrigger) return;
+    closePagesFlyout();
     document.querySelectorAll(".sp-rail-btn").forEach((item) => {
       const selected = item === button;
       item.classList.toggle("is-active", selected);
