@@ -493,31 +493,6 @@
   pointer-events: none;
 }
 
-.sp-options-animations {
-  position: static;
-  transform: none;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
-}
-
-.sp-options-animations .sp-tool-panel-title {
-  padding: 0;
-  margin-bottom: 16px;
-}
-
-.sp-options-animations .sp-tool-section {
-  padding: 0;
-}
-
-.sp-options-animations .sp-tool-field-control,
-.sp-options-animations .sp-speed-bar {
-  width: 100%;
-}
-
 .sp-tool-field {
   position: relative;
   flex: 0 0 auto;
@@ -529,6 +504,7 @@
 
 .sp-tool-btn {
   appearance: none;
+  box-sizing: border-box;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -539,6 +515,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 0;
 }
 
 .sp-tool-btn:hover,
@@ -557,11 +534,18 @@
   display: block;
   width: 28px;
   height: 28px;
+  margin: 0;
+  flex: 0 0 auto;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
 }
 
+/* Framed Animation asset is 40×40 (includes its own border); drop button chrome so the icon fills and centers. */
 .sp-tool-field[data-tool="animations"] .sp-tool-btn {
-  border-color: transparent;
+  border: none;
   background: transparent;
+  overflow: hidden;
 }
 
 .sp-tool-field[data-tool="animations"] .sp-tool-btn img {

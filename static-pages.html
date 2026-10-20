@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="static-pages.css?v=15" />
+    <link rel="stylesheet" href="static-pages.css?v=16" />
   </head>
   <body class="sp-body">
     <a class="skip-link" href="#page-viewport">Skip to page canvas</a>
@@ -583,17 +583,66 @@
               </div>
             </div>
 
-            <div class="sp-tool-field" data-tool="link">
+            <div class="sp-tool-field" data-tool="animations">
               <button
                 type="button"
                 class="sp-tool-btn"
-                id="btn-link"
-                aria-label="Link"
+                id="btn-animations"
+                aria-label="Animation"
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                aria-controls="animations-panel"
                 aria-describedby="sp-tooltip"
-                data-tooltip="Link"
+                data-tooltip="Animation"
               >
-                <img src="assets/static-pages/icon-link.svg" alt="" width="28" height="28" />
+                <img src="assets/static-pages/icon-animations.svg" alt="" width="40" height="40" />
               </button>
+              <div class="sp-tool-panel" id="animations-panel" role="dialog" aria-label="Animation" hidden>
+                <p class="sp-tool-panel-title">Animation</p>
+
+                <p class="sp-tool-section">Entry animation</p>
+                <div class="field sp-tool-field-control">
+                  <span class="field-label" id="page-animation-label">Behavior</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="page-animation-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="page-animation-label page-animation-value"
+                  >
+                    <span id="page-animation-value">Fade</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24">
+                        <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
+                      </span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="page-animation-menu" hidden role="listbox" aria-labelledby="page-animation-label">
+                    <li><button type="button" role="option" data-animation="none" aria-selected="false">None</button></li>
+                    <li><button type="button" role="option" data-animation="fade" aria-selected="true">Fade</button></li>
+                    <li><button type="button" role="option" data-animation="slide-y" aria-selected="false">Slide From Bottom</button></li>
+                    <li><button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button></li>
+                    <li><button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">Shrink</button></li>
+                    <li><button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">Zoom In</button></li>
+                    <li><button type="button" role="option" data-animation="zoom-out" aria-selected="false">Zoom Out</button></li>
+                  </ul>
+                </div>
+
+                <p class="sp-tool-section">Speed</p>
+                <div class="icon-bar speed-bar sp-speed-bar" id="page-speed" role="group" aria-label="Speed">
+                  <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
+                    <span class="icon-24">
+                      <img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                  <button type="button" data-speed="fast" aria-label="Fast speed">
+                    <span class="icon-24">
+                      <img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" />
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -788,52 +837,7 @@
         </button>
       </header>
       <div class="sp-options-body">
-        <div class="sp-tool-panel sp-options-animations" id="animations-panel" role="group" aria-label="Animations">
-          <p class="sp-tool-panel-title">Animations</p>
-
-          <p class="sp-tool-section">Entry animation</p>
-          <div class="field sp-tool-field-control">
-            <span class="field-label" id="page-animation-label">Behavior</span>
-            <button
-              type="button"
-              class="field-trigger"
-              id="page-animation-trigger"
-              aria-haspopup="listbox"
-              aria-expanded="false"
-              aria-labelledby="page-animation-label page-animation-value"
-            >
-              <span id="page-animation-value">Fade</span>
-              <span class="icon-button" aria-hidden="true">
-                <span class="icon-24">
-                  <img src="assets/icon-chevron.svg" alt="" width="24" height="24" />
-                </span>
-              </span>
-            </button>
-            <ul class="field-menu" id="page-animation-menu" hidden role="listbox" aria-labelledby="page-animation-label">
-              <li><button type="button" role="option" data-animation="none" aria-selected="false">None</button></li>
-              <li><button type="button" role="option" data-animation="fade" aria-selected="true">Fade</button></li>
-              <li><button type="button" role="option" data-animation="slide-y" aria-selected="false">Slide From Bottom</button></li>
-              <li><button type="button" role="option" data-animation="zoom-in" aria-selected="false">Grow</button></li>
-              <li><button type="button" role="option" data-animation="zoom-out-in" aria-selected="false">Shrink</button></li>
-              <li><button type="button" role="option" data-animation="zoom-in-more" aria-selected="false">Zoom In</button></li>
-              <li><button type="button" role="option" data-animation="zoom-out" aria-selected="false">Zoom Out</button></li>
-            </ul>
-          </div>
-
-          <p class="sp-tool-section">Speed</p>
-          <div class="icon-bar speed-bar sp-speed-bar" id="page-speed" role="group" aria-label="Speed">
-            <button type="button" class="active" data-speed="normal" aria-label="Normal speed">
-              <span class="icon-24">
-                <img src="assets/icon-speed-normal.svg" alt="" width="24" height="24" />
-              </span>
-            </button>
-            <button type="button" data-speed="fast" aria-label="Fast speed">
-              <span class="icon-24">
-                <img src="assets/icon-speed-fast.svg" alt="" width="24" height="24" />
-              </span>
-            </button>
-          </div>
-        </div>
+        <p class="sp-options-empty">Page-level options will appear here.</p>
       </div>
     </div>
 

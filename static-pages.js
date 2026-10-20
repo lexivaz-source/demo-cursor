@@ -17,8 +17,10 @@ const ctaBtn = document.querySelector("#btn-cta");
 const ctaPanel = document.querySelector("#cta-panel");
 const radiusBtn = document.querySelector("#btn-radius");
 const locationBtn = document.querySelector("#btn-location");
+const animationsBtn = document.querySelector("#btn-animations");
 const radiusPanel = document.querySelector("#radius-panel");
 const locationPanel = document.querySelector("#location-panel");
+const animationsPanel = document.querySelector("#animations-panel");
 const optionsTrigger = document.querySelector("#options-trigger");
 const optionsPanel = document.querySelector("#options-panel");
 const optionsClose = document.querySelector("#options-close");
@@ -39,8 +41,8 @@ const radiusCornerInputs = {
   bl: document.querySelector("#radius-bl"),
   br: document.querySelector("#radius-br"),
 };
-const toolButtons = [colorsBtn, ctaBtn, radiusBtn, locationBtn];
-const toolPanels = [colorsPanel, ctaPanel, radiusPanel, locationPanel];
+const toolButtons = [colorsBtn, ctaBtn, radiusBtn, locationBtn, animationsBtn];
+const toolPanels = [colorsPanel, ctaPanel, radiusPanel, locationPanel, animationsPanel];
 
 const LIVE_PATH = "/properties/meadow-view-lodge";
 const LIVE_ORIGIN = "https://spring-brook.vercel.app";
@@ -590,6 +592,11 @@ locationBtn.addEventListener("click", (event) => {
   openToolPanel(locationBtn, locationPanel);
 });
 
+animationsBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  openToolPanel(animationsBtn, animationsPanel);
+});
+
 optionsTrigger.addEventListener("click", (event) => {
   event.stopPropagation();
   const willOpen = optionsPanel.hidden;
@@ -667,6 +674,7 @@ colorsPanel?.addEventListener("click", (event) => event.stopPropagation());
 ctaPanel?.addEventListener("click", (event) => event.stopPropagation());
 radiusPanel.addEventListener("click", (event) => event.stopPropagation());
 locationPanel.addEventListener("click", (event) => event.stopPropagation());
+animationsPanel?.addEventListener("click", (event) => event.stopPropagation());
 sectionsPanel.addEventListener("click", (event) => event.stopPropagation());
 optionsPanel.addEventListener("click", (event) => event.stopPropagation());
 
