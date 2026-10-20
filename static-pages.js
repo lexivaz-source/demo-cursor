@@ -13,6 +13,8 @@ const publishedStatus = document.querySelector("#published-status");
 const tooltip = document.querySelector("#sp-tooltip");
 const colorsBtn = document.querySelector("#btn-colors");
 const colorsPanel = document.querySelector("#colors-panel");
+const ctaBtn = document.querySelector("#btn-cta");
+const ctaPanel = document.querySelector("#cta-panel");
 const radiusBtn = document.querySelector("#btn-radius");
 const locationBtn = document.querySelector("#btn-location");
 const radiusPanel = document.querySelector("#radius-panel");
@@ -37,8 +39,8 @@ const radiusCornerInputs = {
   bl: document.querySelector("#radius-bl"),
   br: document.querySelector("#radius-br"),
 };
-const toolButtons = [colorsBtn, radiusBtn, locationBtn];
-const toolPanels = [colorsPanel, radiusPanel, locationPanel];
+const toolButtons = [colorsBtn, ctaBtn, radiusBtn, locationBtn];
+const toolPanels = [colorsPanel, ctaPanel, radiusPanel, locationPanel];
 
 const LIVE_PATH = "/properties/meadow-view-lodge";
 const LIVE_ORIGIN = "https://spring-brook.vercel.app";
@@ -194,16 +196,18 @@ function luminance(hex) {
 }
 
 function closeFieldMenus(exceptMenu) {
-  document.querySelectorAll(".sp-tool-panel .field-menu").forEach((menu) => {
+  document.querySelectorAll(".sp-tool-panel .field-menu, .sp-cta-style-menu").forEach((menu) => {
     if (menu === exceptMenu) return;
     menu.hidden = true;
   });
-  document.querySelectorAll(".sp-tool-panel .field-trigger").forEach((trigger) => {
-    const menuId = trigger.getAttribute("aria-controls") || trigger.id.replace("-trigger", "-menu");
-    const menu = document.querySelector(`#${menuId}`);
-    if (menu && menu === exceptMenu) return;
-    trigger.setAttribute("aria-expanded", "false");
-  });
+  document
+    .querySelectorAll(".sp-tool-panel .field-trigger, .sp-cta-style-trigger")
+    .forEach((trigger) => {
+      const menuId = trigger.getAttribute("aria-controls") || trigger.id.replace("-trigger", "-menu");
+      const menu = document.querySelector(`#${menuId}`);
+      if (menu && menu === exceptMenu) return;
+      trigger.setAttribute("aria-expanded", "false");
+    });
 }
 
 function closeColorMenus() {
@@ -554,6 +558,11 @@ colorsBtn?.addEventListener("click", (event) => {
   openToolPanel(colorsBtn, colorsPanel);
 });
 
+ctaBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  openToolPanel(ctaBtn, ctaPanel);
+});
+
 radiusBtn.addEventListener("click", (event) => {
   event.stopPropagation();
   openToolPanel(radiusBtn, radiusPanel);
@@ -638,6 +647,7 @@ pagesFlyout?.querySelectorAll(".sp-pages-item").forEach((item) => {
 });
 
 colorsPanel?.addEventListener("click", (event) => event.stopPropagation());
+ctaPanel?.addEventListener("click", (event) => event.stopPropagation());
 radiusPanel.addEventListener("click", (event) => event.stopPropagation());
 locationPanel.addEventListener("click", (event) => event.stopPropagation());
 sectionsPanel.addEventListener("click", (event) => event.stopPropagation());
@@ -862,6 +872,43 @@ document.querySelectorAll("#location-panel button[data-map-style]").forEach((opt
     announce(`Location map style: ${option.querySelector("span")?.textContent.trim()}`);
   });
 });
+
+const buttonStyles = {
+  reserve: "primary",
+  share: "secondary",
+};
+
+function styleLabel(style) {
+  return style === "secondary" ? "Secondary" : "Primary";
+}
+
+function syncCtaStyleField(slot) {
+  const style = buttonStyles[slot] || "primary";
+  const trigger = document.querySelector(`#cta-${slot}-trigger`);
+  const value = document.querySelector(`#cta-${slot}-value`);
+  const preview = trigger?.querySelector(".sp-cta-preview");
+  const menu = document.querySelector(`#cta-${slot}-menu`);
+  if (preview) preview.dataset.style = style;
+  if (value) value.textContent = styleLabel(style);
+  menu?.querySelectorAll("button[role='option']").forEach((option) => {
+    option.setAttribute("aria-selected", String(option.dataset.style === style));
+  });
+}
+
+function bindCtaStyleMenu(slot, label) {
+  const triggerId = `cta-${slot}-trigger`;
+  const menuId = `cta-${slot}-menu`;
+  bindFieldMenu(triggerId, menuId, (option) => {
+    buttonStyles[slot] = option.dataset.style || "primary";
+    syncCtaStyleField(slot);
+    announce(`${label}: ${styleLabel(buttonStyles[slot])}`);
+  });
+}
+
+bindCtaStyleMenu("reserve", "Reserve");
+bindCtaStyleMenu("share", "Share/Save");
+syncCtaStyleField("reserve");
+syncCtaStyleField("share");
 
 document.querySelectorAll("#page-speed button").forEach((button) => {
   button.addEventListener("click", () => {

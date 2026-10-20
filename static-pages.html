@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="static-pages.css?v=12" />
+    <link rel="stylesheet" href="static-pages.css?v=13" />
   </head>
   <body class="sp-body">
     <a class="skip-link" href="#page-viewport">Skip to page canvas</a>
@@ -391,12 +391,103 @@
                 type="button"
                 class="sp-tool-btn"
                 id="btn-cta"
-                aria-label="Call to Action"
+                aria-label="Button Styling"
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                aria-controls="cta-panel"
                 aria-describedby="sp-tooltip"
-                data-tooltip="Call to Action"
+                data-tooltip="Button Styling"
               >
                 <img src="assets/static-pages/icon-cta.svg" alt="" width="28" height="28" />
               </button>
+              <div class="sp-tool-panel sp-cta-panel" id="cta-panel" role="dialog" aria-label="Button Styles" hidden>
+                <p class="sp-tool-panel-title">Button Styles</p>
+                <div class="sp-cta-sections">
+                  <div class="sp-cta-section">
+                    <p class="sp-cta-section-label" id="cta-reserve-label">Reserve</p>
+                    <div class="sp-cta-style-field">
+                      <button
+                        type="button"
+                        class="sp-cta-style-trigger"
+                        id="cta-reserve-trigger"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-controls="cta-reserve-menu"
+                        aria-labelledby="cta-reserve-label cta-reserve-value"
+                      >
+                        <span class="sp-cta-preview" data-style="primary">
+                          <span class="sp-cta-preview-btn">Button</span>
+                        </span>
+                        <span class="sp-cta-style-name" id="cta-reserve-value">Primary</span>
+                        <span class="sp-cta-style-chevron" aria-hidden="true">
+                          <img src="assets/static-pages/icon-cta-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </button>
+                      <ul class="sp-cta-style-menu field-menu" id="cta-reserve-menu" hidden role="listbox" aria-labelledby="cta-reserve-label">
+                        <li>
+                          <button type="button" role="option" data-style="primary" aria-selected="true">
+                            <span class="sp-cta-preview" data-style="primary">
+                              <span class="sp-cta-preview-btn">Button</span>
+                            </span>
+                            <span>Primary</span>
+                          </button>
+                        </li>
+                        <li>
+                          <button type="button" role="option" data-style="secondary" aria-selected="false">
+                            <span class="sp-cta-preview" data-style="secondary">
+                              <span class="sp-cta-preview-btn">Button</span>
+                            </span>
+                            <span>Secondary</span>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="sp-cta-divider" role="separator"></div>
+
+                  <div class="sp-cta-section">
+                    <p class="sp-cta-section-label" id="cta-share-label">Share/Save</p>
+                    <div class="sp-cta-style-field">
+                      <button
+                        type="button"
+                        class="sp-cta-style-trigger"
+                        id="cta-share-trigger"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-controls="cta-share-menu"
+                        aria-labelledby="cta-share-label cta-share-value"
+                      >
+                        <span class="sp-cta-preview" data-style="secondary">
+                          <span class="sp-cta-preview-btn">Button</span>
+                        </span>
+                        <span class="sp-cta-style-name" id="cta-share-value">Secondary</span>
+                        <span class="sp-cta-style-chevron" aria-hidden="true">
+                          <img src="assets/static-pages/icon-cta-chevron.svg" alt="" width="24" height="24" />
+                        </span>
+                      </button>
+                      <ul class="sp-cta-style-menu field-menu" id="cta-share-menu" hidden role="listbox" aria-labelledby="cta-share-label">
+                        <li>
+                          <button type="button" role="option" data-style="primary" aria-selected="false">
+                            <span class="sp-cta-preview" data-style="primary">
+                              <span class="sp-cta-preview-btn">Button</span>
+                            </span>
+                            <span>Primary</span>
+                          </button>
+                        </li>
+                        <li>
+                          <button type="button" role="option" data-style="secondary" aria-selected="true">
+                            <span class="sp-cta-preview" data-style="secondary">
+                              <span class="sp-cta-preview-btn">Button</span>
+                            </span>
+                            <span>Secondary</span>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="sp-tool-field" data-tool="radius">
@@ -748,6 +839,6 @@
 
     <div class="sp-tooltip" id="sp-tooltip" role="tooltip" hidden></div>
     <p class="sr-only" id="live" aria-live="polite"></p>
-    <script src="static-pages.js?v=9"></script>
+    <script src="static-pages.js?v=10"></script>
   </body>
 </html>
