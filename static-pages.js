@@ -222,7 +222,14 @@ function closeFieldMenus(exceptMenu) {
     });
 }
 
+function closeCustomColorPanels() {
+  document.querySelectorAll(".sp-custom-color-panel").forEach((panel) => {
+    panel.hidden = true;
+  });
+}
+
 function closeColorMenus() {
+  closeCustomColorPanels();
   document.querySelectorAll(".sp-color-menu").forEach((menu) => {
     menu.hidden = true;
   });
@@ -436,10 +443,13 @@ function syncColorPickerSelection(slot) {
   if (!menu) return;
   const current = (pageColors[slot]?.hex || "").toLowerCase();
   const inPalette = COLOR_PICKER_HEXES.has(current);
+  const customOpen = Boolean(menu.querySelector(".sp-custom-color-panel:not([hidden])"));
   menu.querySelectorAll(".sp-color-picker-swatch").forEach((option) => {
     const hex = (option.dataset.hex || "").toLowerCase();
     const isCustom = option.classList.contains("sp-color-picker-add");
-    const selected = isCustom ? !inPalette : hex === current;
+    const selected = isCustom
+      ? customOpen || !inPalette
+      : !customOpen && hex === current;
     option.setAttribute("aria-selected", String(selected));
   });
 }
@@ -458,93 +468,195 @@ function setSlotColor(slot, name, hex) {
   applyPageColors();
 }
 
-function positionCustomColorInput(input, anchor) {
-  const rect = anchor.getBoundingClientRect();
-  const gap = 8;
-  const width = Math.max(rect.width, 32);
-  const height = Math.max(rect.height, 32);
-  const estPickerW = 240;
-  const estPickerH = 300;
-  const margin = 8;
-
-  let left = rect.left + (rect.width - width) / 2;
-  let top = rect.bottom + gap;
-
-  // Prefer underneath; flip above when near the bottom edge.
-  if (top + estPickerH > window.innerHeight - margin) {
-    top = Math.max(margin, rect.top - gap - height);
-  }
-
-  // Keep the anchor strip on-screen horizontally.
-  left = Math.min(
-    Math.max(margin, left),
-    Math.max(margin, window.innerWidth - width - margin)
-  );
-  // Bias left so an OS picker growing rightward stays in view when possible.
-  if (left + estPickerW > window.innerWidth - margin) {
-    left = Math.max(margin, window.innerWidth - estPickerW - margin);
-  }
-
-  input.style.left = `${Math.round(left)}px`;
-  input.style.top = `${Math.round(top)}px`;
-  input.style.width = `${Math.round(width)}px`;
-  input.style.height = `${Math.round(height)}px`;
+function clamp01(n) {
+  return Math.min(1, Math.max(0, n));
 }
 
-function pickCustomColor(slot, label, anchor) {
-  const existing = document.getElementById("sp-custom-color-input");
-  if (existing) existing.remove();
-
-  const input = document.createElement("input");
-  input.type = "color";
-  input.id = "sp-custom-color-input";
-  input.className = "sp-custom-color-input";
-  input.value = pageColors[slot]?.hex || "#d2d2d2";
-  input.setAttribute("aria-hidden", "true");
-  input.tabIndex = -1;
-
-  const place = () => {
-    if (!anchor?.isConnected) return;
-    positionCustomColorInput(input, anchor);
-  };
-
-  document.body.appendChild(input);
-  place();
-
-  const cleanup = () => {
-    window.removeEventListener("resize", place);
-    window.removeEventListener("scroll", place, true);
-    input.remove();
-  };
-
-  input.addEventListener("input", () => {
-    setSlotColor(slot, "Custom", input.value);
-    announce(`${label}: Custom`);
-  });
-  input.addEventListener("change", () => {
-    closeColorMenus();
-    cleanup();
-  });
-  // Native pickers may blur before change; delay cleanup so selection still applies.
-  input.addEventListener("blur", () => {
-    window.setTimeout(() => {
-      if (input.isConnected) cleanup();
-    }, 250);
-  });
-
-  window.addEventListener("resize", place);
-  window.addEventListener("scroll", place, true);
-
-  // showPicker anchors to the input's layout box in supporting browsers.
-  try {
-    if (typeof input.showPicker === "function") {
-      input.showPicker();
-    } else {
-      input.click();
-    }
-  } catch {
-    input.click();
+function hexToHsv(hex) {
+  const raw = String(hex || "").replace("#", "");
+  const full =
+    raw.length === 3
+      ? raw
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : raw.padEnd(6, "0").slice(0, 6);
+  const r = parseInt(full.slice(0, 2), 16) / 255;
+  const g = parseInt(full.slice(2, 4), 16) / 255;
+  const b = parseInt(full.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  if (d !== 0) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+    if (h < 0) h += 360;
   }
+  const s = max === 0 ? 0 : d / max;
+  return { h, s, v: max };
+}
+
+function hsvToHex(h, s, v) {
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = v - c;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (h < 60) [r, g, b] = [c, x, 0];
+  else if (h < 120) [r, g, b] = [x, c, 0];
+  else if (h < 180) [r, g, b] = [0, c, x];
+  else if (h < 240) [r, g, b] = [0, x, c];
+  else if (h < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+  const toByte = (n) =>
+    Math.round((n + m) * 255)
+      .toString(16)
+      .padStart(2, "0");
+  return `#${toByte(r)}${toByte(g)}${toByte(b)}`;
+}
+
+function normalizeHex(value) {
+  const raw = String(value || "").trim().replace(/^#/, "");
+  if (/^[0-9a-fA-F]{3}$/.test(raw)) {
+    return `#${raw
+      .split("")
+      .map((c) => c + c)
+      .join("")
+      .toLowerCase()}`;
+  }
+  if (/^[0-9a-fA-F]{6}$/.test(raw)) return `#${raw.toLowerCase()}`;
+  return null;
+}
+
+function ensureCustomColorPanel(menu) {
+  let panel = menu.querySelector(".sp-custom-color-panel");
+  if (panel) return panel;
+
+  panel = document.createElement("div");
+  panel.className = "sp-custom-color-panel";
+  panel.hidden = true;
+  panel.setAttribute("role", "group");
+  panel.setAttribute("aria-label", "Custom color");
+  panel.innerHTML = `
+    <div class="sp-custom-sv" tabindex="0" role="slider" aria-label="Saturation and brightness">
+      <span class="sp-custom-sv-thumb" aria-hidden="true"></span>
+    </div>
+    <input class="sp-custom-hue" type="range" min="0" max="360" step="1" aria-label="Hue" />
+    <div class="sp-custom-hex-row">
+      <span class="sp-custom-preview" aria-hidden="true"></span>
+      <div class="sp-custom-hex-field">
+        <label for="">Hex</label>
+        <input type="text" class="sp-custom-hex" maxlength="7" spellcheck="false" autocomplete="off" />
+      </div>
+    </div>
+  `;
+  menu.appendChild(panel);
+
+  const hexInput = panel.querySelector(".sp-custom-hex");
+  const hexId = `sp-custom-hex-${menu.id || Math.random().toString(36).slice(2, 8)}`;
+  hexInput.id = hexId;
+  panel.querySelector(".sp-custom-hex-field label").setAttribute("for", hexId);
+
+  return panel;
+}
+
+function bindCustomColorPanel(panel, slot, label) {
+  if (panel.dataset.bound === "true") return;
+  panel.dataset.bound = "true";
+
+  const sv = panel.querySelector(".sp-custom-sv");
+  const thumb = panel.querySelector(".sp-custom-sv-thumb");
+  const hueInput = panel.querySelector(".sp-custom-hue");
+  const hexInput = panel.querySelector(".sp-custom-hex");
+  const preview = panel.querySelector(".sp-custom-preview");
+  let state = { h: 210, s: 0.2, v: 0.85 };
+  let dragging = false;
+
+  const paint = (announceChange = false) => {
+    const hex = hsvToHex(state.h, state.s, state.v);
+    panel.style.setProperty("--sp-custom-hue", String(Math.round(state.h)));
+    hueInput.value = String(Math.round(state.h));
+    thumb.style.left = `${state.s * 100}%`;
+    thumb.style.top = `${(1 - state.v) * 100}%`;
+    preview.style.background = hex;
+    if (document.activeElement !== hexInput) hexInput.value = hex;
+    setSlotColor(slot, "Custom", hex);
+    if (announceChange) announce(`${label}: Custom`);
+  };
+
+  const setFromHex = (hex, announceChange = false) => {
+    const next = normalizeHex(hex);
+    if (!next) return false;
+    state = hexToHsv(next);
+    paint(announceChange);
+    return true;
+  };
+
+  const setFromPointer = (event) => {
+    const rect = sv.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    state.s = clamp01((event.clientX - rect.left) / rect.width);
+    state.v = clamp01(1 - (event.clientY - rect.top) / rect.height);
+    paint(true);
+  };
+
+  hueInput.addEventListener("input", () => {
+    state.h = Number(hueInput.value) || 0;
+    paint(true);
+  });
+
+  hexInput.addEventListener("change", () => {
+    if (!setFromHex(hexInput.value, true)) hexInput.value = hsvToHex(state.h, state.s, state.v);
+  });
+  hexInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      hexInput.blur();
+    }
+  });
+
+  sv.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    dragging = true;
+    sv.setPointerCapture(event.pointerId);
+    setFromPointer(event);
+  });
+  sv.addEventListener("pointermove", (event) => {
+    if (!dragging) return;
+    setFromPointer(event);
+  });
+  sv.addEventListener("pointerup", () => {
+    dragging = false;
+  });
+  sv.addEventListener("pointercancel", () => {
+    dragging = false;
+  });
+
+  panel._loadColor = (hex) => {
+    setFromHex(hex || "#d2d2d2", false);
+  };
+}
+
+function openCustomColorPanel(menu, slot, label) {
+  const panel = ensureCustomColorPanel(menu);
+  bindCustomColorPanel(panel, slot, label);
+  document.querySelectorAll(".sp-custom-color-panel").forEach((other) => {
+    if (other !== panel) other.hidden = true;
+  });
+  panel.hidden = false;
+  panel._loadColor?.(pageColors[slot]?.hex || "#d2d2d2");
+  syncColorPickerSelection(slot);
+  panel.querySelector(".sp-custom-hex")?.focus({ preventScroll: true });
+}
+
+function pickCustomColor(slot, label, menu) {
+  // Native <input type="color"> popovers ignore CSS position on macOS/Chrome.
+  // Use an in-panel nested picker under the preset swatch row instead.
+  openCustomColorPanel(menu, slot, label);
 }
 
 function clampRadius(value) {
@@ -907,9 +1019,10 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
   menu.querySelectorAll(".sp-color-picker-swatch").forEach((option) => {
     option.addEventListener("click", () => {
       if (option.classList.contains("sp-color-picker-add")) {
-        pickCustomColor(slot, label, option);
+        pickCustomColor(slot, label, menu);
         return;
       }
+      closeCustomColorPanels();
       setSlotColor(slot, option.dataset.color, option.dataset.hex);
       announce(`${label}: ${option.dataset.color}`);
       closeColorMenus();
