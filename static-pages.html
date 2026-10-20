@@ -15,7 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="static-pages.css?v=10" />
+    <link rel="stylesheet" href="static-pages.css?v=11" />
   </head>
   <body class="sp-body">
     <a class="skip-link" href="#page-viewport">Skip to page canvas</a>
@@ -318,44 +318,19 @@
                       aria-controls="color-menu-background"
                       aria-label="Background color"
                     >
-                      <span class="swatch sp-swatch" id="swatch-background" style="background: #f5f6f0"></span>
                       <span class="sp-color-chip-label">Background</span>
+                      <span class="swatch sp-swatch" id="swatch-background" style="background: #f5f6f0"></span>
                     </button>
-                    <ul class="color-menu sp-color-menu" id="color-menu-background" hidden role="listbox" aria-label="Background colors">
-                      <li>
-                        <button type="button" data-color="Primary" data-hex="#00669e">
-                          <span class="swatch" style="background:#00669e"></span>Primary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Secondary" data-hex="#f598ff">
-                          <span class="swatch" style="background:#f598ff"></span>Secondary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Tertiary" data-hex="#f0f1eb">
-                          <span class="swatch" style="background:#f0f1eb"></span>Tertiary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Light" data-hex="#f5f6f0" aria-selected="true">
-                          <span class="swatch" style="background:#f5f6f0"></span>Light
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Dark" data-hex="#171d3a">
-                          <span class="swatch" style="background:#171d3a"></span>Dark
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Custom" data-hex="#d2d2d2">
-                          <span class="swatch" style="background:#d2d2d2"></span>Custom
-                        </button>
-                      </li>
-                      <li class="color-menu-footer">
-                        <button type="button" class="color-site-styles">Edit Site Styles</button>
-                      </li>
-                    </ul>
+                    <div class="color-menu sp-color-menu sp-color-picker" id="color-menu-background" hidden role="listbox" aria-label="Background colors">
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Soft Blue" data-hex="#94abf9" style="background:#94abf9" aria-label="Soft Blue"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Secondary" data-hex="#f598ff" style="background:#f598ff" aria-label="Secondary"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Mist" data-hex="#e5e9fd" style="background:#e5e9fd" aria-label="Mist"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Black" data-hex="#000000" style="background:#000000" aria-label="Black"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="White" data-hex="#ffffff" style="background:#ffffff" aria-label="White"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch sp-color-picker-add" data-color="Custom" data-hex="custom" aria-label="Custom color">
+                        <img src="assets/static-pages/icon-color-add.svg" alt="" width="24" height="24" />
+                      </button>
+                    </div>
                   </div>
 
                   <div class="sp-color-field" data-slot="accent1">
@@ -368,44 +343,19 @@
                       aria-controls="color-menu-accent1"
                       aria-label="Accent 1 color"
                     >
-                      <span class="swatch sp-swatch" id="swatch-accent1" style="background: #00669e"></span>
                       <span class="sp-color-chip-label">Accent 1</span>
+                      <span class="swatch sp-swatch" id="swatch-accent1" style="background: #00669e"></span>
                     </button>
-                    <ul class="color-menu sp-color-menu" id="color-menu-accent1" hidden role="listbox" aria-label="Accent 1 colors">
-                      <li>
-                        <button type="button" data-color="Primary" data-hex="#00669e" aria-selected="true">
-                          <span class="swatch" style="background:#00669e"></span>Primary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Secondary" data-hex="#f598ff">
-                          <span class="swatch" style="background:#f598ff"></span>Secondary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Tertiary" data-hex="#f0f1eb">
-                          <span class="swatch" style="background:#f0f1eb"></span>Tertiary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Light" data-hex="#f5f6f0">
-                          <span class="swatch" style="background:#f5f6f0"></span>Light
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Dark" data-hex="#171d3a">
-                          <span class="swatch" style="background:#171d3a"></span>Dark
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Custom" data-hex="#d2d2d2">
-                          <span class="swatch" style="background:#d2d2d2"></span>Custom
-                        </button>
-                      </li>
-                      <li class="color-menu-footer">
-                        <button type="button" class="color-site-styles">Edit Site Styles</button>
-                      </li>
-                    </ul>
+                    <div class="color-menu sp-color-menu sp-color-picker" id="color-menu-accent1" hidden role="listbox" aria-label="Accent 1 colors">
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Soft Blue" data-hex="#94abf9" style="background:#94abf9" aria-label="Soft Blue"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Secondary" data-hex="#f598ff" style="background:#f598ff" aria-label="Secondary"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Mist" data-hex="#e5e9fd" style="background:#e5e9fd" aria-label="Mist"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Black" data-hex="#000000" style="background:#000000" aria-label="Black"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="White" data-hex="#ffffff" style="background:#ffffff" aria-label="White"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch sp-color-picker-add" data-color="Custom" data-hex="custom" aria-label="Custom color">
+                        <img src="assets/static-pages/icon-color-add.svg" alt="" width="24" height="24" />
+                      </button>
+                    </div>
                   </div>
 
                   <div class="sp-color-field" data-slot="accent2">
@@ -418,44 +368,19 @@
                       aria-controls="color-menu-accent2"
                       aria-label="Accent 2 color"
                     >
-                      <span class="swatch sp-swatch" id="swatch-accent2" style="background: #f0f1eb"></span>
                       <span class="sp-color-chip-label">Accent 2</span>
+                      <span class="swatch sp-swatch" id="swatch-accent2" style="background: #e2e3dd"></span>
                     </button>
-                    <ul class="color-menu sp-color-menu" id="color-menu-accent2" hidden role="listbox" aria-label="Accent 2 colors">
-                      <li>
-                        <button type="button" data-color="Primary" data-hex="#00669e">
-                          <span class="swatch" style="background:#00669e"></span>Primary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Secondary" data-hex="#f598ff">
-                          <span class="swatch" style="background:#f598ff"></span>Secondary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Tertiary" data-hex="#f0f1eb" aria-selected="true">
-                          <span class="swatch" style="background:#f0f1eb"></span>Tertiary
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Light" data-hex="#f5f6f0">
-                          <span class="swatch" style="background:#f5f6f0"></span>Light
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Dark" data-hex="#171d3a">
-                          <span class="swatch" style="background:#171d3a"></span>Dark
-                        </button>
-                      </li>
-                      <li>
-                        <button type="button" data-color="Custom" data-hex="#d2d2d2">
-                          <span class="swatch" style="background:#d2d2d2"></span>Custom
-                        </button>
-                      </li>
-                      <li class="color-menu-footer">
-                        <button type="button" class="color-site-styles">Edit Site Styles</button>
-                      </li>
-                    </ul>
+                    <div class="color-menu sp-color-menu sp-color-picker" id="color-menu-accent2" hidden role="listbox" aria-label="Accent 2 colors">
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Soft Blue" data-hex="#94abf9" style="background:#94abf9" aria-label="Soft Blue"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Secondary" data-hex="#f598ff" style="background:#f598ff" aria-label="Secondary"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Mist" data-hex="#e5e9fd" style="background:#e5e9fd" aria-label="Mist"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="Black" data-hex="#000000" style="background:#000000" aria-label="Black"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch" data-color="White" data-hex="#ffffff" style="background:#ffffff" aria-label="White"></button>
+                      <button type="button" role="option" class="sp-color-picker-swatch sp-color-picker-add" data-color="Custom" data-hex="custom" aria-label="Custom color">
+                        <img src="assets/static-pages/icon-color-add.svg" alt="" width="24" height="24" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -823,6 +748,6 @@
 
     <div class="sp-tooltip" id="sp-tooltip" role="tooltip" hidden></div>
     <p class="sr-only" id="live" aria-live="polite"></p>
-    <script src="static-pages.js?v=8"></script>
+    <script src="static-pages.js?v=9"></script>
   </body>
 </html>

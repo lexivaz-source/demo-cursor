@@ -70,8 +70,16 @@ function staticPreviewSrc(path) {
 const pageColors = {
   background: { name: "Light", hex: "#f5f6f0" },
   accent1: { name: "Primary", hex: "#00669e" },
-  accent2: { name: "Tertiary", hex: "#f0f1eb" },
+  accent2: { name: "Accent 2", hex: "#e2e3dd" },
 };
+
+const COLOR_PICKER_HEXES = new Set([
+  "#94abf9",
+  "#f598ff",
+  "#e5e9fd",
+  "#000000",
+  "#ffffff",
+]);
 
 const pageFx = {
   radius: { tl: 20, tr: 20, bl: 20, br: 20 },
@@ -400,6 +408,19 @@ function applyPageColors() {
   pushThemeToPreview();
 }
 
+function syncColorPickerSelection(slot) {
+  const menu = document.querySelector(`#color-menu-${slot}`);
+  if (!menu) return;
+  const current = (pageColors[slot]?.hex || "").toLowerCase();
+  const inPalette = COLOR_PICKER_HEXES.has(current);
+  menu.querySelectorAll(".sp-color-picker-swatch").forEach((option) => {
+    const hex = (option.dataset.hex || "").toLowerCase();
+    const isCustom = option.classList.contains("sp-color-picker-add");
+    const selected = isCustom ? !inPalette : hex === current;
+    option.setAttribute("aria-selected", String(selected));
+  });
+}
+
 function setSlotColor(slot, name, hex) {
   pageColors[slot] = { name, hex };
   const swatch = document.querySelector(`#swatch-${slot}`);
@@ -410,17 +431,22 @@ function setSlotColor(slot, name, hex) {
     if (toolbarSwatch) toolbarSwatch.style.background = hex;
   }
 
-  const menu = document.querySelector(`#color-menu-${slot}`);
-  if (menu) {
-    menu.querySelectorAll("button[data-hex]").forEach((option) => {
-      option.setAttribute(
-        "aria-selected",
-        String(option.dataset.hex.toLowerCase() === hex.toLowerCase())
-      );
-    });
-  }
-
+  syncColorPickerSelection(slot);
   applyPageColors();
+}
+
+function pickCustomColor(slot, label) {
+  const input = document.createElement("input");
+  input.type = "color";
+  input.value = pageColors[slot]?.hex || "#d2d2d2";
+  input.addEventListener("input", () => {
+    setSlotColor(slot, "Custom", input.value);
+    announce(`${label}: Custom`);
+  });
+  input.addEventListener("change", () => {
+    closeColorMenus();
+  });
+  input.click();
 }
 
 function clampRadius(value) {
@@ -750,6 +776,8 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
   const trigger = field.querySelector(".color-trigger");
   const menu = field.querySelector(".color-menu");
   if (!trigger || !menu) return;
+  const labelEl = field.querySelector(".sp-color-chip-label");
+  const label = labelEl?.textContent?.trim() || slot;
 
   trigger.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -757,6 +785,7 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
     closeColorMenus();
     hideTooltip();
     if (willOpen) {
+      syncColorPickerSelection(slot);
       field.classList.add("is-active");
       menu.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
@@ -765,23 +794,20 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
 
   menu.addEventListener("click", (event) => event.stopPropagation());
 
-  menu.querySelectorAll("button[data-hex]").forEach((option) => {
+  menu.querySelectorAll(".sp-color-picker-swatch").forEach((option) => {
     option.addEventListener("click", () => {
+      if (option.classList.contains("sp-color-picker-add")) {
+        pickCustomColor(slot, label);
+        return;
+      }
       setSlotColor(slot, option.dataset.color, option.dataset.hex);
-      announce(
-        `${field.querySelector(".sp-color-chip-label").textContent}: ${option.dataset.color}`
-      );
-      closeColorMenus();
-    });
-  });
-
-  menu.querySelectorAll(".color-site-styles").forEach((button) => {
-    button.addEventListener("click", () => {
-      announce("Edit Site Styles would open site theme settings");
+      announce(`${label}: ${option.dataset.color}`);
       closeColorMenus();
     });
   });
 });
+
+["background", "accent1", "accent2"].forEach(syncColorPickerSelection);
 
 bindFieldMenu("page-animation-trigger", "page-animation-menu", (option) => {
   pageFx.animation = option.dataset.animation || "none";
