@@ -458,18 +458,93 @@ function setSlotColor(slot, name, hex) {
   applyPageColors();
 }
 
-function pickCustomColor(slot, label) {
+function positionCustomColorInput(input, anchor) {
+  const rect = anchor.getBoundingClientRect();
+  const gap = 8;
+  const width = Math.max(rect.width, 32);
+  const height = Math.max(rect.height, 32);
+  const estPickerW = 240;
+  const estPickerH = 300;
+  const margin = 8;
+
+  let left = rect.left + (rect.width - width) / 2;
+  let top = rect.bottom + gap;
+
+  // Prefer underneath; flip above when near the bottom edge.
+  if (top + estPickerH > window.innerHeight - margin) {
+    top = Math.max(margin, rect.top - gap - height);
+  }
+
+  // Keep the anchor strip on-screen horizontally.
+  left = Math.min(
+    Math.max(margin, left),
+    Math.max(margin, window.innerWidth - width - margin)
+  );
+  // Bias left so an OS picker growing rightward stays in view when possible.
+  if (left + estPickerW > window.innerWidth - margin) {
+    left = Math.max(margin, window.innerWidth - estPickerW - margin);
+  }
+
+  input.style.left = `${Math.round(left)}px`;
+  input.style.top = `${Math.round(top)}px`;
+  input.style.width = `${Math.round(width)}px`;
+  input.style.height = `${Math.round(height)}px`;
+}
+
+function pickCustomColor(slot, label, anchor) {
+  const existing = document.getElementById("sp-custom-color-input");
+  if (existing) existing.remove();
+
   const input = document.createElement("input");
   input.type = "color";
+  input.id = "sp-custom-color-input";
+  input.className = "sp-custom-color-input";
   input.value = pageColors[slot]?.hex || "#d2d2d2";
+  input.setAttribute("aria-hidden", "true");
+  input.tabIndex = -1;
+
+  const place = () => {
+    if (!anchor?.isConnected) return;
+    positionCustomColorInput(input, anchor);
+  };
+
+  document.body.appendChild(input);
+  place();
+
+  const cleanup = () => {
+    window.removeEventListener("resize", place);
+    window.removeEventListener("scroll", place, true);
+    input.remove();
+  };
+
   input.addEventListener("input", () => {
     setSlotColor(slot, "Custom", input.value);
     announce(`${label}: Custom`);
   });
   input.addEventListener("change", () => {
     closeColorMenus();
+    cleanup();
   });
-  input.click();
+  // Native pickers may blur before change; delay cleanup so selection still applies.
+  input.addEventListener("blur", () => {
+    window.setTimeout(() => {
+      if (input.isConnected) cleanup();
+    }, 250);
+  });
+
+  window.addEventListener("resize", place);
+  window.addEventListener("scroll", place, true);
+
+  // showPicker anchors to the input's layout box in supporting browsers.
+  try {
+    if (typeof input.showPicker === "function") {
+      input.showPicker();
+    } else {
+      input.click();
+    }
+  } catch {
+    input.click();
+  }
 }
 
 function clampRadius(value) {
@@ -832,7 +907,7 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
   menu.querySelectorAll(".sp-color-picker-swatch").forEach((option) => {
     option.addEventListener("click", () => {
       if (option.classList.contains("sp-color-picker-add")) {
-        pickCustomColor(slot, label);
+        pickCustomColor(slot, label, option);
         return;
       }
       setSlotColor(slot, option.dataset.color, option.dataset.hex);

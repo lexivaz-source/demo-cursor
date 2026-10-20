@@ -493,6 +493,18 @@
   pointer-events: none;
 }
 
+/* Invisible fixed anchor so the native color picker opens under Custom. */
+.sp-custom-color-input {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 10000;
+}
+
 .sp-tool-field {
   position: relative;
   flex: 0 0 auto;
