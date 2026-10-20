@@ -11,12 +11,12 @@ const sectionsClose = document.querySelector("#sections-close");
 const sectionsValue = document.querySelector("#sections-value");
 const publishedStatus = document.querySelector("#published-status");
 const tooltip = document.querySelector("#sp-tooltip");
+const colorsBtn = document.querySelector("#btn-colors");
+const colorsPanel = document.querySelector("#colors-panel");
 const radiusBtn = document.querySelector("#btn-radius");
 const locationBtn = document.querySelector("#btn-location");
-const animationsBtn = document.querySelector("#btn-animations");
 const radiusPanel = document.querySelector("#radius-panel");
 const locationPanel = document.querySelector("#location-panel");
-const animationsPanel = document.querySelector("#animations-panel");
 const optionsTrigger = document.querySelector("#options-trigger");
 const optionsPanel = document.querySelector("#options-panel");
 const optionsClose = document.querySelector("#options-close");
@@ -37,8 +37,8 @@ const radiusCornerInputs = {
   bl: document.querySelector("#radius-bl"),
   br: document.querySelector("#radius-br"),
 };
-const toolButtons = [radiusBtn, locationBtn, animationsBtn];
-const toolPanels = [radiusPanel, locationPanel, animationsPanel];
+const toolButtons = [colorsBtn, radiusBtn, locationBtn];
+const toolPanels = [colorsPanel, radiusPanel, locationPanel];
 
 const LIVE_PATH = "/properties/meadow-view-lodge";
 const LIVE_ORIGIN = "https://spring-brook.vercel.app";
@@ -405,6 +405,11 @@ function setSlotColor(slot, name, hex) {
   const swatch = document.querySelector(`#swatch-${slot}`);
   if (swatch) swatch.style.background = hex;
 
+  if (slot === "accent1") {
+    const toolbarSwatch = document.querySelector("#swatch-toolbar");
+    if (toolbarSwatch) toolbarSwatch.style.background = hex;
+  }
+
   const menu = document.querySelector(`#color-menu-${slot}`);
   if (menu) {
     menu.querySelectorAll("button[data-hex]").forEach((option) => {
@@ -518,6 +523,11 @@ sectionsClose.addEventListener("click", (event) => {
   closeSectionsPanel();
 });
 
+colorsBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  openToolPanel(colorsBtn, colorsPanel);
+});
+
 radiusBtn.addEventListener("click", (event) => {
   event.stopPropagation();
   openToolPanel(radiusBtn, radiusPanel);
@@ -526,11 +536,6 @@ radiusBtn.addEventListener("click", (event) => {
 locationBtn.addEventListener("click", (event) => {
   event.stopPropagation();
   openToolPanel(locationBtn, locationPanel);
-});
-
-animationsBtn.addEventListener("click", (event) => {
-  event.stopPropagation();
-  openToolPanel(animationsBtn, animationsPanel);
 });
 
 optionsTrigger.addEventListener("click", (event) => {
@@ -606,9 +611,9 @@ pagesFlyout?.querySelectorAll(".sp-pages-item").forEach((item) => {
   });
 });
 
+colorsPanel?.addEventListener("click", (event) => event.stopPropagation());
 radiusPanel.addEventListener("click", (event) => event.stopPropagation());
 locationPanel.addEventListener("click", (event) => event.stopPropagation());
-animationsPanel.addEventListener("click", (event) => event.stopPropagation());
 sectionsPanel.addEventListener("click", (event) => event.stopPropagation());
 optionsPanel.addEventListener("click", (event) => event.stopPropagation());
 
@@ -744,11 +749,13 @@ document.querySelectorAll(".sp-color-field").forEach((field) => {
   const slot = field.dataset.slot;
   const trigger = field.querySelector(".color-trigger");
   const menu = field.querySelector(".color-menu");
+  if (!trigger || !menu) return;
 
   trigger.addEventListener("click", (event) => {
     event.stopPropagation();
     const willOpen = menu.hidden;
-    closeMenus();
+    closeColorMenus();
+    hideTooltip();
     if (willOpen) {
       field.classList.add("is-active");
       menu.hidden = false;
