@@ -233,6 +233,38 @@ THEME_SNIPPET = """
   body.sp-hide-policies section[aria-labelledby="policies-heading"] {
     display: none !important;
   }
+  /* Button Styles: Primary = filled Accent 1; Secondary = white + black outline */
+  [data-sp-cta="inquiry"] {
+    display: none !important;
+  }
+  body.sp-cta-reserve-primary [data-sp-cta="reserve"],
+  body.sp-cta-share-primary [data-sp-cta="share"],
+  body.sp-cta-share-primary [data-sp-cta="save"] {
+    background-color: var(--sp-accent-1) !important;
+    color: #fff !important;
+    border-color: var(--sp-accent-1) !important;
+  }
+  body.sp-cta-reserve-primary [data-sp-cta="reserve"]:hover,
+  body.sp-cta-share-primary [data-sp-cta="share"]:hover,
+  body.sp-cta-share-primary [data-sp-cta="save"]:hover {
+    background-color: var(--sb-blue-hover) !important;
+    border-color: var(--sb-blue-hover) !important;
+    color: #fff !important;
+  }
+  body.sp-cta-reserve-secondary [data-sp-cta="reserve"],
+  body.sp-cta-share-secondary [data-sp-cta="share"],
+  body.sp-cta-share-secondary [data-sp-cta="save"] {
+    background-color: #fff !important;
+    color: #020202 !important;
+    border-color: #000 !important;
+  }
+  body.sp-cta-reserve-secondary [data-sp-cta="reserve"]:hover,
+  body.sp-cta-share-secondary [data-sp-cta="share"]:hover,
+  body.sp-cta-share-secondary [data-sp-cta="save"]:hover {
+    background-color: #020202 !important;
+    color: #fff !important;
+    border-color: #020202 !important;
+  }
 </style>
 <script id="sp-preview-bridge">
 (function () {
@@ -358,6 +390,42 @@ THEME_SNIPPET = """
     setHidden(findByHeadingText(/frequently asked questions/i), visibility.faq === false);
   }
 
+  function markCtaButtons() {
+    if (!document.body) return;
+    var nodes = document.querySelectorAll("button, a");
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var label = (el.getAttribute("aria-label") || "").trim();
+      var text = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (/inquir/i.test(label) || /^Inquiry$/i.test(text) || /^Inquire$/i.test(text)) {
+        el.setAttribute("data-sp-cta", "inquiry");
+        continue;
+      }
+      if (/^Reserve$/i.test(text)) {
+        el.setAttribute("data-sp-cta", "reserve");
+        continue;
+      }
+      if (/Share this property/i.test(label) || (/^Share$/i.test(text) && /share/i.test(label))) {
+        el.setAttribute("data-sp-cta", "share");
+        continue;
+      }
+      if (/Save property/i.test(label) || (/^Save$/i.test(text) && /save/i.test(label))) {
+        el.setAttribute("data-sp-cta", "save");
+      }
+    }
+  }
+
+  function applyButtonStyles(styles) {
+    if (!document.body) return;
+    markCtaButtons();
+    var reserve = styles && styles.reserve === "secondary" ? "secondary" : "primary";
+    var share = styles && styles.share === "primary" ? "primary" : "secondary";
+    document.body.classList.toggle("sp-cta-reserve-primary", reserve === "primary");
+    document.body.classList.toggle("sp-cta-reserve-secondary", reserve === "secondary");
+    document.body.classList.toggle("sp-cta-share-primary", share === "primary");
+    document.body.classList.toggle("sp-cta-share-secondary", share === "secondary");
+  }
+
   function applyTheme(payload) {
     if (!payload || !document.body) return;
     lastTheme = payload;
@@ -394,6 +462,7 @@ THEME_SNIPPET = """
     root.style.setProperty("--sp-radius", tl);
     document.body.classList.add("sp-has-radius");
     applySections(payload.sections);
+    applyButtonStyles(payload.buttonStyles);
   }
 
   window.addEventListener("message", function (event) {
@@ -408,6 +477,7 @@ THEME_SNIPPET = """
       }
     } catch (err) {}
     if (lastTheme) applyTheme(lastTheme);
+    else applyButtonStyles(null);
   }
 
   if (document.readyState === "loading") {

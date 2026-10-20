@@ -75,6 +75,12 @@ const pageColors = {
   accent2: { name: "Accent 2", hex: "#e2e3dd" },
 };
 
+/** Button Styles panel → preview CTAs (Reserve checkout; Share/Save header). */
+const buttonStyles = {
+  reserve: "primary",
+  share: "secondary",
+};
+
 const COLOR_PICKER_HEXES = new Set([
   "#94abf9",
   "#f598ff",
@@ -340,6 +346,7 @@ function themePayload() {
     text: dark ? "#ffffff" : "#171d3a",
     radius: { tl, tr, bl, br },
     sections: { ...sectionVisibility },
+    buttonStyles: { ...buttonStyles },
   };
 }
 
@@ -873,11 +880,6 @@ document.querySelectorAll("#location-panel button[data-map-style]").forEach((opt
   });
 });
 
-const buttonStyles = {
-  reserve: "primary",
-  share: "secondary",
-};
-
 function styleLabel(style) {
   return style === "secondary" ? "Secondary" : "Primary";
 }
@@ -901,6 +903,7 @@ function bindCtaStyleMenu(slot, label) {
   bindFieldMenu(triggerId, menuId, (option) => {
     buttonStyles[slot] = option.dataset.style || "primary";
     syncCtaStyleField(slot);
+    pushThemeToPreview();
     announce(`${label}: ${styleLabel(buttonStyles[slot])}`);
   });
 }
