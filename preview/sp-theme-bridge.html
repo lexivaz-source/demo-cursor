@@ -1,0 +1,418 @@
+<style id="sp-preview-theme">
+  /* Page Colors: surface + contrast only — do not restyle layout/components. */
+  :root {
+    --sp-bg: #f5f6f0;
+    --sp-accent-1: #00669e;
+    --sb-blue: #00669e;
+    --sb-blue-hover: #004a82;
+    --sb-focus: #00669e;
+    --sp-accent-2: #f0f1eb;
+    --sp-text: #171d3a;
+    --sp-muted: #4b5269;
+    --sp-radius-tl: 20px;
+    --sp-radius-tr: 20px;
+    --sp-radius-br: 20px;
+    --sp-radius-bl: 20px;
+    --sp-radius: 20px;
+  }
+  html,
+  body {
+    background-color: var(--sp-bg) !important;
+  }
+  body {
+    color: var(--sp-text);
+  }
+  body.sp-theme-dark {
+    color: var(--sp-text) !important;
+  }
+  body.sp-theme-dark :where(h1, h2, h3, h4, h5, h6, p, li, td, th, label, span):not(.text-sb-blue) {
+    color: var(--sp-text) !important;
+  }
+  /* Keep brand accent links/buttons on Accent 1 even in dark mode */
+  body.sp-theme-dark :where(a.text-sb-blue, .text-sb-blue, button.bg-sb-blue, .bg-sb-blue) {
+    color: inherit;
+  }
+  body.sp-theme-dark :where(a:not(.text-sb-blue):not(.bg-sb-blue)) {
+    color: color-mix(in srgb, var(--sp-accent-1) 55%, #ffffff);
+  }
+  /* Accent 2 drives Stay highlights + Where you'll sleep container surfaces */
+  section[aria-labelledby="highlights-heading"],
+  section[aria-labelledby="sleeping-heading"] {
+    --sb-cream-dark: var(--sp-accent-2);
+  }
+  /* Corner Radius: images + content containers inside the property page */
+  body.sp-has-radius :where(
+    img,
+    picture,
+    video,
+    figure,
+    [class*="card"],
+    [class*="Card"],
+    [class*="tile"],
+    [class*="Tile"],
+    [class*="media"],
+    [class*="Media"],
+    [class*="gallery"] > *,
+    [class*="Gallery"] > *,
+    [class*="grid"] > *,
+    [class*="Grid"] > *,
+    [class*="photo"],
+    [class*="Photo"],
+    [class*="thumb"],
+    [class*="Thumb"],
+    [class*="panel"],
+    [class*="Panel"],
+    [class*="box"]:not(html):not(body),
+    [class*="Box"]:not(html):not(body),
+    [class*="container"]:not(html):not(body):not([class*="container-fluid"]),
+    [class*="Container"]:not(html):not(body),
+    [class*="surface"],
+    [class*="Surface"],
+    [class*="frame"],
+    [class*="Frame"],
+    [class*="module"],
+    [class*="Module"],
+    [class*="block"]:not([class*="inline"]),
+    [class*="Block"]:not([class*="inline"]),
+    section,
+    article,
+    aside
+  ) {
+    border-radius: var(--sp-radius-tl) var(--sp-radius-tr) var(--sp-radius-br) var(--sp-radius-bl) !important;
+  }
+  body.sp-has-radius :where(
+    img,
+    picture,
+    video,
+    figure,
+    [class*="card"],
+    [class*="Card"],
+    [class*="media"],
+    [class*="Media"],
+    [class*="gallery"] > *,
+    [class*="Gallery"] > *,
+    [class*="photo"],
+    [class*="Photo"],
+    [class*="thumb"],
+    [class*="Thumb"]
+  ) {
+    overflow: hidden !important;
+  }
+  /* Display Sections: hide by stable aria / id when unchecked */
+  .sp-section-hidden {
+    display: none !important;
+  }
+  body.sp-hide-highlights section[aria-labelledby="highlights-heading"],
+  body.sp-hide-about section[aria-labelledby="about-heading"],
+  body.sp-hide-bedrooms section[aria-labelledby="sleeping-heading"],
+  body.sp-hide-amenities section[aria-labelledby="amenities-heading"],
+  body.sp-hide-availability section#availability,
+  body.sp-hide-availability section[aria-labelledby="availability-heading"],
+  body.sp-hide-reviews section[aria-labelledby="reviews-heading"],
+  body.sp-hide-location section[aria-labelledby="location-heading"],
+  body.sp-hide-policies section[aria-labelledby="policies-heading"] {
+    display: none !important;
+  }
+  /* Button Styles: Primary = filled Accent 1; Secondary = white + black outline.
+     Beat Tailwind bg-* / transparent utilities (background + background-image). */
+  [data-sp-cta="inquiry"] {
+    display: none !important;
+  }
+  body.sp-cta-reserve-primary [data-sp-cta="reserve"],
+  body.sp-cta-share-primary [data-sp-cta="share"],
+  body.sp-cta-share-primary [data-sp-cta="save"] {
+    background: var(--sp-accent-1) !important;
+    background-color: var(--sp-accent-1) !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: var(--sp-accent-1) !important;
+  }
+  body.sp-cta-reserve-primary [data-sp-cta="reserve"]:hover,
+  body.sp-cta-share-primary [data-sp-cta="share"]:hover,
+  body.sp-cta-share-primary [data-sp-cta="save"]:hover {
+    background: var(--sb-blue-hover) !important;
+    background-color: var(--sb-blue-hover) !important;
+    background-image: none !important;
+    border-color: var(--sb-blue-hover) !important;
+    color: #fff !important;
+  }
+  body.sp-cta-reserve-secondary [data-sp-cta="reserve"],
+  body.sp-cta-share-secondary [data-sp-cta="share"],
+  body.sp-cta-share-secondary [data-sp-cta="save"] {
+    background: #fff !important;
+    background-color: #fff !important;
+    background-image: none !important;
+    color: #020202 !important;
+    border-color: #000 !important;
+  }
+  body.sp-cta-reserve-secondary [data-sp-cta="reserve"]:hover,
+  body.sp-cta-share-secondary [data-sp-cta="share"]:hover,
+  body.sp-cta-share-secondary [data-sp-cta="save"]:hover {
+    background: #020202 !important;
+    background-color: #020202 !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: #020202 !important;
+  }
+</style>
+<script id="sp-preview-bridge">
+(function () {
+  var lastTheme = null;
+  var remoteOrigin = "https://spring-brook.vercel.app";
+  /* Default Accent 1 matches Figma Color Dropdown Primary */
+  var SECTION_BODY_CLASS = {
+    highlights: "sp-hide-highlights",
+    about: "sp-hide-about",
+    bedrooms: "sp-hide-bedrooms",
+    amenities: "sp-hide-amenities",
+    availability: "sp-hide-availability",
+    reviews: "sp-hide-reviews",
+    location: "sp-hide-location",
+    policies: "sp-hide-policies"
+  };
+
+  // Absolute Vercel URLs must stay same-origin so the local proxy handles them.
+  function toLocal(url) {
+    if (typeof url !== "string") return url;
+    if (url.indexOf(remoteOrigin) === 0) {
+      return url.slice(remoteOrigin.length) || "/";
+    }
+    return url;
+  }
+
+  var rawFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    try {
+      if (typeof input === "string") {
+        input = toLocal(input);
+      } else if (input && typeof Request !== "undefined" && input instanceof Request) {
+        var mapped = toLocal(input.url);
+        if (mapped !== input.url) input = new Request(mapped, input);
+      }
+    } catch (err) {}
+    return rawFetch(input, init);
+  };
+
+  function luminance(hex) {
+    const raw = String(hex || "").replace("#", "").trim();
+    if (raw.length !== 3 && raw.length !== 6) return 1;
+    const full = raw.length === 3
+      ? raw.split("").map(function (c) { return c + c; }).join("")
+      : raw;
+    const r = parseInt(full.slice(0, 2), 16) / 255;
+    const g = parseInt(full.slice(2, 4), 16) / 255;
+    const b = parseInt(full.slice(4, 6), 16) / 255;
+    const toLin = function (c) {
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
+  }
+
+  function px(value, fallback) {
+    var n = Number(value);
+    if (!isFinite(n)) n = fallback;
+    return Math.max(0, Math.min(99, n)) + "px";
+  }
+
+  function darkenHex(hex, amount) {
+    var raw = String(hex || "").replace("#", "").trim();
+    if (raw.length === 3) {
+      raw = raw.split("").map(function (c) { return c + c; }).join("");
+    }
+    if (raw.length !== 6) return hex || "#004a82";
+    var n = Math.max(0, Math.min(1, amount == null ? 0.14 : amount));
+    var parts = [0, 2, 4].map(function (i) {
+      var v = Math.round(parseInt(raw.slice(i, i + 2), 16) * (1 - n));
+      return Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0");
+    });
+    return "#" + parts.join("");
+  }
+
+  function textMatch(el, re) {
+    return el && re.test((el.textContent || "").trim());
+  }
+
+  function findByHeadingText(re) {
+    var headings = document.querySelectorAll("h2, h3");
+    for (var i = 0; i < headings.length; i++) {
+      if (textMatch(headings[i], re)) {
+        return headings[i].closest("section") || headings[i];
+      }
+    }
+    return null;
+  }
+
+  function resolveHeader() {
+    var h1 = document.querySelector("main h1");
+    if (!h1) return null;
+    return h1.closest("div.flex") || h1.parentElement || h1;
+  }
+
+  function resolveGallery() {
+    var buttons = document.querySelectorAll("button");
+    for (var i = 0; i < buttons.length; i++) {
+      if (!textMatch(buttons[i], /show all photos/i)) continue;
+      var node = buttons[i].parentElement;
+      while (node && node !== document.body) {
+        if (node.querySelectorAll("img").length >= 3) return node;
+        node = node.parentElement;
+      }
+      return buttons[i].parentElement;
+    }
+    return null;
+  }
+
+  function setHidden(el, hidden) {
+    if (!el) return;
+    el.classList.toggle("sp-section-hidden", hidden);
+  }
+
+  function applySections(sections) {
+    if (!document.body) return;
+    var visibility = sections || {};
+    Object.keys(SECTION_BODY_CLASS).forEach(function (key) {
+      var hide = visibility[key] === false;
+      document.body.classList.toggle(SECTION_BODY_CLASS[key], hide);
+    });
+    setHidden(resolveHeader(), visibility.header === false);
+    setHidden(resolveGallery(), visibility.gallery === false);
+    setHidden(findByHeadingText(/frequently asked questions/i), visibility.faq === false);
+  }
+
+  function markCtaButtons() {
+    if (!document.body) return;
+    var nodes = document.querySelectorAll("button, a");
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var label = (el.getAttribute("aria-label") || "").trim();
+      var text = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (/inquir/i.test(label) || /^Inquiry$/i.test(text) || /^Inquire$/i.test(text)) {
+        el.setAttribute("data-sp-cta", "inquiry");
+        continue;
+      }
+      /* Checkout Reserve — visible text or aria-label starting with Reserve. */
+      if (/^Reserve$/i.test(text) || /^Reserve\b/i.test(label)) {
+        el.setAttribute("data-sp-cta", "reserve");
+        continue;
+      }
+      if (
+        /Share this property/i.test(label) ||
+        (/^Share$/i.test(text) && /share/i.test(label)) ||
+        (/^Share$/i.test(text) && !label)
+      ) {
+        el.setAttribute("data-sp-cta", "share");
+        continue;
+      }
+      if (
+        /Save property/i.test(label) ||
+        (/^Save$/i.test(text) && /save/i.test(label)) ||
+        (/^Save$/i.test(text) && !label)
+      ) {
+        el.setAttribute("data-sp-cta", "save");
+      }
+    }
+  }
+
+  var lastButtonStyles = null;
+
+  function applyButtonStyles(styles) {
+    if (!document.body) return;
+    if (styles) lastButtonStyles = styles;
+    applyingCta = true;
+    try {
+      markCtaButtons();
+      var active = styles || lastButtonStyles;
+      var reserve = active && active.reserve === "secondary" ? "secondary" : "primary";
+      var share = active && active.share === "primary" ? "primary" : "secondary";
+      document.body.classList.toggle("sp-cta-reserve-primary", reserve === "primary");
+      document.body.classList.toggle("sp-cta-reserve-secondary", reserve === "secondary");
+      document.body.classList.toggle("sp-cta-share-primary", share === "primary");
+      document.body.classList.toggle("sp-cta-share-secondary", share === "secondary");
+    } finally {
+      applyingCta = false;
+    }
+  }
+
+  var ctaObserver = null;
+  var applyingCta = false;
+  function watchCtaDom() {
+    if (!document.body || ctaObserver) return;
+    var timer = null;
+    ctaObserver = new MutationObserver(function () {
+      if (applyingCta) return;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () {
+        applyButtonStyles(lastButtonStyles);
+      }, 80);
+    });
+    ctaObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function applyTheme(payload) {
+    if (!payload || !document.body) return;
+    lastTheme = payload;
+    const root = document.documentElement;
+    const bg = payload.background || payload.bg || "#f5f6f0";
+    /* Live page brand blue is --sb-blue; Accent 1 drives it (Figma Primary). */
+    const accent1 = payload.accent1 || "#00669e";
+    const accent2 = payload.accent2 || "#f0f1eb";
+    const accent1Hover = darkenHex(accent1, 0.14);
+    const dark = luminance(bg) < 0.45;
+    const text = dark ? "#ffffff" : (payload.text || "#171d3a");
+    root.style.setProperty("--sp-bg", bg);
+    root.style.setProperty("--sp-accent-1", accent1);
+    root.style.setProperty("--sp-accent-2", accent2);
+    root.style.setProperty("--sp-text", text);
+    root.style.setProperty("--sp-muted", dark ? "rgba(255,255,255,0.78)" : "#4b5269");
+    /* Map Accent 1 onto site tokens used by buttons, links, highlight borders */
+    root.style.setProperty("--sb-blue", accent1);
+    root.style.setProperty("--sb-blue-hover", accent1Hover);
+    root.style.setProperty("--sb-focus", accent1);
+    document.body.classList.toggle("sp-theme-dark", dark);
+    document.body.style.backgroundColor = bg;
+    document.body.style.color = text;
+
+    var radius = payload.radius || {};
+    var tl = px(radius.tl, 20);
+    var tr = px(radius.tr, 20);
+    var br = px(radius.br, 20);
+    var bl = px(radius.bl, 20);
+    root.style.setProperty("--sp-radius-tl", tl);
+    root.style.setProperty("--sp-radius-tr", tr);
+    root.style.setProperty("--sp-radius-br", br);
+    root.style.setProperty("--sp-radius-bl", bl);
+    root.style.setProperty("--sp-radius", tl);
+    document.body.classList.add("sp-has-radius");
+    applySections(payload.sections);
+    applyButtonStyles(payload.buttonStyles || null);
+    watchCtaDom();
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data || event.data.type !== "sp-page-theme") return;
+    applyTheme(event.data);
+  });
+
+  function notifyReady() {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: "sp-preview-ready" }, "*");
+      }
+    } catch (err) {}
+    if (lastTheme) applyTheme(lastTheme);
+    else {
+      applyButtonStyles(lastButtonStyles);
+      watchCtaDom();
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", notifyReady);
+  } else {
+    notifyReady();
+  }
+  setTimeout(notifyReady, 400);
+  setTimeout(notifyReady, 1200);
+  setTimeout(notifyReady, 2500);
+})();
+</script>

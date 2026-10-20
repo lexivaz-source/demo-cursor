@@ -51,6 +51,8 @@ const TOOLTIP_SELECTOR = ".sp-tool-btn[data-tooltip]";
 const STATIC_PREVIEW_BY_PATH = {
   "/properties/meadow-view-lodge": "preview/meadow-view-lodge.html",
 };
+/** Bump when preview bridge / CTA CSS changes so GitHub Pages clients skip stale HTML. */
+const PREVIEW_CACHE_BUST = "13";
 
 /** Local static-pages-server.py proxies /properties/* same-origin; GitHub Pages cannot. */
 function usesLocalPreviewProxy() {
@@ -63,9 +65,11 @@ function staticPreviewSrc(path) {
   const relative = STATIC_PREVIEW_BY_PATH[clean];
   if (!relative) return null;
   try {
-    return new URL(relative, window.location.href).href;
+    const url = new URL(relative, window.location.href);
+    url.searchParams.set("v", PREVIEW_CACHE_BUST);
+    return url.href;
   } catch {
-    return relative;
+    return `${relative}?v=${PREVIEW_CACHE_BUST}`;
   }
 }
 
@@ -400,11 +404,17 @@ function setAllSectionsVisible(on) {
 
 function pushThemeToPreview() {
   const payload = themePayload();
-  try {
-    iframe.contentWindow?.postMessage(payload, "*");
-  } catch {
-    /* cross-origin direct page — theme only on wrapper */
-  }
+  const send = () => {
+    try {
+      iframe.contentWindow?.postMessage(payload, "*");
+    } catch {
+      /* cross-origin direct page — theme only on wrapper */
+    }
+  };
+  send();
+  // Retry so CTA classes land after Next.js hydration remounts checkout/header buttons.
+  setTimeout(send, 80);
+  setTimeout(send, 400);
 }
 
 function applyPageColors() {
