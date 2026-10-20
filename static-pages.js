@@ -7,7 +7,6 @@ const viewport = document.querySelector("#viewport-frame");
 const fallback = document.querySelector("#iframe-fallback");
 const sectionsTrigger = document.querySelector("#sections-trigger");
 const sectionsPanel = document.querySelector("#sections-panel");
-const sectionsClose = document.querySelector("#sections-close");
 const sectionsValue = document.querySelector("#sections-value");
 const publishedStatus = document.querySelector("#published-status");
 const tooltip = document.querySelector("#sp-tooltip");
@@ -118,8 +117,6 @@ const SECTION_KEYS = [
 ];
 
 const sectionVisibility = Object.fromEntries(SECTION_KEYS.map((key) => [key, true]));
-const CHECKBOX_ON = "assets/static-pages/icon-checkbox-checked.svg";
-const CHECKBOX_OFF = "assets/static-pages/icon-checkbox.svg";
 
 function announce(message) {
   if (live) live.textContent = message;
@@ -384,8 +381,6 @@ function selectAllButton() {
 
 function syncSectionOption(button, on) {
   button.setAttribute("aria-selected", String(on));
-  const icon = button.querySelector(".sp-sections-check");
-  if (icon) icon.src = on ? CHECKBOX_ON : CHECKBOX_OFF;
 }
 
 function updateSectionsTriggerLabel() {
@@ -763,11 +758,6 @@ sectionsTrigger.addEventListener("click", (event) => {
   if (!willOpen) return;
   sectionsPanel.hidden = false;
   sectionsTrigger.setAttribute("aria-expanded", "true");
-});
-
-sectionsClose.addEventListener("click", (event) => {
-  event.stopPropagation();
-  closeSectionsPanel();
 });
 
 colorsBtn?.addEventListener("click", (event) => {
