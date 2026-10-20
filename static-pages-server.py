@@ -20,7 +20,13 @@ ROOT = Path(__file__).resolve().parent
 CACHE_DIR = ROOT / ".preview-cache"
 REMOTE_ORIGIN = "https://spring-brook.vercel.app"
 PREVIEW_PREFIX = "/__preview__"
-PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
+def _parse_port() -> int:
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        return int(sys.argv[1])
+    return 8765
+
+
+PORT = _parse_port()
 BROWSER_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -115,12 +121,12 @@ THEME_SNIPPET = """
 <style id="sp-preview-theme">
   /* Page Colors: surface + contrast only — do not restyle layout/components. */
   :root {
-    --sp-bg: #f5f6f1;
-    --sp-accent-1: #005a9c;
-    --sb-blue: #005a9c;
+    --sp-bg: #f5f6f0;
+    --sp-accent-1: #00669e;
+    --sb-blue: #00669e;
     --sb-blue-hover: #004a82;
-    --sb-focus: #005a9c;
-    --sp-accent-2: #f0f1e9;
+    --sb-focus: #00669e;
+    --sp-accent-2: #f0f1eb;
     --sp-text: #171d3a;
     --sp-muted: #4b5269;
     --sp-radius-tl: 20px;
@@ -232,6 +238,7 @@ THEME_SNIPPET = """
 (function () {
   var lastTheme = null;
   var remoteOrigin = "https://spring-brook.vercel.app";
+  /* Default Accent 1 matches Figma Color Dropdown Primary */
   var SECTION_BODY_CLASS = {
     highlights: "sp-hide-highlights",
     about: "sp-hide-about",
@@ -355,10 +362,10 @@ THEME_SNIPPET = """
     if (!payload || !document.body) return;
     lastTheme = payload;
     const root = document.documentElement;
-    const bg = payload.background || payload.bg || "#f5f6f1";
-    /* Live page brand blue is --sb-blue (#005a9c); Accent 1 drives it. */
-    const accent1 = payload.accent1 || "#005a9c";
-    const accent2 = payload.accent2 || "#f0f1e9";
+    const bg = payload.background || payload.bg || "#f5f6f0";
+    /* Live page brand blue is --sb-blue; Accent 1 drives it (Figma Primary). */
+    const accent1 = payload.accent1 || "#00669e";
+    const accent2 = payload.accent2 || "#f0f1eb";
     const accent1Hover = darkenHex(accent1, 0.14);
     const dark = luminance(bg) < 0.45;
     const text = dark ? "#ffffff" : (payload.text || "#171d3a");
@@ -596,25 +603,9 @@ class StaticPagesHandler(SimpleHTTPRequestHandler):
             self.wfile.write(body)
             return
 
-        html = body.decode("utf-8", errors="replace")
-        # No remote <base> — path-absolute /_next/* must hit this origin's proxy.
-        html = re.sub(r"<base\b[^>]*>", "", html, flags=re.I)
-        # Leave asset URLs as /_next/... and /images/... (proxied below).
-        # Only rewrite fully-qualified Vercel absolute URLs to same-origin paths.
-        html = html.replace(f'"{REMOTE_ORIGIN}/', '"/')
-        html = html.replace(f"'{REMOTE_ORIGIN}/", "'/")
-
-        if re.search(r"<head[^>]*>", html, flags=re.I):
-            html = re.sub(
-                r"(<head[^>]*>)",
-                lambda m: m.group(1) + "\n" + THEME_SNIPPET,
-                html,
-                count=1,
-                flags=re.I,
-            )
-        else:
-            html = THEME_SNIPPET + html
-
+        html = build_static_preview_html(
+            body.decode("utf-8", errors="replace"), for_static_host=False
+        )
         payload = html.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -624,7 +615,119 @@ class StaticPagesHandler(SimpleHTTPRequestHandler):
         self.wfile.write(payload)
 
 
+def build_static_preview_html(raw_html: str, *, for_static_host: bool) -> str:
+    """Inject theme bridge and rewrite asset URLs for local proxy or static host."""
+    html = re.sub(r"<base\b[^>]*>", "", raw_html, flags=re.I)
+    snippet = THEME_SNIPPET
+    if for_static_host:
+        # Pages cannot proxy /_next — point assets + fetch at Vercel.
+        # Normalize any already-absolute URLs, then rewrite every root-relative
+        # /_next and /images occurrence (including srcset tails without a quote).
+        html = html.replace(f"{REMOTE_ORIGIN}/_next/", "/_next/")
+        html = html.replace(f"{REMOTE_ORIGIN}/images/", "/images/")
+        html = html.replace("/_next/", f"{REMOTE_ORIGIN}/_next/")
+        html = html.replace("/images/", f"{REMOTE_ORIGIN}/images/")
+        # Drop Next.js client bundles so SSR markup stays visible when the file
+        # is not served at the real /properties/... route (GitHub Pages / plain
+        # static servers). Keep stylesheets + inject our theme bridge below.
+        html = re.sub(
+            r"<script\b[^>]*\bsrc=[\"'][^\"']*_next/[^\"']*[\"'][^>]*>\s*</script>",
+            "",
+            html,
+            flags=re.I,
+        )
+        html = re.sub(
+            r"<script\b[^>]*>[\s\S]*?</script>",
+            "",
+            html,
+            flags=re.I,
+        )
+        snippet = snippet.replace(
+            """  // Absolute Vercel URLs must stay same-origin so the local proxy handles them.
+  function toLocal(url) {
+    if (typeof url !== "string") return url;
+    if (url.indexOf(remoteOrigin) === 0) {
+      return url.slice(remoteOrigin.length) || "/";
+    }
+    return url;
+  }
+
+  var rawFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    try {
+      if (typeof input === "string") {
+        input = toLocal(input);
+      } else if (input && typeof Request !== "undefined" && input instanceof Request) {
+        var mapped = toLocal(input.url);
+        if (mapped !== input.url) input = new Request(mapped, input);
+      }
+    } catch (err) {}
+    return rawFetch(input, init);
+  };""",
+            """  // Static hosts (GitHub Pages): root-relative assets must hit Vercel.
+  function toRemote(url) {
+    if (typeof url !== "string") return url;
+    if (url.indexOf("/") === 0 && url.indexOf("//") !== 0) {
+      return remoteOrigin + url;
+    }
+    return url;
+  }
+
+  var rawFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    try {
+      if (typeof input === "string") {
+        input = toRemote(input);
+      } else if (input && typeof Request !== "undefined" && input instanceof Request) {
+        var mapped = toRemote(input.url);
+        if (mapped !== input.url) input = new Request(mapped, input);
+      }
+    } catch (err) {}
+    return rawFetch(input, init);
+  };""",
+        )
+    else:
+        html = html.replace(f'"{REMOTE_ORIGIN}/', '"/')
+        html = html.replace(f"'{REMOTE_ORIGIN}/", "'/")
+
+    if re.search(r"<head[^>]*>", html, flags=re.I):
+        html = re.sub(
+            r"(<head[^>]*>)",
+            lambda m: m.group(1) + "\n" + snippet,
+            html,
+            count=1,
+            flags=re.I,
+        )
+    else:
+        html = snippet + html
+    return html
+
+
+def export_static_previews() -> None:
+    """Write same-origin preview HTML under preview/ for GitHub Pages theming."""
+    out_dir = ROOT / "preview"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    mapping = {
+        "/properties/meadow-view-lodge": out_dir / "meadow-view-lodge.html",
+    }
+    for url_path, dest in mapping.items():
+        cached = read_html_cache(url_path)
+        if not cached:
+            raise SystemExit(
+                f"No cache for {url_path}. Run the server once to populate .preview-cache/"
+            )
+        html = build_static_preview_html(
+            cached.decode("utf-8", errors="replace"), for_static_host=True
+        )
+        dest.write_text(html, encoding="utf-8")
+        print(f"Exported {dest.relative_to(ROOT)} ({dest.stat().st_size} bytes)")
+
+
 def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] in ("--export-static", "export-static"):
+        export_static_previews()
+        return
+
     server = ThreadingHTTPServer(("127.0.0.1", PORT), StaticPagesHandler)
     print(f"Static Pages server at http://127.0.0.1:{PORT}/static-pages.html")
     print(f"Property preview at http://127.0.0.1:{PORT}/properties/meadow-view-lodge")

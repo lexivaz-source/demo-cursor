@@ -129,6 +129,31 @@ function isGithubPagesNotFoundDoc(doc) {
   );
 }
 
+/** Plain http.server / missing proxy HTML (e.g. port without static-pages-server.py). */
+function isProxyMissingDoc(doc) {
+  if (!doc) return false;
+  const title = doc.title || "";
+  const text = doc.body?.innerText || "";
+  return (
+    /Error response/i.test(title) &&
+    (/File not found/i.test(text) || /Nothing matches the given URI/i.test(text) || /\b404\b/.test(text))
+  );
+}
+
+function isBrokenPreviewDoc(doc) {
+  return isGithubPagesNotFoundDoc(doc) || isProxyMissingDoc(doc);
+}
+
+let usedStaticPreviewFallback = false;
+
+function loadStaticPreviewFallback() {
+  const cached = staticPreviewSrc(iframe.dataset.remotePath || LIVE_PATH);
+  if (!cached || usedStaticPreviewFallback) return false;
+  usedStaticPreviewFallback = true;
+  iframe.src = cached;
+  return true;
+}
+
 function showPreviewFallback(message) {
   if (!fallback) return;
   fallback.hidden = false;
@@ -877,9 +902,13 @@ window.addEventListener("message", (event) => {
 iframe.addEventListener("load", () => {
   try {
     const doc = iframe.contentDocument;
-    if (isGithubPagesNotFoundDoc(doc)) {
+    if (isBrokenPreviewDoc(doc)) {
+      // Prefer same-origin cached HTML (theme bridge) when the local proxy isn't running.
+      if (loadStaticPreviewFallback()) return;
       showPreviewFallback(
-        "This preview path isn’t available on GitHub Pages. Open the live site, or run static-pages-server.py locally for an embedded preview."
+        isGithubPagesNotFoundDoc(doc)
+          ? "This preview path isn’t available on GitHub Pages. Open the live site, or run static-pages-server.py locally for an embedded preview."
+          : "The local preview proxy isn’t available. Open the live site, or run static-pages-server.py for an embedded preview."
       );
       return;
     }
@@ -892,6 +921,7 @@ iframe.addEventListener("load", () => {
 });
 
 iframe.addEventListener("error", () => {
+  if (loadStaticPreviewFallback()) return;
   showPreviewFallback(
     "The live page couldn’t load inside this frame (likely blocked by embed headers)."
   );

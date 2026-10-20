@@ -233,16 +233,6 @@
   position: relative;
 }
 
-.sp-rail::after {
-  content: "";
-  position: absolute;
-  left: 12px;
-  top: 166px;
-  width: 30px;
-  height: 1px;
-  background: #d9d9d9;
-}
-
 .sp-rail-btn {
   appearance: none;
   display: inline-flex;
@@ -255,6 +245,24 @@
   border-radius: 12px;
   background: transparent;
   cursor: pointer;
+}
+
+/* Extra gap + divider between Layers and Media (avoids absolute top overlap). */
+.sp-rail-btn[data-rail="media"] {
+  margin-top: 20px;
+  position: relative;
+}
+
+.sp-rail-btn[data-rail="media"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -11px;
+  width: 30px;
+  height: 1px;
+  background: #d9d9d9;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .sp-rail-btn.is-active {
@@ -283,7 +291,8 @@
   background: #fafafa;
   overflow: visible;
   position: relative;
-  z-index: 40;
+  /* Keep menus above canvas, but under Manage Pages flyout (z-index 100). */
+  z-index: 20;
 }
 
 .sp-subbar-label {
@@ -347,6 +356,10 @@
   top: calc(100% + 8px);
   left: 0;
   width: 282px;
+}
+
+.sp-color-field[data-slot="accent2"] .sp-color-chip {
+  box-shadow: inset 0 -3px 0 var(--page-accent-2);
 }
 
 .sp-tool-cluster {
@@ -983,9 +996,9 @@
 }
 
 .sp-viewport {
-  --page-bg: #f5f6f1;
+  --page-bg: #f5f6f0;
   --page-accent-1: #00669e;
-  --page-accent-2: #f0f1e9;
+  --page-accent-2: #f0f1eb;
   --page-text: #171d3a;
   --page-border-width: 1px;
   --page-anim-ms: 600ms;
@@ -1053,7 +1066,8 @@
 
 .sp-pages-flyout {
   position: fixed;
-  z-index: 35;
+  /* Above editor chrome (topbar 30 / subbar 20) so Manage Pages covers page settings. */
+  z-index: 100;
   top: 60px;
   left: 55px;
   bottom: 0;
