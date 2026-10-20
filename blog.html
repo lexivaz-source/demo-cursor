@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog List + Post — Editor</title>
+    <meta
+      name="description"
+      content="Blog List and Blog Post editor mock using New Editor Blocks / Material 3 controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="blog.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-mode="list-content">List Content</button>
+          <button type="button" class="chip" data-mode="list-design">List Design</button>
+          <button type="button" class="chip" data-mode="post-content">Post Content</button>
+          <button type="button" class="chip" data-mode="post-design">Post Design</button>
+          <button type="button" class="chip" data-mode="post-preview">Post canvas picker</button>
+          <button type="button" class="chip" data-mode="block">Block</button>
+        </div>
+
+        <p class="canvas-kicker" id="canvas-kicker">Section canvas · Blog List</p>
+
+        <article class="page-card" id="page-card">
+          <div class="page-body page-body-center">
+            <div class="block-wrap" id="list-block">
+              <div class="quick-actions" role="toolbar" aria-label="Blog List quick actions">
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24"><img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" aria-label="Clone">
+                  <span class="icon-24"><img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" aria-label="Delete">
+                  <span class="icon-24"><img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <div class="filters-bar" id="filters-bar">
+                <span class="filter-chip on">All</span>
+                <span class="filter-chip">Resident life</span>
+                <span class="filter-chip">Neighborhood</span>
+              </div>
+
+              <div class="blog-grid" id="blog-grid">
+                <article class="blog-card">
+                  <div class="blog-thumb"></div>
+                  <div class="blog-card-body">
+                    <p class="blog-card-date">08.12.2026</p>
+                    <h3 class="blog-card-title">Summer resident events</h3>
+                    <button type="button" class="blog-card-btn">Read Post</button>
+                  </div>
+                </article>
+                <article class="blog-card">
+                  <div class="blog-thumb"></div>
+                  <div class="blog-card-body">
+                    <p class="blog-card-date">07.28.2026</p>
+                    <h3 class="blog-card-title">New coffee shop next door</h3>
+                    <button type="button" class="blog-card-btn">Read Post</button>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="block-wrap" id="post-block" hidden>
+              <div class="quick-actions" role="toolbar" aria-label="Blog Post quick actions">
+                <button type="button" class="icon-button" id="qa-edit-post" aria-label="Edit">
+                  <span class="icon-24"><img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" aria-label="Clone">
+                  <span class="icon-24"><img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" aria-label="Delete">
+                  <span class="icon-24"><img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+
+              <div class="preview-bar" id="preview-bar">
+                <em>Editor only. Pick a post to populate this page.</em>
+                <select aria-label="Preview post">
+                  <option>Summer resident events</option>
+                  <option>New coffee shop next door</option>
+                </select>
+              </div>
+
+              <div class="post-page">
+                <div class="post-hero">
+                  <div>
+                    <h2>Summer resident events</h2>
+                    <div class="date">08.12.2026</div>
+                  </div>
+                </div>
+                <div class="post-article">
+                  <p class="cats">Resident life</p>
+                  <p>
+                    Join us poolside this month for movie nights, a popsicle social, and a weekend
+                    farmers-market shuttle.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <p class="canvas-hint" id="canvas-hint">
+          List cards are live Blog documents, not child blocks. Posts are written in Dashboard Blog
+          content — these inspectors only display and style them.
+        </p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main">
+          <header class="panel-header">
+            <h1 id="panel-title">Blog List</h1>
+          </header>
+
+          <div class="tabs" role="tablist" aria-label="Block settings">
+            <button
+              class="tab active"
+              type="button"
+              role="tab"
+              id="tab-content"
+              aria-selected="true"
+              aria-controls="panel-content"
+            >
+              Content
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-design"
+              aria-selected="false"
+              aria-controls="panel-design"
+            >
+              Design
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              id="tab-block"
+              aria-selected="false"
+              aria-controls="panel-block"
+            >
+              Block
+            </button>
+          </div>
+
+          <div class="tab-panels">
+            <!-- LIST CONTENT -->
+            <div class="tab-panel" id="panel-list-content" role="tabpanel">
+              <p class="section-label">Layout</p>
+              <div class="field">
+                <span class="field-label" id="layout-label">Layout</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="layout-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="layout-label layout-value"
+                >
+                  <span id="layout-value">Grid</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="layout-menu" hidden role="listbox" aria-labelledby="layout-label">
+                  <li><button type="button" role="option" aria-selected="true">Grid</button></li>
+                  <li><button type="button" role="option" aria-selected="false">List</button></li>
+                </ul>
+              </div>
+              <hr class="panel-divider" />
+
+              <p class="section-label">Columns</p>
+              <div class="inline-field">
+                <span class="inline-field-label" id="cols-label">Number of Columns</span>
+                <div class="field compact-field cols-field">
+                  <input type="number" id="cols" min="1" max="12" value="2" aria-labelledby="cols-label" />
+                  <span class="cols-stepper" aria-hidden="true">
+                    <img src="assets/blog/cols-stepper.svg" alt="" width="24" height="24" />
+                  </span>
+                </div>
+              </div>
+
+              <p class="section-label">Column Spacing</p>
+              <div class="segmented has-tune" id="gap-source" role="group" aria-label="Column Spacing">
+                <button type="button" data-gap="8">S</button>
+                <button type="button" data-gap="15">M</button>
+                <button type="button" class="active" data-gap="24">L</button>
+                <button type="button" class="tune" id="gap-tune" aria-label="Custom column spacing">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-gap-field" hidden>
+                <span class="field-label">Column Spacing</span>
+                <input type="number" id="custom-gap" value="24" min="0" max="80" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Pagination</p>
+              <label class="field">
+                <span class="field-label">Posts to load initially</span>
+                <input type="number" value="2" min="1" />
+              </label>
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="sw-load-more"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="load-more-label"
+                ></button>
+                <div class="toggle-copy"><span id="load-more-label">Show Load More</span></div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Filters</p>
+              <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch on"
+                    id="sw-filters"
+                    role="switch"
+                    aria-checked="true"
+                    aria-labelledby="filters-label"
+                  ></button>
+                  <div class="toggle-copy"><span id="filters-label">Use category filters</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button
+                    type="button"
+                    class="switch"
+                    id="sw-filter-url"
+                    role="switch"
+                    aria-checked="false"
+                    aria-labelledby="filter-url-label"
+                  ></button>
+                  <div class="toggle-copy">
+                    <span id="filter-url-label">Remember Filter in URL</span>
+                    <p class="hint">Add the selected filter to the URL so filtered posts can be shared or revisited.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label" id="filter-display-label">Filter display</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="filter-display-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="filter-display-label filter-display-value"
+                >
+                  <span id="filter-display-value">Buttons list</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul
+                  class="field-menu"
+                  id="filter-display-menu"
+                  hidden
+                  role="listbox"
+                  aria-labelledby="filter-display-label"
+                >
+                  <li><button type="button" role="option" aria-selected="true">Buttons list</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Dropdown list</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Card fields</p>
+              <p class="blog-note">Turns fields on or off. Color and text style live on Design.</p>
+              <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="cf-thumb"></button>
+                  <div class="toggle-copy"><span id="cf-thumb">Thumbnail</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="cf-title"></button>
+                  <div class="toggle-copy"><span id="cf-title">Title</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="cf-subtitle"></button>
+                  <div class="toggle-copy"><span id="cf-subtitle">Subtitle</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="cf-excerpt"></button>
+                  <div class="toggle-copy"><span id="cf-excerpt">Excerpt</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="cf-date"></button>
+                  <div class="toggle-copy"><span id="cf-date">Publish date</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="cf-author"></button>
+                  <div class="toggle-copy"><span id="cf-author">Author</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="cf-cats"></button>
+                  <div class="toggle-copy"><span id="cf-cats">Categories</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="cf-btn"></button>
+                  <div class="toggle-copy"><span id="cf-btn">Read Post button</span></div>
+                </div>
+              </div>
+              <label class="field">
+                <span class="field-label">Date format</span>
+                <input type="text" value="MM.DD.YYYY" />
+              </label>
+              <label class="field">
+                <span class="field-label">Read Post label</span>
+                <input type="text" value="Read Post" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Links</p>
+              <div class="field">
+                <span class="field-label" id="post-screen-label">Blog Post screen</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="post-screen-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="post-screen-label post-screen-value"
+                >
+                  <span id="post-screen-value">blog/:slug</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="post-screen-menu" hidden role="listbox" aria-labelledby="post-screen-label">
+                  <li><button type="button" role="option" aria-selected="true">blog/:slug</button></li>
+                  <li><button type="button" role="option" aria-selected="false">news/:slug</button></li>
+                </ul>
+                <span class="field-help">Where a card click opens the article.</span>
+              </div>
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="sw-view-all"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="view-all-label"
+                ></button>
+                <div class="toggle-copy"><span id="view-all-label">View All to blog page</span></div>
+              </div>
+              <div class="nested" id="view-all-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Blog page slug</span>
+                  <input type="text" value="blog" />
+                  <span class="field-help">Missing from the current List schema — add in Editor V2.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- LIST DESIGN -->
+            <div class="tab-panel" id="panel-list-design" role="tabpanel" hidden>
+              <p class="section-label">Card layout</p>
+              <div class="field">
+                <span class="field-label" id="template-label">Template</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="template-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="template-label template-value"
+                >
+                  <span id="template-value">Custom</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="template-menu" hidden role="listbox" aria-labelledby="template-label">
+                  <li><button type="button" role="option" aria-selected="true">Custom</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Odd column inverted</button></li>
+                </ul>
+              </div>
+              <div class="field">
+                <span class="field-label" id="details-label">Details placement</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="details-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="details-label details-value"
+                >
+                  <span id="details-value">Below image</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="details-menu" hidden role="listbox" aria-labelledby="details-label">
+                  <li><button type="button" role="option" aria-selected="true">Below image</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Above image</button></li>
+                  <li><button type="button" role="option" aria-selected="false">On top of image</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Card text</p>
+              <p class="blog-note">Only visible fields. Same row pattern as Post.</p>
+
+              <div class="style-group">
+                <p class="style-group-label">Title</p>
+                <div class="color-card">
+                  <button type="button" class="color-trigger" id="list-title-color-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="swatch" style="background: #1e2743"></span>
+                    <span class="color-name">Secondary</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="color-menu" id="list-title-color-menu" hidden role="listbox">
+                    <li>
+                      <button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="true">
+                        <span class="swatch" style="background: #1e2743"></span>Secondary
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-color="#4b5269" data-label="Secondary 400" aria-selected="false">
+                        <span class="swatch" style="background: #4b5269"></span>Secondary 400
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-color="#ffffff" data-label="White" aria-selected="false">
+                        <span class="swatch" style="background: #ffffff"></span>White
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <span class="field-label" id="list-title-style-label">Text style</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="list-title-style-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="list-title-style-label list-title-style-value"
+                  >
+                    <span id="list-title-style-value">Heading 3</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="list-title-style-menu" hidden role="listbox" aria-labelledby="list-title-style-label">
+                    <li><button type="button" role="option" aria-selected="false">Heading 4</button></li>
+                    <li><button type="button" role="option" aria-selected="true">Heading 3</button></li>
+                    <li><button type="button" role="option" aria-selected="false">Paragraph</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="style-group">
+                <p class="style-group-label">Date</p>
+                <div class="color-card">
+                  <button type="button" class="color-trigger" id="list-date-color-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="swatch" style="background: #4b5269"></span>
+                    <span class="color-name">Secondary 400</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="color-menu" id="list-date-color-menu" hidden role="listbox">
+                    <li>
+                      <button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="false">
+                        <span class="swatch" style="background: #1e2743"></span>Secondary
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-color="#4b5269" data-label="Secondary 400" aria-selected="true">
+                        <span class="swatch" style="background: #4b5269"></span>Secondary 400
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-color="#989ca9" data-label="Secondary 200" aria-selected="false">
+                        <span class="swatch" style="background: #989ca9"></span>Secondary 200
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <span class="field-label" id="list-date-style-label">Text style</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="list-date-style-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="list-date-style-label list-date-style-value"
+                  >
+                    <span id="list-date-style-value">Paragraph</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="list-date-style-menu" hidden role="listbox" aria-labelledby="list-date-style-label">
+                    <li><button type="button" role="option" aria-selected="true">Paragraph</button></li>
+                    <li><button type="button" role="option" aria-selected="false">Disclaimer</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <button class="setting-row" type="button" id="list-advanced">
+                <span>Advanced</span>
+                <span class="icon-button" aria-hidden="true">
+                  <span class="icon-24"><img src="assets/icon-row-chevron.svg" alt="" width="24" height="24" /></span>
+                </span>
+              </button>
+              <p class="blog-note">Custom font, margins, and padding.</p>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Filters</p>
+              <div class="color-card">
+                <button type="button" class="color-trigger" id="filter-color-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Active filter color">
+                  <span class="swatch" style="background: #c2c2c2"></span>
+                  <span class="color-name">Active filter</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="filter-color-menu" hidden role="listbox">
+                  <li>
+                    <button type="button" role="option" data-color="#c2c2c2" data-label="Active filter" aria-selected="true">
+                      <span class="swatch" style="background: #c2c2c2"></span>Active filter
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="false">
+                      <span class="swatch" style="background: #1e2743"></span>Secondary
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <p class="blog-note">Button chrome reuses the Buttons design group when filters are buttons.</p>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Buttons</p>
+              <div class="field">
+                <span class="field-label" id="btn-styles-label">Read Post / Load More / View All</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="btn-styles-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="btn-styles-label btn-styles-value"
+                >
+                  <span id="btn-styles-value">Use default styles</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="btn-styles-menu" hidden role="listbox" aria-labelledby="btn-styles-label">
+                  <li><button type="button" role="option" aria-selected="true">Use default styles</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Custom (Buttons group)</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Background</p>
+              <div class="field">
+                <span class="field-label" id="list-bg-label">Color</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="list-bg-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="list-bg-label list-bg-value"
+                >
+                  <span id="list-bg-value">None</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="list-bg-menu" hidden role="listbox" aria-labelledby="list-bg-label">
+                  <li><button type="button" role="option" aria-selected="true">None</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Color</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Image</button></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- POST CONTENT -->
+            <div class="tab-panel" id="panel-post-content" role="tabpanel" hidden>
+              <p class="blog-note">
+                Copy is not edited here. Pick a preview post on the canvas, then choose what the
+                template shows.
+              </p>
+
+              <p class="section-label">Hero</p>
+              <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button type="button" class="switch on" id="sw-hero" role="switch" aria-checked="true" aria-labelledby="hero-label"></button>
+                  <div class="toggle-copy"><span id="hero-label">Show post hero</span></div>
+                </div>
+              </div>
+              <label class="field">
+                <span class="field-label">Default hero banner</span>
+                <input type="text" value="Fallback image…" />
+              </label>
+              <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="hero-title"></button>
+                  <div class="toggle-copy"><span id="hero-title">Title in hero</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="hero-date"></button>
+                  <div class="toggle-copy"><span id="hero-date">Date in hero</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="hero-sub"></button>
+                  <div class="toggle-copy"><span id="hero-sub">Subtitle in hero</span></div>
+                </div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Body fields</p>
+              <div class="toggle-stack">
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="bf-title"></button>
+                  <div class="toggle-copy"><span id="bf-title">Title</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="bf-subtitle"></button>
+                  <div class="toggle-copy"><span id="bf-subtitle">Subtitle</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="bf-excerpt"></button>
+                  <div class="toggle-copy"><span id="bf-excerpt">Excerpt</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="bf-date"></button>
+                  <div class="toggle-copy"><span id="bf-date">Publish date</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="bf-author"></button>
+                  <div class="toggle-copy"><span id="bf-author">Author</span></div>
+                </div>
+                <div class="toggle-row">
+                  <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="bf-cats"></button>
+                  <div class="toggle-copy"><span id="bf-cats">Categories</span></div>
+                </div>
+              </div>
+              <label class="field">
+                <span class="field-label">Date format</span>
+                <input type="text" value="MM.DD.YYYY" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Share</p>
+              <div class="toggle-row">
+                <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="share-label"></button>
+                <div class="toggle-copy"><span id="share-label">Show share block</span></div>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Back to blog</p>
+              <div class="toggle-row">
+                <button
+                  type="button"
+                  class="switch"
+                  id="sw-back"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="back-label"
+                ></button>
+                <div class="toggle-copy"><span id="back-label">Show link to blog page</span></div>
+              </div>
+              <div class="nested" id="back-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Blog page slug</span>
+                  <input type="text" value="blog" />
+                </label>
+              </div>
+            </div>
+
+            <!-- POST DESIGN -->
+            <div class="tab-panel" id="panel-post-design" role="tabpanel" hidden>
+              <p class="section-label">Hero</p>
+              <div class="color-card">
+                <button type="button" class="color-trigger" id="overlay-color-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Overlay color">
+                  <span class="swatch" style="background: rgba(0, 0, 0, 0.35)"></span>
+                  <span class="color-name">Overlay</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="overlay-color-menu" hidden role="listbox">
+                  <li>
+                    <button type="button" role="option" data-color="rgba(0,0,0,0.35)" data-label="Overlay" aria-selected="true">
+                      <span class="swatch" style="background: rgba(0, 0, 0, 0.35)"></span>Overlay
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="rgba(30,39,67,0.5)" data-label="Secondary overlay" aria-selected="false">
+                      <span class="swatch" style="background: rgba(30, 39, 67, 0.5)"></span>Secondary overlay
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <label class="field">
+                <span class="field-label">Hero height</span>
+                <input type="text" value="40vh" />
+              </label>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Article text</p>
+              <div class="style-group">
+                <p class="style-group-label">Title</p>
+                <div class="color-card">
+                  <button type="button" class="color-trigger" id="post-title-color-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="swatch" style="background: #ffffff"></span>
+                    <span class="color-name">White</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="color-menu" id="post-title-color-menu" hidden role="listbox">
+                    <li>
+                      <button type="button" role="option" data-color="#ffffff" data-label="White" aria-selected="true">
+                        <span class="swatch" style="background: #ffffff"></span>White
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="false">
+                        <span class="swatch" style="background: #1e2743"></span>Secondary
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="field">
+                  <span class="field-label" id="post-title-style-label">Text style</span>
+                  <button
+                    type="button"
+                    class="field-trigger"
+                    id="post-title-style-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="post-title-style-label post-title-style-value"
+                  >
+                    <span id="post-title-style-value">Heading 2</span>
+                    <span class="icon-button" aria-hidden="true">
+                      <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                    </span>
+                  </button>
+                  <ul class="field-menu" id="post-title-style-menu" hidden role="listbox" aria-labelledby="post-title-style-label">
+                    <li><button type="button" role="option" aria-selected="false">Heading 1</button></li>
+                    <li><button type="button" role="option" aria-selected="true">Heading 2</button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="color-card">
+                <button type="button" class="color-trigger" id="body-color-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Default body color">
+                  <span class="swatch" style="background: #1e2743"></span>
+                  <span class="color-name">Secondary</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="color-menu" id="body-color-menu" hidden role="listbox">
+                  <li>
+                    <button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="true">
+                      <span class="swatch" style="background: #1e2743"></span>Secondary
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" role="option" data-color="#4b5269" data-label="Secondary 400" aria-selected="false">
+                      <span class="swatch" style="background: #4b5269"></span>Secondary 400
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <label class="field">
+                <span class="field-label">Content max width</span>
+                <input type="text" value="100%" />
+              </label>
+              <div class="field">
+                <span class="field-label" id="align-label">Text alignment</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="align-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="align-label align-value"
+                >
+                  <span id="align-value">Left</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="align-menu" hidden role="listbox" aria-labelledby="align-label">
+                  <li><button type="button" role="option" aria-selected="true">Left</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Center</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Right</button></li>
+                </ul>
+              </div>
+
+              <button class="setting-row" type="button">
+                <span>Advanced</span>
+                <span class="icon-button" aria-hidden="true">
+                  <span class="icon-24"><img src="assets/icon-row-chevron.svg" alt="" width="24" height="24" /></span>
+                </span>
+              </button>
+              <p class="blog-note">Custom font, margins, and padding.</p>
+            </div>
+
+            <!-- BLOCK (shared) -->
+            <div class="tab-panel" id="panel-block" role="tabpanel" hidden>
+              <p class="section-label">Animation</p>
+              <div class="field">
+                <span class="field-label" id="animation-label">Behavior</span>
+                <button
+                  type="button"
+                  class="field-trigger"
+                  id="animation-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-labelledby="animation-label animation-value"
+                >
+                  <span id="animation-value">None</span>
+                  <span class="icon-button" aria-hidden="true">
+                    <span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span>
+                  </span>
+                </button>
+                <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                  <li><button type="button" role="option" data-animation="" aria-selected="true">None</button></li>
+                  <li><button type="button" role="option" data-animation="fade" aria-selected="false">Fade</button></li>
+                  <li><button type="button" role="option" data-animation="slide" aria-selected="false">Slide up</button></li>
+                </ul>
+              </div>
+
+              <hr class="panel-divider" />
+
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" data-pad="0">—</button>
+                <button type="button" data-pad="8">S</button>
+                <button type="button" class="active" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="16" min="0" max="80" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <script src="blog.js"></script>
+  </body>
+</html>

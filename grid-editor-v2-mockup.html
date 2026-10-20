@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Mock — Grid · Editor V2</title>
+	<style>
+		:root {
+			--secondary: #1e2743;
+			--secondary-400: #4b5269;
+			--secondary-200: #989ca9;
+			--background: #fff;
+			--bg2: #f0f0f0;
+			--divider: #dbdfe0;
+			--blue: #015eea;
+			--font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+			--sidebar-width: 400px;
+			--grid-cols: 2;
+			--grid-gap: 15px;
+			--cell-radius: 0px;
+			--cell-pad: 16px;
+			--text-color: #1e2743;
+			--cell-bg: #fff;
+			--cell-border: 1px solid #d1d3e2;
+		}
+		* { box-sizing: border-box; }
+		body { margin: 0; font-family: var(--font); background: #e9e9ec; color: var(--secondary); line-height: 1.45; }
+		.page-header { padding: 24px 24px 0; max-width: 1240px; margin: 0 auto; }
+		h1 { font-size: 1.15rem; font-weight: 600; margin: 0 0 8px; }
+		p.lead { margin: 0 0 12px; font-size: 0.875rem; color: var(--secondary-400); max-width: 58rem; }
+		.state-toggles { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; }
+		.state-toggles button {
+			font: inherit; font-size: 0.75rem; padding: 6px 12px; border-radius: 6px;
+			border: 1px solid var(--divider); background: var(--background); cursor: pointer;
+		}
+		.state-toggles button.active { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+		.layout {
+			display: grid; grid-template-columns: 1fr var(--sidebar-width); max-width: 1240px;
+			margin: 0 auto 40px; min-height: 640px; background: var(--background); border-radius: 12px;
+			overflow: hidden; border: 1px solid var(--divider);
+		}
+		.layout.no-sidebar { grid-template-columns: 1fr; }
+		.canvas { background: #f7f7f8; min-height: 640px; position: relative; padding: 56px 28px 36px; }
+		.canvas-label {
+			position: absolute; top: 12px; left: 16px; font-size: 0.65rem; text-transform: uppercase;
+			letter-spacing: .08em; color: var(--secondary-400);
+		}
+		.crumb {
+			position: absolute; top: 12px; left: 160px; font-size: 0.72rem; color: var(--secondary-400);
+		}
+		.crumb strong { color: var(--secondary); }
+		.quick-actions {
+			position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; background: #fff;
+			padding: 8px; border-radius: 12px; border: 1px solid var(--divider); z-index: 6; flex-wrap: wrap;
+		}
+		.quick-actions button {
+			font: inherit; font-size: 0.68rem; padding: 6px 8px; border: 1px solid var(--divider);
+			border-radius: 6px; background: #fff; cursor: pointer; white-space: nowrap;
+		}
+		.quick-actions button.primary { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+		.quick-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+		.grid-block {
+			max-width: 760px; margin: 0 auto; border: 2px solid transparent; border-radius: 10px;
+			padding: 12px; background: #fff;
+		}
+		.grid-block.parent-sel { border-color: var(--blue); }
+		.filters-bar {
+			display: none; flex-wrap: wrap; gap: 8px; justify-content: center;
+			padding: 4px 4px 14px;
+		}
+		.filters-bar.show { display: flex; }
+		.chip {
+			font: inherit; font-size: 0.72rem; padding: 6px 12px; border-radius: 4px;
+			border: 1px solid var(--divider); background: #fff;
+		}
+		.chip.on { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+		.grid {
+			display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr);
+			gap: var(--grid-gap); align-items: stretch;
+		}
+		.cell {
+			position: relative; background: var(--cell-bg); border: var(--cell-border);
+			border-radius: var(--cell-radius); min-height: 200px; cursor: pointer; overflow: hidden;
+		}
+		.cell.cell-sel { outline: 2px solid var(--blue); outline-offset: 2px; }
+		.cell-content {
+			position: relative; z-index: 2; height: 100%; min-height: 200px; padding: var(--cell-pad);
+			display: flex; gap: 10px;
+		}
+		.cell-content.dir-col { flex-direction: column; }
+		.cell-content.dir-row { flex-direction: row; }
+		.cell-content.dir-col.h-start { align-items: flex-start; }
+		.cell-content.dir-col.h-center { align-items: center; }
+		.cell-content.dir-col.h-end { align-items: flex-end; }
+		.cell-content.dir-col.v-start { justify-content: flex-start; }
+		.cell-content.dir-col.v-center { justify-content: center; }
+		.cell-content.dir-col.v-end { justify-content: flex-end; }
+		.cell-content.dir-row.h-start { justify-content: flex-start; }
+		.cell-content.dir-row.h-center { justify-content: center; }
+		.cell-content.dir-row.h-end { justify-content: flex-end; }
+		.cell-content.dir-row.v-start { align-items: flex-start; }
+		.cell-content.dir-row.v-center { align-items: center; }
+		.cell-content.dir-row.v-end { align-items: flex-end; }
+		.thumb {
+			width: 100%; height: 72px; border-radius: 4px; flex-shrink: 0;
+			background: linear-gradient(135deg, #9aa3b8, #6d7488);
+		}
+		.cell:nth-child(2) .thumb { background: linear-gradient(135deg, #7a8aa3, #4e5a70); }
+		.cell:nth-child(3) .thumb { background: linear-gradient(135deg, #b7c0cf, #8a93a6); }
+		.cell:nth-child(4) .thumb { background: linear-gradient(135deg, #8b9aad, #5c6778); }
+		.cell-content.dir-row .thumb { width: 88px; height: 88px; }
+		.cell-copy { min-width: 0; }
+		.cell-copy h3 {
+			margin: 0 0 4px; font-size: 0.92rem; color: var(--text-color);
+		}
+		.cell-copy p { margin: 0; font-size: 0.74rem; color: var(--text-color); opacity: .78; }
+		.overlay {
+			display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+			background: rgba(30, 39, 67, .45); color: #fff; align-items: center; justify-content: center;
+			font-size: 0.78rem; font-weight: 600; opacity: 0; transition: opacity .2s;
+		}
+		.grid-block.show-overlay .overlay { display: flex; }
+		.cell:hover .overlay { opacity: 1; }
+		.load-more {
+			display: none; margin: 16px auto 4px; font: inherit; font-size: 0.78rem;
+			padding: 8px 16px; border: 0; border-radius: 4px; background: var(--secondary); color: #fff;
+		}
+		.load-more.show { display: block; }
+		.sidebar { border-left: 1px solid var(--divider); display: flex; flex-direction: column; background: var(--bg2); }
+		.sidebar.hidden { display: none; }
+		.sidebar-header {
+			padding: 14px 20px 10px; border-bottom: 1px solid var(--divider); display: flex;
+			justify-content: space-between; background: #fff;
+		}
+		.sidebar-title { font-weight: 600; font-size: 0.95rem; margin: 0; }
+		.sidebar-sub { font-size: 0.65rem; color: var(--secondary-200); font-family: ui-monospace, monospace; }
+		.close-btn { width: 28px; height: 28px; border-radius: 50%; border: 0; background: #e01212; color: #fff; cursor: pointer; }
+		.tab-row {
+			display: flex; gap: 16px; padding: 4px 20px 0; border-bottom: 1px solid var(--divider); background: #fff;
+		}
+		.tab-row button {
+			font: inherit; font-weight: 600; font-size: 0.8125rem; padding: 0 0 12px; border: 0; background: none;
+			cursor: pointer; color: var(--secondary-400); border-bottom: 2px solid transparent; margin-bottom: -1px;
+		}
+		.tab-row button.active { color: var(--secondary); border-bottom-color: var(--secondary); }
+		.panel { flex: 1; overflow-y: auto; padding: 16px 20px 24px; font-size: 0.8rem; }
+		.section-heading {
+			font-size: 0.7rem; text-transform: uppercase; letter-spacing: .08em;
+			color: var(--secondary-400); margin: 16px 0 8px;
+		}
+		.section-heading:first-child { margin-top: 0; }
+		.field { margin-bottom: 12px; }
+		.label { font-size: 12px; color: var(--secondary-400); display: block; margin-bottom: 4px; }
+		select, input[type="text"], input[type="number"], input[type="color"] {
+			width: 100%; padding: 8px 10px; border: 1px solid var(--divider); border-radius: 6px; font: inherit;
+		}
+		input[type="color"] { height: 36px; padding: 4px; }
+		.hint { font-size: 0.68rem; color: var(--secondary-400); margin-top: 4px; }
+		.warn { font-size: 0.68rem; color: #8a4b12; margin-top: 4px; }
+		.item-row {
+			display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff;
+			border: 1px solid var(--divider); border-radius: 6px; margin-bottom: 6px; cursor: pointer;
+		}
+		.item-row.active-row { border-color: var(--secondary); }
+		.item-row .grip { color: var(--secondary-200); cursor: grab; }
+		.item-row .meta { margin-left: auto; font-size: 0.65rem; color: var(--secondary-200); }
+		.item-row button.icon {
+			font: inherit; font-size: 0.7rem; padding: 2px 6px; border: 1px solid var(--divider);
+			border-radius: 4px; background: #fff; color: var(--secondary-400); cursor: pointer;
+		}
+		.item-row button.icon:disabled { opacity: 0.35; cursor: not-allowed; }
+		.add-link { font: inherit; font-size: 0.8rem; color: var(--blue); background: none; border: 0; cursor: pointer; padding: 8px 0; }
+		.add-link:disabled { color: var(--secondary-200); cursor: not-allowed; }
+		.toggle {
+			display: flex; align-items: center; justify-content: space-between; gap: 8px;
+			padding: 8px 0; border-bottom: 1px solid var(--divider);
+		}
+		.switch {
+			width: 36px; height: 20px; border-radius: 999px; background: #c5c9d4; position: relative; flex-shrink: 0; cursor: pointer;
+		}
+		.switch.on { background: var(--secondary); }
+		.switch::after {
+			content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%;
+			background: #fff; top: 2px; left: 2px;
+		}
+		.switch.on::after { left: 18px; }
+		.seg { display: flex; border: 1px solid var(--divider); border-radius: 6px; overflow: hidden; }
+		.seg button {
+			flex: 1; font: inherit; font-size: 0.75rem; padding: 8px 6px; border: 0; background: #fff;
+			cursor: pointer; color: var(--secondary);
+		}
+		.seg button.on { background: var(--secondary); color: #fff; }
+		.nested {
+			margin: 8px 0 12px; padding: 10px 12px; background: #fff; border: 1px solid var(--divider); border-radius: 6px;
+		}
+		.readonly {
+			padding: 10px 12px; background: #fff; border: 1px dashed var(--divider); border-radius: 6px; font-size: 0.75rem;
+			color: var(--secondary-400);
+		}
+		.hidden { display: none !important; }
+		.spec-box { max-width: 1240px; margin: 0 auto 48px; padding: 0 24px; }
+		.spec-box section {
+			background: #fff; padding: 18px 20px; border-radius: 8px; border: 1px solid var(--divider);
+			margin-bottom: 14px; font-size: 0.85rem; color: var(--secondary-400);
+		}
+		@media (max-width: 860px) {
+			.layout, .layout.no-sidebar { grid-template-columns: 1fr; }
+			.sidebar { border-left: 0; border-top: 1px solid var(--divider); min-height: 360px; }
+		}
+	</style>
+</head>
+<body>
+	<header class="page-header">
+		<h1>Grid — Editor V2 mockup</h1>
+		<p class="lead">
+			Parent-block inspector for <code>s-block-grid</code>. Planning:
+			<code>_docs/planning/editor-v2-grid.md</code>.
+			Each cell is the container. Layout (direction, horizontal, vertical) broadcasts from the parent.
+			Add list is Text, Buttons, Media only.
+		</p>
+		<div class="state-toggles" id="toggles">
+			<button type="button" class="active" data-mode="parent">Parent selected</button>
+			<button type="button" data-mode="content">Parent Content</button>
+			<button type="button" data-mode="design">Parent Design</button>
+			<button type="button" data-mode="cell">Cell</button>
+			<button type="button" data-mode="cellDesign">Cell Design</button>
+		</div>
+	</header>
+
+	<div class="layout" id="layout">
+		<div class="canvas">
+			<span class="canvas-label">Page canvas</span>
+			<div class="crumb" id="crumb"><strong>Grid</strong></div>
+			<div class="quick-actions" id="qa">
+				<button type="button" class="primary" data-qa="add">Add cell</button>
+				<button type="button" data-qa="edit">Edit</button>
+				<button type="button">Clone</button>
+				<button type="button">Delete</button>
+			</div>
+
+			<div class="grid-block parent-sel" id="gridBlock">
+				<div class="filters-bar" id="filtersBar">
+					<span class="chip on">All</span>
+					<span class="chip">Amenities</span>
+					<span class="chip">Community</span>
+				</div>
+				<div class="grid" id="grid">
+					<article class="cell" data-cell="0">
+						<div class="cell-content" data-content>
+							<div class="thumb" aria-hidden="true"></div>
+							<div class="cell-copy">
+								<h3>Resort-style pool</h3>
+								<p>Cabana seating and weekend hours.</p>
+							</div>
+						</div>
+						<div class="overlay">Learn more</div>
+					</article>
+					<article class="cell" data-cell="1">
+						<div class="cell-content" data-content>
+							<div class="thumb" aria-hidden="true"></div>
+							<div class="cell-copy">
+								<h3>Fitness studio</h3>
+								<p>Open 5 a.m. to 11 p.m.</p>
+							</div>
+						</div>
+						<div class="overlay">Learn more</div>
+					</article>
+					<article class="cell" data-cell="2">
+						<div class="cell-content" data-content>
+							<div class="thumb" aria-hidden="true"></div>
+							<div class="cell-copy">
+								<h3>Cowork lounge</h3>
+								<p>Desks, wifi, and coffee.</p>
+							</div>
+						</div>
+						<div class="overlay">Learn more</div>
+					</article>
+					<article class="cell" data-cell="3">
+							<div class="cell-content" data-content>
+							<div class="thumb" aria-hidden="true"></div>
+							<div class="cell-copy">
+								<h3>Pet park</h3>
+								<p>Fenced yard and wash station.</p>
+							</div>
+						</div>
+						<div class="overlay">Learn more</div>
+					</article>
+				</div>
+				<button type="button" class="load-more" id="loadMoreBtn">Show more</button>
+			</div>
+		</div>
+
+		<aside class="sidebar hidden" id="sidebar">
+			<div class="sidebar-header">
+				<div>
+					<p class="sidebar-title" id="sbTitle">Grid</p>
+					<p class="sidebar-sub" id="sbSub">s-block-grid</p>
+				</div>
+				<button type="button" class="close-btn" id="closeSb" aria-label="Close">×</button>
+			</div>
+			<div class="tab-row" id="tabs">
+				<button type="button" class="active" data-tab="content">Content</button>
+				<button type="button" data-tab="design">Design</button>
+				<button type="button" data-tab="block">Block</button>
+			</div>
+
+			<div class="panel" id="panel-content">
+				<p class="section-heading">Cells</p>
+				<p class="hint" style="margin-bottom:10px">Each cell is a container. Open a cell to add text, media, or buttons. Minimum 4 cells.</p>
+				<div class="item-row active-row" data-pick-cell="0">
+					<span class="grip">⋮⋮</span> Cell 1
+					<span class="meta">2 blocks</span>
+					<button type="button" class="icon" disabled title="Minimum 4 cells">Remove</button>
+				</div>
+				<div class="item-row" data-pick-cell="1">
+					<span class="grip">⋮⋮</span> Cell 2
+					<span class="meta">2 blocks</span>
+					<button type="button" class="icon" disabled title="Minimum 4 cells">Remove</button>
+				</div>
+				<div class="item-row" data-pick-cell="2">
+					<span class="grip">⋮⋮</span> Cell 3
+					<span class="meta">2 blocks</span>
+					<button type="button" class="icon" disabled title="Minimum 4 cells">Remove</button>
+				</div>
+				<div class="item-row" data-pick-cell="3">
+					<span class="grip">⋮⋮</span> Cell 4
+					<span class="meta">2 blocks</span>
+					<button type="button" class="icon" disabled title="Minimum 4 cells">Remove</button>
+				</div>
+				<button type="button" class="add-link">+ Add cell</button>
+				<p class="warn">Remove is disabled at 4 cells. Add a fifth cell before you can delete one.</p>
+
+				<p class="section-heading">Filters</p>
+				<div class="toggle"><span>Show filters</span><span class="switch" id="swFilters" data-switch></span></div>
+				<div class="nested hidden" id="filterNames">
+					<div class="field">
+						<span class="label">Categories</span>
+						<input type="text" value="Amenities, Community" />
+						<p class="hint">Names only. Cells opt in from the cell inspector. An All chip is added automatically.</p>
+					</div>
+				</div>
+
+				<p class="section-heading">Load more</p>
+				<div class="toggle"><span>Add a load more button</span><span class="switch" id="swLoadMore" data-switch></span></div>
+				<div class="nested hidden" id="loadMoreFields">
+					<div class="field">
+						<span class="label">Initial cells to display</span>
+						<input type="number" min="1" value="6" />
+					</div>
+					<div class="field">
+						<span class="label">Button text</span>
+						<input type="text" id="loadMoreLabel" value="Show more" />
+					</div>
+					<p class="hint">Button style is on Design.</p>
+				</div>
+			</div>
+
+			<div class="panel hidden" id="panel-design">
+				<p class="section-heading">Grid layout</p>
+				<div class="field">
+					<span class="label">Number of columns</span>
+					<input type="number" id="colsInput" min="1" max="12" value="2" />
+				</div>
+				<div class="field">
+					<span class="label">Space between cells</span>
+					<input type="number" id="gapInput" min="0" value="15" />
+					<p class="hint">Pixels. Blueprint 15.</p>
+				</div>
+
+				<p class="section-heading">Text color (broadcast)</p>
+				<p class="hint" style="margin-bottom:8px">Color only. Size and heading stay on the text block. Applies to text inside cells.</p>
+				<div class="field">
+					<span class="label">Color</span>
+					<input type="color" id="textColor" value="#1e2743" />
+				</div>
+
+				<p class="section-heading">Cell layout (broadcast)</p>
+				<p class="hint" style="margin-bottom:8px">Writes into every cell that still follows the Grid. Replaces nesting a Container for alignment.</p>
+				<div class="field">
+					<span class="label">Content direction</span>
+					<div class="seg" id="dirSeg">
+						<button type="button" class="on" data-dir="col">Vertical</button>
+						<button type="button" data-dir="row">Horizontal</button>
+					</div>
+				</div>
+				<div class="field">
+					<span class="label">Horizontal</span>
+					<div class="seg" id="hSeg">
+						<button type="button" class="on" data-h="start">Left</button>
+						<button type="button" data-h="center">Center</button>
+						<button type="button" data-h="end">Right</button>
+					</div>
+				</div>
+				<div class="field">
+					<span class="label">Vertical</span>
+					<div class="seg" id="vSeg">
+						<button type="button" data-v="start">Top</button>
+						<button type="button" class="on" data-v="center">Center</button>
+						<button type="button" data-v="end">Bottom</button>
+					</div>
+					<p class="hint">Visible when cells share a row height. Default Center matches today’s viewer.</p>
+				</div>
+
+				<p class="section-heading">Cell chrome (broadcast)</p>
+				<div class="field">
+					<span class="label">Cell background</span>
+					<input type="text" value="White" />
+				</div>
+				<div class="toggle"><span>Border</span><span class="switch on" id="swBorder" data-switch></span></div>
+				<div class="field">
+					<span class="label">Rounded corners</span>
+					<input type="text" id="radiusInput" value="0px" />
+				</div>
+				<div class="field">
+					<span class="label">Height</span>
+					<input type="text" value="" placeholder="0 = auto" />
+					<p class="hint">Empty or 0 is auto. Grid rows still stretch cells to equal height.</p>
+				</div>
+				<div class="field">
+					<span class="label">Padding</span>
+					<input type="text" id="padInput" value="16px" />
+				</div>
+				<div class="toggle"><span>Box shadow</span><span class="switch" data-switch></span></div>
+				<div class="toggle"><span>Show overlay</span><span class="switch" id="swOverlay" data-switch></span></div>
+				<div class="nested hidden" id="overlayFields">
+					<p class="hint" style="margin-bottom:8px">Overlay shows on the live site, not in the editor. Hover the canvas cells here to preview.</p>
+					<div class="field">
+						<span class="label">Overlay text</span>
+						<input type="text" value="Learn more" />
+					</div>
+					<div class="field">
+						<span class="label">Overlay icon</span>
+						<select><option>None</option><option>Choose image…</option></select>
+					</div>
+					<button type="button" class="add-link">Overlay background and font</button>
+				</div>
+
+				<div id="filterDesign" class="hidden">
+					<p class="section-heading">Filters</p>
+					<div class="field">
+						<span class="label">Layout</span>
+						<div class="seg" id="filterLayoutSeg">
+							<button type="button" class="on" data-fl="list">Button list</button>
+							<button type="button" data-fl="dropdown">Dropdown</button>
+						</div>
+					</div>
+					<div class="field">
+						<span class="label">Alignment</span>
+						<div class="seg">
+							<button type="button">Left</button>
+							<button type="button" class="on">Center</button>
+							<button type="button">Right</button>
+						</div>
+					</div>
+					<button type="button" class="add-link">Filter and active button styles</button>
+				</div>
+
+				<div id="loadMoreDesign" class="hidden">
+					<p class="section-heading">Load more button</p>
+					<button type="button" class="add-link">Button style pack</button>
+					<div class="field">
+						<span class="label">Wrapper padding</span>
+						<input type="text" value="25px 0" />
+					</div>
+				</div>
+
+				<p class="section-heading">Module background</p>
+				<div class="field">
+					<span class="label">Background</span>
+					<select><option>None</option><option>Color</option><option>Image</option><option>Gradient</option></select>
+				</div>
+			</div>
+
+			<div class="panel hidden" id="panel-block">
+				<p class="section-heading">Block</p>
+				<p class="hint" style="margin-bottom:10px">Same pack as Media. Animation, width, padding, layer, hide on device.</p>
+				<div class="field">
+					<span class="label">Width</span>
+					<select><option>Full</option><option>Wide</option><option>Standard</option></select>
+				</div>
+				<div class="field">
+					<span class="label">Padding</span>
+					<select><option>M</option><option>None</option><option>S</option><option>L</option></select>
+				</div>
+				<div class="field">
+					<span class="label">Entry animation</span>
+					<select><option>None</option><option>Fade</option><option>Slide up</option></select>
+				</div>
+				<div class="toggle"><span>Parallax</span><span class="switch" data-switch></span></div>
+			</div>
+
+			<div class="panel hidden" id="panel-cell-content">
+				<p class="section-heading">Blocks in this cell</p>
+				<p class="hint" style="margin-bottom:10px">Text, Buttons, or Media. Maximum 6. Container is not in the add list.</p>
+				<div id="cellBlockList">
+					<div class="item-row"><span class="grip">⋮⋮</span> Media</div>
+					<div class="item-row"><span class="grip">⋮⋮</span> Text</div>
+				</div>
+				<button type="button" class="add-link" id="addBlockBtn">+ Add block</button>
+				<p class="hint" id="cellCountHint">2 of 6 blocks</p>
+				<p class="warn hidden" id="cellMaxWarn">Add is disabled. This cell already has 6 blocks.</p>
+
+				<div id="cellCats" class="hidden">
+					<p class="section-heading">Filter tags</p>
+					<div class="field">
+						<span class="label">Categories</span>
+						<input type="text" value="Amenities" />
+						<p class="hint">Must match a name on the parent Grid.</p>
+					</div>
+				</div>
+
+				<p class="section-heading">Cell</p>
+				<div class="toggle"><span>Keep content always visible</span><span class="switch" data-switch></span></div>
+				<p class="hint">Hover overlay sits behind the content.</p>
+				<div class="toggle"><span>Make cell a clickable link</span><span class="switch" id="swLink" data-switch></span></div>
+				<div class="nested hidden" id="linkFields">
+					<div class="field">
+						<span class="label">Link to</span>
+						<select>
+							<option>Existing screen</option>
+							<option>External URL</option>
+							<option>Open screen in lightbox</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel hidden" id="panel-cell-design">
+				<p class="section-heading">Cell layout</p>
+				<p class="hint" style="margin-bottom:8px">Same controls as Grid Design. They update when the Grid broadcasts. Change a value here to style this cell only.</p>
+				<div class="field">
+					<span class="label">Content direction</span>
+					<div class="seg" id="cDirSeg">
+						<button type="button" class="on" data-cdir="col">Vertical</button>
+						<button type="button" data-cdir="row">Horizontal</button>
+					</div>
+				</div>
+				<div class="field">
+					<span class="label">Horizontal</span>
+					<div class="seg" id="cHSeg">
+						<button type="button" class="on" data-ch="start">Left</button>
+						<button type="button" data-ch="center">Center</button>
+						<button type="button" data-ch="end">Right</button>
+					</div>
+				</div>
+				<div class="field">
+					<span class="label">Vertical</span>
+					<div class="seg" id="cVSeg">
+						<button type="button" data-cv="start">Top</button>
+						<button type="button" class="on" data-cv="center">Center</button>
+						<button type="button" data-cv="end">Bottom</button>
+					</div>
+				</div>
+				<button type="button" class="add-link hidden" id="resetGridStyles">Use Grid styles</button>
+
+				<p class="section-heading">Cell chrome</p>
+				<div class="field">
+					<span class="label">Cell background</span>
+					<input type="text" value="White" />
+				</div>
+				<div class="toggle"><span>Border</span><span class="switch on" data-switch></span></div>
+				<div class="field">
+					<span class="label">Rounded corners</span>
+					<input type="text" value="0px" />
+				</div>
+				<div class="field">
+					<span class="label">Height</span>
+					<input type="text" value="" placeholder="0 = auto" />
+				</div>
+				<div class="field">
+					<span class="label">Padding</span>
+					<input type="text" value="16px" />
+				</div>
+				<div class="toggle"><span>Box shadow</span><span class="switch" data-switch></span></div>
+				<div class="toggle"><span>Show overlay</span><span class="switch" id="swCellOverlay" data-switch></span></div>
+				<div class="nested hidden" id="cellOverlayFields">
+					<div class="field">
+						<span class="label">Overlay text</span>
+						<input type="text" value="Learn more" />
+					</div>
+					<button type="button" class="add-link">Overlay background and font</button>
+				</div>
+			</div>
+		</aside>
+	</div>
+
+	<div class="spec-box">
+		<section>
+			<strong>Broadcast.</strong> Parent Design has three channels: text color, cell layout, and cell chrome. Cell Design always shows the layout and chrome dashboard — those fields update when the Grid broadcasts. There is no Listen / Custom control on the cell. Editing a cell field styles that cell only; Use Grid styles puts it back on the broadcast. Child text, media, and buttons are listed in the cell. Text color comes from the Grid; size and heading stay on the text block.
+		</section>
+		<section>
+			<strong>Caps.</strong> Minimum 4 cells — Remove is disabled with a reason, not a silent fail. Maximum 6 blocks per cell — Add is disabled at 6. Add list is Text, Buttons, Media. Nested Containers on five live sites stay (grandfather).
+		</section>
+		<section>
+			<strong>Click order.</strong> Parent chrome selects the grid. A cell on canvas (or a list row) selects that cell. Breadcrumb: Grid &gt; Cell N.
+		</section>
+	</div>
+
+	<script>
+		const layout = document.getElementById("layout");
+		const sidebar = document.getElementById("sidebar");
+		const tabs = document.getElementById("tabs");
+		const gridBlock = document.getElementById("gridBlock");
+		const crumb = document.getElementById("crumb");
+		const qa = document.getElementById("qa");
+		const cells = [...document.querySelectorAll(".cell")];
+		let mode = "parent";
+		let selectedCell = 0;
+		const dirtyCells = {};
+
+		function parentLayout() {
+			return {
+				dir: segVal("dirSeg", "dir") || "col",
+				h: segVal("hSeg", "h") || "start",
+				v: segVal("vSeg", "v") || "center",
+			};
+		}
+
+		function layoutForCell(index) {
+			return dirtyCells[index] || parentLayout();
+		}
+
+		function syncCellSegs(index) {
+			const L = layoutForCell(index);
+			segOn(document.getElementById("cDirSeg"), "cdir", L.dir);
+			segOn(document.getElementById("cHSeg"), "ch", L.h);
+			segOn(document.getElementById("cVSeg"), "cv", L.v);
+			document.getElementById("resetGridStyles").classList.toggle("hidden", !dirtyCells[index]);
+		}
+
+		function isOn(el) { return el.classList.contains("on"); }
+		function show(id, on) { document.getElementById(id).classList.toggle("hidden", !on); }
+		function segOn(root, attr, value) {
+			root.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset[attr] === value));
+		}
+		function segVal(id, attr) {
+			return document.querySelector("#" + id + " .on")?.dataset[attr];
+		}
+
+		function applyLayoutClasses(el, dir, h, v) {
+			el.classList.toggle("dir-col", dir === "col");
+			el.classList.toggle("dir-row", dir === "row");
+			el.classList.toggle("h-start", h === "start");
+			el.classList.toggle("h-center", h === "center");
+			el.classList.toggle("h-end", h === "end");
+			el.classList.toggle("v-start", v === "start");
+			el.classList.toggle("v-center", v === "center");
+			el.classList.toggle("v-end", v === "end");
+		}
+
+		function applyCanvas() {
+			const cols = Math.min(12, Math.max(1, Number(document.getElementById("colsInput").value) || 2));
+			document.documentElement.style.setProperty("--grid-cols", String(cols));
+			document.documentElement.style.setProperty("--grid-gap", (document.getElementById("gapInput").value || 15) + "px");
+			document.documentElement.style.setProperty("--text-color", document.getElementById("textColor").value);
+			document.documentElement.style.setProperty("--cell-radius", document.getElementById("radiusInput").value || "0px");
+			document.documentElement.style.setProperty("--cell-pad", document.getElementById("padInput").value || "16px");
+			document.documentElement.style.setProperty("--cell-border", isOn(document.getElementById("swBorder")) ? "1px solid #d1d3e2" : "none");
+
+			const dir = segVal("dirSeg", "dir") || "col";
+			const h = segVal("hSeg", "h") || "start";
+			const v = segVal("vSeg", "v") || "center";
+			document.querySelectorAll("[data-content]").forEach((el, i) => {
+				const L = layoutForCell(i);
+				applyLayoutClasses(el, L.dir, L.h, L.v);
+			});
+
+			if (mode === "cell" || mode === "cellDesign") syncCellSegs(selectedCell);
+
+			const filtersOn = isOn(document.getElementById("swFilters"));
+			document.getElementById("filtersBar").classList.toggle("show", filtersOn);
+			show("filterNames", filtersOn);
+			show("filterDesign", filtersOn);
+			show("cellCats", filtersOn && (mode === "cell" || mode === "cellDesign"));
+			show("cellOverlayFields", isOn(document.getElementById("swCellOverlay")));
+
+			const loadMore = isOn(document.getElementById("swLoadMore"));
+			document.getElementById("loadMoreBtn").classList.toggle("show", loadMore);
+			document.getElementById("loadMoreBtn").textContent = document.getElementById("loadMoreLabel").value || "Show more";
+			show("loadMoreFields", loadMore);
+			show("loadMoreDesign", loadMore);
+
+			gridBlock.classList.toggle("show-overlay", isOn(document.getElementById("swOverlay")));
+			show("overlayFields", isOn(document.getElementById("swOverlay")));
+			show("linkFields", isOn(document.getElementById("swLink")));
+		}
+
+		function showParentPanels(tab) {
+			["content", "design", "block"].forEach((t) => show("panel-" + t, t === tab));
+			show("panel-cell-content", false);
+			show("panel-cell-design", false);
+		}
+
+		function setQa(current) {
+			if (current === "cell" || current === "cellDesign") {
+				qa.innerHTML = '<button type="button" class="primary">Add block</button><button type="button">Clone cell</button><button type="button" disabled title="Minimum 4 cells">Delete cell</button>';
+			} else {
+				qa.innerHTML = '<button type="button" class="primary" data-qa="add">Add cell</button><button type="button" data-qa="edit">Edit</button><button type="button">Clone</button><button type="button">Delete</button>';
+			}
+		}
+
+		function setMode(next) {
+			mode = next;
+			document.querySelectorAll("#toggles button").forEach((b) => b.classList.toggle("active", b.dataset.mode === next));
+			const showSb = next !== "parent";
+			layout.classList.toggle("no-sidebar", !showSb);
+			sidebar.classList.toggle("hidden", !showSb);
+			gridBlock.classList.toggle("parent-sel", next === "parent" || next === "content" || next === "design" || next === "block");
+			cells.forEach((c) => c.classList.toggle("cell-sel", (next === "cell" || next === "cellDesign") && Number(c.dataset.cell) === selectedCell));
+
+			const isCell = next === "cell" || next === "cellDesign";
+			document.querySelector('#tabs [data-tab="block"]').classList.toggle("hidden", isCell);
+
+			if (next === "parent") {
+				crumb.innerHTML = "<strong>Grid</strong>";
+			} else if (next === "content" || next === "design" || next === "block") {
+				crumb.innerHTML = "<strong>Grid</strong>";
+				document.getElementById("sbTitle").textContent = "Grid";
+				document.getElementById("sbSub").textContent = "s-block-grid";
+				const tab = next === "block" ? "block" : next === "design" ? "design" : "content";
+				document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+				showParentPanels(tab);
+			} else if (isCell) {
+				if (next === "cell") selectedCell = selectedCell || 0;
+				cells.forEach((c) => c.classList.toggle("cell-sel", Number(c.dataset.cell) === selectedCell));
+				crumb.innerHTML = "Grid &gt; <strong>Cell " + (selectedCell + 1) + "</strong>";
+				document.getElementById("sbTitle").textContent = "Grid cell";
+				document.getElementById("sbSub").textContent = "s-block-grid-cell";
+				document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === (next === "cellDesign" ? "design" : "content")));
+				show("panel-content", false);
+				show("panel-design", false);
+				show("panel-block", false);
+				show("panel-cell-content", next !== "cellDesign");
+				show("panel-cell-design", next === "cellDesign");
+				syncCellSegs(selectedCell);
+				document.querySelectorAll("[data-pick-cell]").forEach((row) => {
+					row.classList.toggle("active-row", Number(row.dataset.pickCell) === selectedCell);
+				});
+			}
+			setQa(next);
+			applyCanvas();
+		}
+
+		document.getElementById("toggles").addEventListener("click", (e) => {
+			const btn = e.target.closest("button");
+			if (btn?.dataset.mode) setMode(btn.dataset.mode);
+		});
+		qa.addEventListener("click", (e) => {
+			if (e.target.dataset.qa === "edit") setMode("content");
+		});
+		document.getElementById("closeSb").addEventListener("click", () => setMode("parent"));
+		tabs.addEventListener("click", (e) => {
+			const btn = e.target.closest("[data-tab]");
+			if (!btn) return;
+			const tab = btn.dataset.tab;
+			document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b === btn));
+			if (mode === "cell" || mode === "cellDesign") {
+				show("panel-cell-content", tab === "content");
+				show("panel-cell-design", tab === "design");
+				show("panel-content", false);
+				show("panel-design", false);
+				show("panel-block", false);
+			} else {
+				showParentPanels(tab);
+			}
+		});
+		document.querySelectorAll("[data-switch]").forEach((sw) => {
+			sw.addEventListener("click", () => { sw.classList.toggle("on"); applyCanvas(); });
+		});
+		document.querySelectorAll(".seg").forEach((seg) => {
+			seg.addEventListener("click", (e) => {
+				const btn = e.target.closest("button");
+				if (!btn) return;
+				seg.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b === btn));
+				if (seg.id === "cDirSeg" || seg.id === "cHSeg" || seg.id === "cVSeg") {
+					dirtyCells[selectedCell] = {
+						dir: segVal("cDirSeg", "cdir") || "col",
+						h: segVal("cHSeg", "ch") || "start",
+						v: segVal("cVSeg", "cv") || "center",
+					};
+					document.getElementById("resetGridStyles").classList.remove("hidden");
+				}
+				applyCanvas();
+			});
+		});
+		["colsInput", "gapInput", "textColor", "radiusInput", "padInput", "loadMoreLabel"].forEach((id) => {
+			document.getElementById(id).addEventListener("input", applyCanvas);
+		});
+		document.getElementById("resetGridStyles").addEventListener("click", () => {
+			delete dirtyCells[selectedCell];
+			syncCellSegs(selectedCell);
+			applyCanvas();
+		});
+		document.getElementById("grid").addEventListener("click", (e) => {
+			const cell = e.target.closest(".cell");
+			if (!cell) return;
+			selectedCell = Number(cell.dataset.cell);
+			setMode("cell");
+		});
+		document.getElementById("panel-content").addEventListener("click", (e) => {
+			const row = e.target.closest("[data-pick-cell]");
+			if (!row || e.target.closest("button")) return;
+			selectedCell = Number(row.dataset.pickCell);
+			setMode("cell");
+		});
+
+		setMode("parent");
+	</script>
+</body>
+</html>

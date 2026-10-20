@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid — Editor</title>
+    <meta name="description" content="Grid editor mock using New Editor Blocks / Material 3 controls." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="grid.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#floater">Skip to block settings</a>
+    <main class="workspace">
+      <section class="canvas" aria-label="Page canvas">
+        <div class="review-bar" role="group" aria-label="Review states">
+          <button type="button" class="chip active" data-mode="content">Parent Content</button>
+          <button type="button" class="chip" data-mode="design">Parent Design</button>
+          <button type="button" class="chip" data-mode="block">Block</button>
+          <button type="button" class="chip" data-mode="cell">Cell</button>
+          <button type="button" class="chip" data-mode="cellDesign">Cell Design</button>
+        </div>
+        <p class="canvas-kicker">Section canvas · Grid</p>
+        <article class="page-card" id="page-card">
+          <div class="page-body page-body-center">
+            <div class="block-wrap" id="grid-block">
+              <div class="quick-actions" id="qa-parent" role="toolbar" aria-label="Grid quick actions">
+                <button type="button" class="icon-button" id="qa-add" aria-label="Add cell">
+                  <span class="icon-24"><img src="assets/icon-qa-add.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" id="qa-edit" aria-label="Edit">
+                  <span class="icon-24"><img src="assets/icon-qa-edit.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" id="qa-copy" aria-label="Clone">
+                  <span class="icon-24"><img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" id="qa-delete" aria-label="Delete">
+                  <span class="icon-24"><img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <div class="quick-actions" id="qa-cell" hidden role="toolbar" aria-label="Cell quick actions">
+                <button type="button" class="icon-button" id="qa-add-block" aria-label="Add block">
+                  <span class="icon-24"><img src="assets/icon-qa-add.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <button type="button" class="icon-button" id="qa-clone-cell" aria-label="Clone cell">
+                  <span class="icon-24"><img src="assets/icon-qa-copy.svg" alt="" width="24" height="24" /></span>
+                </button>
+                <span class="qa-divider" aria-hidden="true"></span>
+                <button type="button" class="icon-button" disabled aria-label="Delete cell" title="Minimum 4 cells">
+                  <span class="icon-24"><img src="assets/icon-qa-delete.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <div class="filters-bar" id="filters-bar" hidden>
+                <span class="filter-chip on">All</span>
+                <span class="filter-chip">Amenities</span>
+                <span class="filter-chip">Community</span>
+              </div>
+              <div class="amenity-grid" id="amenity-grid">
+                <article class="cell" data-cell="0">
+                  <div class="cell-content" data-content>
+                    <div class="thumb"></div>
+                    <div class="cell-copy"><h3>Resort-style pool</h3><p>Cabana seating and weekend hours.</p></div>
+                  </div>
+                  <div class="overlay">Learn more</div>
+                </article>
+                <article class="cell" data-cell="1">
+                  <div class="cell-content" data-content>
+                    <div class="thumb"></div>
+                    <div class="cell-copy"><h3>Fitness studio</h3><p>Open 5 a.m. to 11 p.m.</p></div>
+                  </div>
+                  <div class="overlay">Learn more</div>
+                </article>
+                <article class="cell" data-cell="2">
+                  <div class="cell-content" data-content>
+                    <div class="thumb"></div>
+                    <div class="cell-copy"><h3>Cowork lounge</h3><p>Desks, wifi, and coffee.</p></div>
+                  </div>
+                  <div class="overlay">Learn more</div>
+                </article>
+                <article class="cell" data-cell="3">
+                  <div class="cell-content" data-content>
+                    <div class="thumb"></div>
+                    <div class="cell-copy"><h3>Pet park</h3><p>Fenced yard and wash station.</p></div>
+                  </div>
+                  <div class="overlay">Learn more</div>
+                </article>
+              </div>
+              <button type="button" class="load-more" id="load-more" hidden>Show more</button>
+            </div>
+          </div>
+        </article>
+        <p class="canvas-hint" id="crumb">Grid is selected. Open a cell from the list or the canvas.</p>
+      </section>
+
+      <aside class="panel" id="floater" aria-label="Block settings">
+        <div class="panel-main" id="parent-shell">
+          <header class="panel-header"><h1>Grid</h1></header>
+          <div class="tabs" role="tablist" aria-label="Grid settings">
+            <button class="tab active" type="button" role="tab" id="tab-content" aria-selected="true" aria-controls="panel-content">Content</button>
+            <button class="tab" type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design">Design</button>
+            <button class="tab" type="button" role="tab" id="tab-block" aria-selected="false" aria-controls="panel-block">Block</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+              <p class="section-label">Cells</p>
+              <p class="grid-note">Each cell is a container. Open a cell to add text, media, or buttons. Minimum 4 cells.</p>
+              <div class="cell-list" id="cell-list">
+                <button type="button" class="cell-row active" data-pick-cell="0"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Cell 1</span><span class="meta">2 blocks</span></button>
+                <button type="button" class="cell-row" data-pick-cell="1"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Cell 2</span><span class="meta">2 blocks</span></button>
+                <button type="button" class="cell-row" data-pick-cell="2"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Cell 3</span><span class="meta">2 blocks</span></button>
+                <button type="button" class="cell-row" data-pick-cell="3"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Cell 4</span><span class="meta">2 blocks</span></button>
+              </div>
+              <button type="button" class="medium-button medium-button--leading" id="add-cell">
+                <span class="icon-24"><img src="assets/icon-add.svg" alt="" width="24" height="24" /></span>
+                Add cell
+              </button>
+              <p class="warn">Remove is disabled at 4 cells. Add a fifth cell before you can delete one.</p>
+              <hr class="panel-divider" />
+              <p class="section-label">Filters</p>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-filters" role="switch" aria-checked="false" aria-labelledby="filters-label"></button>
+                <div class="toggle-copy"><span id="filters-label">Show filters</span></div>
+              </div>
+              <div class="nested" id="filter-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Categories</span>
+                  <input type="text" id="filter-names" value="Amenities, Community" />
+                  <span class="field-help">Names only. An All chip is added automatically.</span>
+                </label>
+              </div>
+              <hr class="panel-divider" />
+              <p class="section-label">Load more</p>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-load" role="switch" aria-checked="false" aria-labelledby="load-label"></button>
+                <div class="toggle-copy"><span id="load-label">Add a load more button</span></div>
+              </div>
+              <div class="nested" id="load-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Initial cells to display</span>
+                  <input type="number" id="load-count" min="1" value="6" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Button text</span>
+                  <input type="text" id="load-text" value="Show more" />
+                </label>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+              <p class="section-label">Grid layout</p>
+              <label class="field">
+                <span class="field-label">Number of columns</span>
+                <input type="number" id="cols" min="1" max="12" value="2" />
+              </label>
+              <label class="field">
+                <span class="field-label">Space between cells</span>
+                <input type="number" id="gap" min="0" value="15" />
+                <span class="field-help">Pixels. Blueprint 15.</span>
+              </label>
+              <hr class="panel-divider" />
+              <p class="section-label">Text color</p>
+              <p class="grid-note">Color only. Size and heading stay on the text block.</p>
+              <div class="color-card">
+                <button type="button" class="color-trigger" id="text-color-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="swatch" id="text-swatch" style="background:#1e2743"></span>
+                  <span class="color-name" id="text-color-value">Secondary</span>
+                  <span class="icon-button" aria-hidden="true"><span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span></span>
+                </button>
+                <ul class="color-menu" id="text-color-menu" hidden role="listbox">
+                  <li><button type="button" role="option" data-color="#1e2743" data-label="Secondary" aria-selected="true"><span class="swatch" style="background:#1e2743"></span>Secondary</button></li>
+                  <li><button type="button" role="option" data-color="#ffffff" data-label="White" aria-selected="false"><span class="swatch" style="background:#ffffff"></span>White</button></li>
+                  <li><button type="button" role="option" data-color="#353535" data-label="Black" aria-selected="false"><span class="swatch" style="background:#353535"></span>Black</button></li>
+                </ul>
+              </div>
+              <hr class="panel-divider" />
+              <p class="section-label">Cell layout</p>
+              <p class="grid-note">Writes into every cell that still follows the Grid.</p>
+              <p class="section-label">Content direction</p>
+              <div class="segmented segmented-pair" id="dir-seg" role="group" aria-label="Content direction">
+                <button type="button" class="active" data-dir="col">Vertical</button>
+                <button type="button" data-dir="row">Horizontal</button>
+              </div>
+              <p class="section-label">Horizontal</p>
+              <div class="segmented" id="h-seg" role="group" aria-label="Horizontal">
+                <button type="button" class="active" data-h="start">Left</button>
+                <button type="button" data-h="center">Center</button>
+                <button type="button" data-h="end">Right</button>
+              </div>
+              <p class="section-label">Vertical</p>
+              <div class="segmented" id="v-seg" role="group" aria-label="Vertical">
+                <button type="button" data-v="start">Top</button>
+                <button type="button" class="active" data-v="center">Center</button>
+                <button type="button" data-v="end">Bottom</button>
+              </div>
+              <p class="grid-note">Visible when cells share a row height. Default Center matches the viewer.</p>
+              <hr class="panel-divider" />
+              <p class="section-label">Cell chrome</p>
+              <div class="field">
+                <span class="field-label" id="bg-label">Cell background</span>
+                <button type="button" class="field-trigger" id="bg-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="bg-label bg-value">
+                  <span id="bg-value">White</span>
+                  <span class="icon-button" aria-hidden="true"><span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span></span>
+                </button>
+                <ul class="field-menu" id="bg-menu" hidden role="listbox" aria-labelledby="bg-label">
+                  <li><button type="button" role="option" data-bg="#ffffff" aria-selected="true">White</button></li>
+                  <li><button type="button" role="option" data-bg="transparent" aria-selected="false">None</button></li>
+                  <li><button type="button" role="option" data-bg="#f0f0f0" aria-selected="false">Secondary</button></li>
+                </ul>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch on" id="sw-border" role="switch" aria-checked="true" aria-labelledby="border-label"></button>
+                <div class="toggle-copy"><span id="border-label">Border</span></div>
+              </div>
+              <label class="field">
+                <span class="field-label">Rounded corners</span>
+                <input type="number" id="radius" min="0" max="40" value="0" />
+              </label>
+              <label class="field">
+                <span class="field-label">Height</span>
+                <input type="text" id="height" placeholder="0 = auto" />
+                <span class="field-help">Empty or 0 is auto. Rows still stretch cells to equal height.</span>
+              </label>
+              <label class="field">
+                <span class="field-label">Padding</span>
+                <input type="number" id="cell-pad" min="0" value="16" />
+              </label>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-shadow" role="switch" aria-checked="false" aria-labelledby="shadow-label"></button>
+                <div class="toggle-copy"><span id="shadow-label">Box shadow</span></div>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-overlay" role="switch" aria-checked="false" aria-labelledby="overlay-label"></button>
+                <div class="toggle-copy"><span id="overlay-label">Show overlay</span></div>
+              </div>
+              <div class="nested" id="overlay-fields" hidden>
+                <label class="field">
+                  <span class="field-label">Overlay text</span>
+                  <input type="text" id="overlay-text" value="Learn more" />
+                </label>
+              </div>
+              <hr class="panel-divider" />
+              <p class="section-label">Module background</p>
+              <div class="field">
+                <span class="field-label" id="module-label">Background</span>
+                <button type="button" class="field-trigger" id="module-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="module-label module-value">
+                  <span id="module-value">None</span>
+                  <span class="icon-button" aria-hidden="true"><span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span></span>
+                </button>
+                <ul class="field-menu" id="module-menu" hidden role="listbox" aria-labelledby="module-label">
+                  <li><button type="button" role="option" aria-selected="true">None</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Color</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Image</button></li>
+                  <li><button type="button" role="option" aria-selected="false">Gradient</button></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="panel-block" role="tabpanel" aria-labelledby="tab-block" hidden>
+              <p class="section-label">Animation</p>
+              <div class="field">
+                <span class="field-label" id="animation-label">Behavior</span>
+                <button type="button" class="field-trigger" id="animation-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="animation-label animation-value">
+                  <span id="animation-value">None</span>
+                  <span class="icon-button" aria-hidden="true"><span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span></span>
+                </button>
+                <ul class="field-menu" id="animation-menu" hidden role="listbox" aria-labelledby="animation-label">
+                  <li><button type="button" role="option" data-animation="" aria-selected="true">None</button></li>
+                  <li><button type="button" role="option" data-animation="fade" aria-selected="false">Fade</button></li>
+                  <li><button type="button" role="option" data-animation="slide" aria-selected="false">Slide up</button></li>
+                </ul>
+              </div>
+              <hr class="panel-divider" />
+              <p class="section-label">Padding</p>
+              <div class="segmented has-tune" id="padding-source" role="group" aria-label="Padding">
+                <button type="button" data-pad="0">—</button>
+                <button type="button" data-pad="8">S</button>
+                <button type="button" class="active" data-pad="16">M</button>
+                <button type="button" data-pad="24">L</button>
+                <button type="button" class="tune" id="padding-tune" aria-label="Custom padding">
+                  <span class="icon-24"><img src="assets/icon-tune.svg" alt="" width="24" height="24" /></span>
+                </button>
+              </div>
+              <label class="field" id="custom-padding-field" hidden>
+                <span class="field-label">Padding</span>
+                <input type="number" id="custom-padding" value="16" min="0" max="80" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-main" id="cell-shell" hidden>
+          <header class="layer-header">
+            <button type="button" class="medium-button" id="cell-back" aria-label="Back to Grid">
+              <span class="icon-24"><img src="assets/icon-back.svg" alt="" width="24" height="24" /></span>
+            </button>
+            <h2 class="layer-title">Grid cell</h2>
+          </header>
+          <div class="tabs" role="tablist" aria-label="Cell settings">
+            <button class="tab active" type="button" role="tab" id="tab-cell-content" aria-selected="true">Content</button>
+            <button class="tab" type="button" role="tab" id="tab-cell-design" aria-selected="false">Design</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel" id="panel-cell-content">
+              <p class="section-label">Blocks in this cell</p>
+              <p class="grid-note">Text, Buttons, or Media. Maximum 6. Container is not in the add list.</p>
+              <div class="cell-list">
+                <div class="cell-row"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Media</span></div>
+                <div class="cell-row"><span class="icon-24"><img src="assets/icon-drag.svg" alt="" width="24" height="24" /></span><span>Text</span></div>
+              </div>
+              <button type="button" class="medium-button medium-button--leading">
+                <span class="icon-24"><img src="assets/icon-add.svg" alt="" width="24" height="24" /></span>
+                Add block
+              </button>
+              <p class="grid-note">2 of 6 blocks</p>
+              <hr class="panel-divider" />
+              <p class="section-label">Cell</p>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-visible" role="switch" aria-checked="false" aria-labelledby="visible-label"></button>
+                <div class="toggle-copy">
+                  <span id="visible-label">Keep content always visible</span>
+                  <p class="hint">Hover overlay sits behind the content.</p>
+                </div>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="sw-link" role="switch" aria-checked="false" aria-labelledby="link-label"></button>
+                <div class="toggle-copy"><span id="link-label">Make cell a clickable link</span></div>
+              </div>
+              <div class="nested" id="link-fields" hidden>
+                <div class="field">
+                  <span class="field-label" id="linkto-label">Link to</span>
+                  <button type="button" class="field-trigger" id="linkto-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="linkto-label linkto-value">
+                    <span id="linkto-value">Existing screen</span>
+                    <span class="icon-button" aria-hidden="true"><span class="icon-24"><img src="assets/icon-chevron.svg" alt="" width="24" height="24" /></span></span>
+                  </button>
+                  <ul class="field-menu" id="linkto-menu" hidden role="listbox" aria-labelledby="linkto-label">
+                    <li><button type="button" role="option" aria-selected="true">Existing screen</button></li>
+                    <li><button type="button" role="option" aria-selected="false">External URL</button></li>
+                    <li><button type="button" role="option" aria-selected="false">Open screen in lightbox</button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="tab-panel" id="panel-cell-design" hidden>
+              <p class="section-label">Cell layout</p>
+              <p class="grid-note">Same controls as Grid Design. Change a value here to style this cell only.</p>
+              <p class="section-label">Content direction</p>
+              <div class="segmented segmented-pair" id="c-dir-seg" role="group" aria-label="Cell content direction">
+                <button type="button" class="active" data-dir="col">Vertical</button>
+                <button type="button" data-dir="row">Horizontal</button>
+              </div>
+              <p class="section-label">Horizontal</p>
+              <div class="segmented" id="c-h-seg" role="group" aria-label="Cell horizontal">
+                <button type="button" class="active" data-h="start">Left</button>
+                <button type="button" data-h="center">Center</button>
+                <button type="button" data-h="end">Right</button>
+              </div>
+              <p class="section-label">Vertical</p>
+              <div class="segmented" id="c-v-seg" role="group" aria-label="Cell vertical">
+                <button type="button" data-v="start">Top</button>
+                <button type="button" class="active" data-v="center">Center</button>
+                <button type="button" data-v="end">Bottom</button>
+              </div>
+              <hr class="panel-divider" />
+              <p class="section-label">Cell chrome</p>
+              <div class="field">
+                <span class="field-label">Cell background</span>
+                <button type="button" class="field-trigger" disabled><span>White</span></button>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch on" role="switch" aria-checked="true" aria-labelledby="c-border-label"></button>
+                <div class="toggle-copy"><span id="c-border-label">Border</span></div>
+              </div>
+              <label class="field"><span class="field-label">Rounded corners</span><input type="number" value="0" min="0" readonly /></label>
+              <label class="field"><span class="field-label">Height</span><input type="text" placeholder="0 = auto" readonly /></label>
+              <label class="field"><span class="field-label">Padding</span><input type="number" value="16" readonly /></label>
+              <div class="toggle-row">
+                <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="c-shadow-label"></button>
+                <div class="toggle-copy"><span id="c-shadow-label">Box shadow</span></div>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch" role="switch" aria-checked="false" aria-labelledby="c-overlay-label"></button>
+                <div class="toggle-copy"><span id="c-overlay-label">Show overlay</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <script src="grid.js"></script>
+  </body>
+</html>
