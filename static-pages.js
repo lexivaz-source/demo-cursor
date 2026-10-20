@@ -37,8 +37,15 @@ const toolButtons = [radiusBtn, locationBtn, animationsBtn];
 const toolPanels = [radiusPanel, locationPanel, animationsPanel];
 
 const LIVE_PATH = "/properties/meadow-view-lodge";
-const LIVE_REMOTE = "https://spring-brook.vercel.app/properties/meadow-view-lodge";
+const LIVE_ORIGIN = "https://spring-brook.vercel.app";
+const LIVE_REMOTE = `${LIVE_ORIGIN}/properties/meadow-view-lodge`;
 const TOOLTIP_SELECTOR = ".sp-tool-btn[data-tooltip]";
+
+/** Local static-pages-server.py proxies /properties/* same-origin; GitHub Pages cannot. */
+function usesLocalPreviewProxy() {
+  const host = window.location.hostname;
+  return host === "localhost" || host === "127.0.0.1";
+}
 
 const pageColors = {
   background: { name: "Cream", hex: "#f5f6f1" },
@@ -76,10 +83,41 @@ function announce(message) {
   if (live) live.textContent = message;
 }
 
-function previewSrc(path) {
+function previewSrc(path, absoluteUrl) {
   const clean = path?.startsWith("/") ? path : `/${path || LIVE_PATH}`;
-  // Serve at the real site path so Next.js /_next assets resolve correctly.
-  return clean;
+  // Local proxy: real path so Next.js /_next assets resolve on the same origin.
+  if (usesLocalPreviewProxy()) return clean;
+  // GitHub Pages / static hosts: absolute remote (root-relative paths 404 on *.github.io).
+  if (absoluteUrl) return absoluteUrl;
+  try {
+    return new URL(clean, LIVE_ORIGIN).href;
+  } catch {
+    return LIVE_REMOTE;
+  }
+}
+
+function isGithubPagesNotFoundDoc(doc) {
+  if (!doc) return false;
+  const title = doc.title || "";
+  const text = doc.body?.innerText || "";
+  return (
+    /GitHub Pages/i.test(title) &&
+    (/There isn't a GitHub Pages site here/i.test(text) || /\b404\b/.test(text))
+  );
+}
+
+function showPreviewFallback(message) {
+  if (!fallback) return;
+  fallback.hidden = false;
+  fallback.setAttribute("aria-hidden", "false");
+  const copy = fallback.querySelector("p");
+  if (copy && message) copy.textContent = message;
+}
+
+function hidePreviewFallback() {
+  if (!fallback) return;
+  fallback.hidden = true;
+  fallback.setAttribute("aria-hidden", "true");
 }
 
 function luminance(hex) {
@@ -505,13 +543,19 @@ pageMenu.querySelectorAll("button").forEach((button) => {
       item.setAttribute("aria-selected", String(item === button));
     });
     pageName.textContent = button.dataset.page;
-    const remotePath = button.dataset.url
-      ? new URL(button.dataset.url).pathname
-      : LIVE_PATH;
+    const absoluteUrl = button.dataset.url || LIVE_REMOTE;
+    let remotePath = LIVE_PATH;
+    try {
+      remotePath = button.dataset.url ? new URL(button.dataset.url).pathname || "/" : LIVE_PATH;
+    } catch {
+      remotePath = LIVE_PATH;
+    }
     iframe.dataset.remotePath = remotePath;
-    iframe.src = previewSrc(remotePath);
+    iframe.dataset.remoteUrl = absoluteUrl;
+    hidePreviewFallback();
+    iframe.src = previewSrc(remotePath, absoluteUrl);
     iframe.title = `${button.dataset.page} — live page`;
-    fallback.hidden = true;
+    if (fallbackLink) fallbackLink.href = absoluteUrl;
     announce(`Loaded ${button.dataset.page}`);
     closeMenus();
   });
@@ -718,18 +762,37 @@ window.addEventListener("message", (event) => {
 });
 
 iframe.addEventListener("load", () => {
-  fallback.hidden = true;
+  try {
+    const doc = iframe.contentDocument;
+    if (isGithubPagesNotFoundDoc(doc)) {
+      showPreviewFallback(
+        "This preview path isn’t available on GitHub Pages. Open the live site, or run static-pages-server.py locally for an embedded preview."
+      );
+      return;
+    }
+  } catch {
+    /* cross-origin remote preview — treat as loaded */
+  }
+  hidePreviewFallback();
   pushThemeToPreview();
   replayAnimation();
 });
 
 iframe.addEventListener("error", () => {
-  fallback.hidden = false;
+  showPreviewFallback(
+    "The live page couldn’t load inside this frame (likely blocked by embed headers)."
+  );
 });
 
 // Fallback link still points at the live remote site
 const fallbackLink = fallback?.querySelector("a");
-if (fallbackLink) fallbackLink.href = LIVE_REMOTE;
+if (fallbackLink) fallbackLink.href = iframe.dataset.remoteUrl || LIVE_REMOTE;
+
+// Resolve src for the current host (fixes GitHub Pages root-relative 404 in the canvas).
+iframe.src = previewSrc(
+  iframe.dataset.remotePath || LIVE_PATH,
+  iframe.dataset.remoteUrl || LIVE_REMOTE
+);
 
 applyPageColors();
 setAllRadii(pageFx.radius.tl);
