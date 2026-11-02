@@ -53,7 +53,9 @@ const STATIC_PREVIEW_BY_PATH = {
   "/properties/meadow-view-lodge": "preview/meadow-view-lodge.html",
 };
 /** Bump when preview bridge / CTA CSS changes so GitHub Pages clients skip stale HTML. */
-const PREVIEW_CACHE_BUST = "14";
+const PREVIEW_CACHE_BUST = "21";
+/** Unique per editor load so Chrome cannot restore a prior iframe scroll position. */
+const PREVIEW_SESSION = String(Date.now());
 
 /** Local static-pages-server.py proxies /properties/* same-origin; GitHub Pages cannot. */
 function usesLocalPreviewProxy() {
@@ -68,9 +70,10 @@ function staticPreviewSrc(path) {
   try {
     const url = new URL(relative, window.location.href);
     url.searchParams.set("v", PREVIEW_CACHE_BUST);
+    url.searchParams.set("s", PREVIEW_SESSION);
     return url.href;
   } catch {
-    return `${relative}?v=${PREVIEW_CACHE_BUST}`;
+    return `${relative}?v=${PREVIEW_CACHE_BUST}&s=${PREVIEW_SESSION}`;
   }
 }
 
@@ -1218,12 +1221,40 @@ function resetIframeScroll() {
     } catch {
       /* ignore */
     }
+    try {
+      if (win.location.hash) {
+        win.history.replaceState(
+          null,
+          "",
+          win.location.pathname + win.location.search
+        );
+      }
+    } catch {
+      /* ignore */
+    }
     win.scrollTo(0, 0);
     if (doc.documentElement) doc.documentElement.scrollTop = 0;
     if (doc.body) doc.body.scrollTop = 0;
+    if (doc.scrollingElement) doc.scrollingElement.scrollTop = 0;
   } catch {
     /* cross-origin — bridge handles scroll reset */
   }
+}
+
+let iframeScrollLockUntil = 0;
+function lockIframeScrollFrames() {
+  if (Date.now() > iframeScrollLockUntil) return;
+  resetIframeScroll();
+  window.requestAnimationFrame(lockIframeScrollFrames);
+}
+
+function pinPreviewToHero() {
+  resetIframeScroll();
+  iframeScrollLockUntil = Date.now() + 6000;
+  window.requestAnimationFrame(lockIframeScrollFrames);
+  [0, 50, 100, 250, 500, 1000, 2000, 3500, 5000, 7000].forEach((ms) => {
+    window.setTimeout(resetIframeScroll, ms);
+  });
 }
 
 iframe.addEventListener("load", () => {
@@ -1242,15 +1273,11 @@ iframe.addEventListener("load", () => {
   } catch {
     /* cross-origin remote preview — treat as loaded */
   }
-  resetIframeScroll();
   hidePreviewFallback();
   pushThemeToPreview();
   replayAnimation();
   // Browser scroll restoration can re-apply after load; pin the hero in view.
-  window.setTimeout(resetIframeScroll, 0);
-  window.setTimeout(resetIframeScroll, 100);
-  window.setTimeout(resetIframeScroll, 500);
-  window.setTimeout(resetIframeScroll, 1200);
+  pinPreviewToHero();
 });
 
 iframe.addEventListener("error", () => {

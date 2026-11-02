@@ -1,3 +1,16 @@
+<script id="sp-scroll-boot">
+(function () {
+  try {
+    if (history && "scrollRestoration" in history) history.scrollRestoration = "manual";
+  } catch (e) {}
+  try {
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  } catch (e) {}
+  try {
+    scrollTo(0, 0);
+  } catch (e) {}
+})();
+</script>
 <style id="sp-preview-theme">
   /* Page Colors: surface + contrast only — do not restyle layout/components. */
   :root {
@@ -171,18 +184,108 @@
     policies: "sp-hide-policies"
   };
 
-  /* Preview iframes restore the last scroll (often mid-page reviews). Always start at top. */
+  /* Preview iframes restore the last scroll (often mid-page reviews). Always start at top.
+     Restoration can fire AFTER load — keep fighting it for several seconds. */
   try {
     if (window.history && "scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
   } catch (err) {}
 
+  try {
+    if (window.location.hash) {
+      history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search
+      );
+    }
+  } catch (err) {}
+
+  try {
+    ["scrollPosition", "scrollpos", "sp-preview-scroll", "scroll-position"].forEach(
+      function (key) {
+        sessionStorage.removeItem(key);
+        localStorage.removeItem(key);
+      }
+    );
+  } catch (err) {}
+
   function resetPreviewScroll() {
     try {
+      if (window.location.hash) {
+        history.replaceState(
+          null,
+          "",
+          window.location.pathname + window.location.search
+        );
+      }
       window.scrollTo(0, 0);
       if (document.documentElement) document.documentElement.scrollTop = 0;
       if (document.body) document.body.scrollTop = 0;
+      if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+    } catch (err) {}
+  }
+
+  resetPreviewScroll();
+
+  var scrollLockUntil = Date.now() + 6000;
+  function lockScrollFrame() {
+    if (Date.now() > scrollLockUntil) return;
+    resetPreviewScroll();
+    try {
+      requestAnimationFrame(lockScrollFrame);
+    } catch (err) {}
+  }
+  try {
+    requestAnimationFrame(lockScrollFrame);
+  } catch (err) {}
+
+  /* Prefer same-origin hero/gallery assets so GH Pages visitors always see the top. */
+  var LOCAL_PREVIEW_IMAGES = {
+    "cabin-ext-2.jpg": "../assets/preview/cabin-ext-2.jpg",
+    "cabin-ext-4.jpg": "../assets/preview/cabin-ext-4.jpg",
+    "cabin-ext-10.jpg": "../assets/preview/cabin-ext-10.jpg",
+    "cabin-int-2.jpg": "../assets/preview/cabin-int-2.jpg",
+    "cabin-int-4.jpg": "../assets/preview/cabin-int-4.jpg",
+    "guest-avatar.jpg": "../assets/preview/guest-avatar.jpg"
+  };
+
+  function localPreviewImageUrl(url) {
+    if (typeof url !== "string" || !url) return null;
+    var names = Object.keys(LOCAL_PREVIEW_IMAGES);
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      if (
+        url.indexOf(name) !== -1 ||
+        url.indexOf(encodeURIComponent("/images/" + name)) !== -1 ||
+        url.indexOf("%2Fimages%2F" + name.replace(/\./g, "%2E")) !== -1
+      ) {
+        try {
+          return new URL(LOCAL_PREVIEW_IMAGES[name], window.location.href).href;
+        } catch (err) {
+          return LOCAL_PREVIEW_IMAGES[name];
+        }
+      }
+    }
+    return null;
+  }
+
+  function rewritePreviewImages() {
+    try {
+      var nodes = document.querySelectorAll("img, source");
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        var src = el.getAttribute("src");
+        var local = localPreviewImageUrl(src);
+        if (local) el.setAttribute("src", local);
+        var srcset = el.getAttribute("srcset");
+        if (srcset) {
+          var mapped = localPreviewImageUrl(srcset);
+          if (mapped) el.setAttribute("srcset", mapped);
+        }
+      }
+      resetPreviewScroll();
     } catch (err) {}
   }
 
@@ -409,6 +512,7 @@
   });
 
   function notifyReady() {
+    rewritePreviewImages();
     resetPreviewScroll();
     try {
       if (window.parent && window.parent !== window) {
@@ -431,10 +535,25 @@
   setTimeout(notifyReady, 400);
   setTimeout(notifyReady, 1200);
   setTimeout(notifyReady, 2500);
-  window.addEventListener("load", resetPreviewScroll);
-  setTimeout(resetPreviewScroll, 0);
-  setTimeout(resetPreviewScroll, 100);
-  setTimeout(resetPreviewScroll, 600);
-  setTimeout(resetPreviewScroll, 1500);
+  window.addEventListener("DOMContentLoaded", resetPreviewScroll);
+  window.addEventListener("load", function () {
+    rewritePreviewImages();
+    resetPreviewScroll();
+    scrollLockUntil = Date.now() + 4000;
+    try {
+      requestAnimationFrame(lockScrollFrame);
+    } catch (err) {}
+  });
+  window.addEventListener("pageshow", function (event) {
+    resetPreviewScroll();
+    scrollLockUntil = Date.now() + (event.persisted ? 5000 : 3000);
+    try {
+      requestAnimationFrame(lockScrollFrame);
+    } catch (err) {}
+  });
+  window.addEventListener("hashchange", resetPreviewScroll);
+  [0, 50, 100, 250, 500, 1000, 2000, 3500, 5000, 7000].forEach(function (ms) {
+    setTimeout(resetPreviewScroll, ms);
+  });
 })();
 </script>
