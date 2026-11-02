@@ -171,6 +171,21 @@
     policies: "sp-hide-policies"
   };
 
+  /* Preview iframes restore the last scroll (often mid-page reviews). Always start at top. */
+  try {
+    if (window.history && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  } catch (err) {}
+
+  function resetPreviewScroll() {
+    try {
+      window.scrollTo(0, 0);
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    } catch (err) {}
+  }
+
   // Absolute Vercel URLs must stay same-origin so the local proxy handles them.
   function toLocal(url) {
     if (typeof url !== "string") return url;
@@ -394,6 +409,7 @@
   });
 
   function notifyReady() {
+    resetPreviewScroll();
     try {
       if (window.parent && window.parent !== window) {
         window.parent.postMessage({ type: "sp-preview-ready" }, "*");
@@ -404,6 +420,7 @@
       applyButtonStyles(lastButtonStyles);
       watchCtaDom();
     }
+    resetPreviewScroll();
   }
 
   if (document.readyState === "loading") {
@@ -414,5 +431,10 @@
   setTimeout(notifyReady, 400);
   setTimeout(notifyReady, 1200);
   setTimeout(notifyReady, 2500);
+  window.addEventListener("load", resetPreviewScroll);
+  setTimeout(resetPreviewScroll, 0);
+  setTimeout(resetPreviewScroll, 100);
+  setTimeout(resetPreviewScroll, 600);
+  setTimeout(resetPreviewScroll, 1500);
 })();
 </script>

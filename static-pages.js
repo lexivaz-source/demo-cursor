@@ -53,7 +53,7 @@ const STATIC_PREVIEW_BY_PATH = {
   "/properties/meadow-view-lodge": "preview/meadow-view-lodge.html",
 };
 /** Bump when preview bridge / CTA CSS changes so GitHub Pages clients skip stale HTML. */
-const PREVIEW_CACHE_BUST = "13";
+const PREVIEW_CACHE_BUST = "14";
 
 /** Local static-pages-server.py proxies /properties/* same-origin; GitHub Pages cannot. */
 function usesLocalPreviewProxy() {
@@ -1206,6 +1206,26 @@ window.addEventListener("message", (event) => {
   }
 });
 
+function resetIframeScroll() {
+  try {
+    const win = iframe.contentWindow;
+    const doc = iframe.contentDocument;
+    if (!win || !doc) return;
+    try {
+      if (win.history && "scrollRestoration" in win.history) {
+        win.history.scrollRestoration = "manual";
+      }
+    } catch {
+      /* ignore */
+    }
+    win.scrollTo(0, 0);
+    if (doc.documentElement) doc.documentElement.scrollTop = 0;
+    if (doc.body) doc.body.scrollTop = 0;
+  } catch {
+    /* cross-origin — bridge handles scroll reset */
+  }
+}
+
 iframe.addEventListener("load", () => {
   try {
     const doc = iframe.contentDocument;
@@ -1222,9 +1242,15 @@ iframe.addEventListener("load", () => {
   } catch {
     /* cross-origin remote preview — treat as loaded */
   }
+  resetIframeScroll();
   hidePreviewFallback();
   pushThemeToPreview();
   replayAnimation();
+  // Browser scroll restoration can re-apply after load; pin the hero in view.
+  window.setTimeout(resetIframeScroll, 0);
+  window.setTimeout(resetIframeScroll, 100);
+  window.setTimeout(resetIframeScroll, 500);
+  window.setTimeout(resetIframeScroll, 1200);
 });
 
 iframe.addEventListener("error", () => {
