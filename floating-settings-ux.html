@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floating Settings Panel — UX Guidelines</title>
+    <meta
+      name="description"
+      content="Interactive UX breakdown of the New Editor Blocks floating settings panel."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=block-1" />
+    <link rel="stylesheet" href="floating-settings-ux.css?v=block-3" />
+  </head>
+  <body class="ux-page">
+    <a class="skip-link" href="#panel-anatomy">Skip to panel examples</a>
+
+    <main class="ux-shell">
+      <div class="review-bar" role="group" aria-label="Preview interaction states">
+        <button type="button" class="chip active" data-preview="default">Default</button>
+        <button type="button" class="chip" data-preview="tab-hover">Tab hover</button>
+        <button type="button" class="chip" data-preview="device-hover">Device hover</button>
+        <button type="button" class="chip" data-preview="device-focus">Device focus</button>
+      </div>
+
+      <header class="ux-intro">
+        <h1>UX Guidelines for Floating Settings Panel</h1>
+        <p class="ux-lede">
+          The floating settings panel consists of three tabs, each with a clearly defined purpose.
+        </p>
+
+        <section class="ux-rules" aria-labelledby="rules-heading">
+          <h2 id="rules-heading">Global Behavior Rules:</h2>
+          <dl class="rules-list">
+            <div class="rules-row">
+              <dt>Tab order</dt>
+              <dd>Content → Design → Block Settings</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Tab visibility</dt>
+              <dd>Keep all three tabs visible</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Default tab</dt>
+              <dd>Open Content when a block is first selected</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Settings availability</dt>
+              <dd>Only display controls supported by the selected block</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Preview</dt>
+              <dd>Reflect changes immediately when supported</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Panel Size</dt>
+              <dd>Fixed height of 500px</dd>
+            </div>
+            <div class="rules-row">
+              <dt>Accessibility</dt>
+              <dd>Keep visible focus, tooltips for icon-only tabs, and clear active states</dd>
+            </div>
+          </dl>
+        </section>
+      </header>
+
+      <section class="ux-examples" id="panel-anatomy" aria-label="Panel anatomy examples">
+        <div class="ux-previews">
+        <article class="ux-example ux-example--stage">
+          <h2 class="ux-example-title">Content Tab</h2>
+          <div class="ux-stage" id="content-stage">
+            <aside class="panel ux-panel" id="panel-content" data-panel="content" aria-label="Content tab">
+              <div class="panel-main" id="content-main">
+                <header class="panel-header">
+                  <h1 id="panel-title">Block Label</h1>
+                </header>
+
+                <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+                  <button
+                    class="tab active"
+                    type="button"
+                    role="tab"
+                    id="content-tab-content"
+                    aria-selected="true"
+                    aria-controls="content-panel-content"
+                    data-tab="content"
+                  >
+                    Content
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="content-tab-design"
+                    aria-selected="false"
+                    aria-controls="content-panel-design"
+                    data-tab="design"
+                  >
+                    Design
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="content-tab-block"
+                    aria-selected="false"
+                    aria-controls="content-panel-block"
+                    data-tab="block"
+                  >
+                    Block
+                  </button>
+                  <button
+                    class="tab tab-icon"
+                    type="button"
+                    role="tab"
+                    id="content-tab-device"
+                    aria-selected="false"
+                    aria-controls="content-panel-device"
+                    data-tab="device"
+                    aria-label="Mobile Settings"
+                    aria-describedby="ux-tooltip"
+                    data-tooltip="Mobile Settings"
+                  >
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/floating-settings-ux/icon-device.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                </div>
+
+                <div class="tab-panels" id="content-scroll">
+                  <div
+                    class="tab-panel"
+                    id="content-panel-content"
+                    role="tabpanel"
+                    aria-labelledby="content-tab-content"
+                    data-layout="content"
+                  >
+                    <div class="ux-guide-copy">
+                      <p>This tab contains settings related to the block's content, data, and information.</p>
+                      <p>
+                        <strong>Examples:</strong> Titles, descriptions, images, content sources, Add and manage
+                        items, number of items displayed, filters, and sorting.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Content-specific controls belong here. Settings should update the
+                        preview when changed. The available fields vary by block type.
+                      </p>
+                    </div>
+
+                    <hr class="panel-divider" />
+
+                    <div class="ux-section">
+                      <button type="button" class="setting-row nest-row" id="open-nested-layer">
+                        <span>Nested Layer</span>
+                        <span class="icon-button" aria-hidden="true">
+                          <span class="icon-24">
+                            <img src="assets/floating-settings-ux/icon-chevron.svg" alt="" width="24" height="24" />
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+
+                    <hr class="panel-divider" />
+
+                    <div class="ux-section ux-section--blocks">
+                      <p class="section-label">Blocks</p>
+                      <div class="block-list" id="block-list" role="list" aria-label="Added blocks"></div>
+                      <button
+                        type="button"
+                        class="medium-button medium-button--leading"
+                        id="add-block"
+                        aria-haspopup="dialog"
+                        aria-controls="add-block-lightbox"
+                        aria-expanded="false"
+                      >
+                        <span class="icon-28" aria-hidden="true">
+                          <img src="assets/floating-settings-ux/icon-add.svg" alt="" width="28" height="28" />
+                        </span>
+                        Add Block
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="content-panel-design" role="tabpanel" aria-labelledby="content-tab-design" hidden>
+                    <div class="ux-guide-copy">
+                      <p>
+                        This tab contains visual customization options, including design, layout, and background
+                        settings.
+                      </p>
+                      <p>
+                        <strong>Example:</strong> Layout styles, grid columns, spacing, alignment, colors, typography,
+                        corner radius, background images, and overlays.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Group controls into labeled sections such as Layout, Appearance, and
+                        Background. Only display settings supported by the selected block.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="content-panel-block" role="tabpanel" aria-labelledby="content-tab-block" hidden>
+                    <div class="ux-guide-copy">
+                      <p>
+                        Controls the block's structural properties and behavior, including dimensions, padding, layer
+                        positioning, and animations.
+                      </p>
+                      <p>
+                        <strong>Rule:</strong> This tab always occupies the third position. Use consistent labels and
+                        ordering across all blocks.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="content-panel-device" role="tabpanel" aria-labelledby="content-tab-device" hidden>
+                    <div class="ux-guide-copy">
+                      <p>Device settings adjust how this block behaves on mobile breakpoints.</p>
+                      <p>
+                        <strong>Examples:</strong> Show or hide the block on mobile, and mobile-only layout
+                        overrides when the block supports them.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Icon-only tabs need a tooltip and accessible name. Keep focus
+                        visible and the active state clear.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="nested-layer layer-pane" id="nested-layer" hidden>
+                <header class="layer-header">
+                  <button type="button" class="medium-button" id="nested-back" aria-label="Back to Block Label">
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/icon-back.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                  <h2 class="layer-title">Nested Layer</h2>
+                </header>
+                <div class="layer-body">
+                  <div class="ux-guide-copy">
+                    <p>Nested layers open as a full takeover of the floating panel.</p>
+                    <p>
+                      <strong>Examples:</strong> Text styles, advanced filters, element lists, and other
+                      content-specific drill-ins.
+                    </p>
+                    <p>
+                      <strong>Rules:</strong> Use a back control and clear title. Hide the main tabs while the
+                      nested layer is open. Return focus to the row that opened it.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="nested-layer layer-pane" id="block-edit-layer" hidden>
+                <header class="layer-header">
+                  <button
+                    type="button"
+                    class="medium-button"
+                    id="block-edit-back"
+                    aria-label="Back to Block Label"
+                  >
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/icon-back.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                  <h2 class="layer-title" id="block-edit-title">Text</h2>
+                </header>
+
+                <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Nested block settings">
+                  <button
+                    class="tab active"
+                    type="button"
+                    role="tab"
+                    id="edit-tab-format"
+                    aria-selected="true"
+                    aria-controls="edit-panel-format"
+                    data-edit-tab="format"
+                  >
+                    Format
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="edit-tab-color"
+                    aria-selected="false"
+                    aria-controls="edit-panel-color"
+                    data-edit-tab="color"
+                  >
+                    Color
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="edit-tab-block"
+                    aria-selected="false"
+                    aria-controls="edit-panel-block"
+                    data-edit-tab="block"
+                  >
+                    Block
+                  </button>
+                  <button
+                    class="tab tab-icon"
+                    type="button"
+                    role="tab"
+                    id="edit-tab-device"
+                    aria-selected="false"
+                    aria-controls="edit-panel-device"
+                    data-edit-tab="device"
+                    aria-label="Mobile Settings"
+                    aria-describedby="ux-tooltip"
+                    data-tooltip="Mobile Settings"
+                  >
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/floating-settings-ux/icon-device.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                </div>
+
+                <div class="tab-panels block-edit-panels" id="block-edit-scroll">
+                  <div
+                    class="tab-panel"
+                    id="edit-panel-format"
+                    role="tabpanel"
+                    aria-labelledby="edit-tab-format"
+                    data-edit-layout="format"
+                  >
+                    <div class="ux-section ux-section--fields">
+                      <div class="field">
+                        <span class="field-label" id="text-style-label">Text Style</span>
+                        <button
+                          type="button"
+                          class="field-trigger"
+                          id="text-style-trigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false"
+                          aria-controls="text-style-menu"
+                          aria-labelledby="text-style-label text-style-value"
+                        >
+                          <span id="text-style-value">H1</span>
+                          <span class="icon-button" aria-hidden="true">
+                            <span class="icon-24">
+                              <img src="assets/floating-settings-ux/icon-chevron-down.svg" alt="" width="24" height="24" />
+                            </span>
+                          </span>
+                        </button>
+                        <ul class="field-menu" id="text-style-menu" hidden role="listbox" aria-labelledby="text-style-label">
+                          <li><button type="button" role="option" data-style="H1" aria-selected="true">H1</button></li>
+                          <li><button type="button" role="option" data-style="H2" aria-selected="false">H2</button></li>
+                          <li><button type="button" role="option" data-style="H3" aria-selected="false">H3</button></li>
+                          <li><button type="button" role="option" data-style="H4" aria-selected="false">H4</button></li>
+                          <li><button type="button" role="option" data-style="Body" aria-selected="false">Body</button></li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <hr class="panel-divider" />
+
+                    <div class="ux-section">
+                      <p class="section-label">Text Alignment</p>
+                      <div class="icon-bar" id="text-align" role="group" aria-label="Text Alignment">
+                        <button type="button" class="active" data-align="left" aria-label="Align left" aria-pressed="true">
+                          <span class="icon-24">
+                            <img src="assets/icon-align-left.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-align="center" aria-label="Align center" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/icon-align-center.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-align="right" aria-label="Align right" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/icon-align-right.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-align="justify" aria-label="Align justify" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/icon-align-justify.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <hr class="panel-divider" />
+
+                    <div class="ux-section">
+                      <p class="section-label">Text Orientation</p>
+                      <div class="icon-bar" id="text-orient" role="group" aria-label="Text Orientation">
+                        <button type="button" class="active" data-orient="horizontal" aria-label="Horizontal" aria-pressed="true">
+                          <span class="icon-24">
+                            <img src="assets/floating-settings-ux/icon-orient-horizontal.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-orient="rotate-left" aria-label="Rotate left" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/floating-settings-ux/icon-orient-rotate-left.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-orient="rotate-right" aria-label="Rotate right" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/floating-settings-ux/icon-orient-rotate-right.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                        <button type="button" data-orient="stacked" aria-label="Stacked" aria-pressed="false">
+                          <span class="icon-24">
+                            <img src="assets/floating-settings-ux/icon-orient-stacked.svg" alt="" width="24" height="24" />
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="edit-panel-color" role="tabpanel" aria-labelledby="edit-tab-color" hidden>
+                    <div class="ux-guide-copy">
+                      <p>Color settings for the nested block.</p>
+                      <p><strong>Examples:</strong> Text color, background color, and link color.</p>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="edit-panel-block" role="tabpanel" aria-labelledby="edit-tab-block" hidden>
+                    <div class="ux-guide-copy">
+                      <p>Shared block behavior for the nested block.</p>
+                      <p><strong>Examples:</strong> Animation and Padding.</p>
+                    </div>
+                  </div>
+
+                  <div class="tab-panel" id="edit-panel-device" role="tabpanel" aria-labelledby="edit-tab-device" hidden>
+                    <div class="ux-guide-copy">
+                      <p>Device overrides for this nested block.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <ul class="block-more-menu" id="block-more-menu" hidden role="menu" aria-label="Block actions">
+              <li><button type="button" role="menuitem" data-action="edit">Edit</button></li>
+              <li><button type="button" role="menuitem" data-action="hide">Hide</button></li>
+              <li><button type="button" role="menuitem" data-action="delete" class="is-danger">Delete</button></li>
+            </ul>
+
+            <aside
+              class="add-block-lightbox"
+              id="add-block-lightbox"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="add-block-title"
+              hidden
+            >
+              <header class="add-block-header">
+                <h2 id="add-block-title">Add Block</h2>
+                <button type="button" class="medium-button" id="add-block-close" aria-label="Close Add Block">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-close.svg" alt="" width="28" height="28" />
+                  </span>
+                </button>
+              </header>
+
+              <label class="add-block-search" for="add-block-search">
+                <span class="sr-only">Search blocks</span>
+                <span class="add-block-search-icon" aria-hidden="true">
+                  <img src="assets/icon-search.svg" alt="" width="24" height="24" />
+                </span>
+                <input id="add-block-search" type="search" placeholder="Search" autocomplete="off" />
+              </label>
+
+              <div class="add-block-grid" id="add-block-grid" role="listbox" aria-label="Available blocks">
+                <button type="button" class="add-block-option" role="option" data-block="Text">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-text.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Text</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Button">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-button.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Button</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Media">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-media.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Media</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Container">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-container.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Container</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Gallery">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-gallery.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Gallery</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Logo">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-logo.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Logo</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Virtual Tour">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-vrpano.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Virtual Tour</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Columns">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-columns.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Columns</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Carousel">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-vrpano.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Carousel</span>
+                </button>
+                <button type="button" class="add-block-option add-block-option--multiline" role="option" data-block="Floor Plan Gallery">
+                  <span class="icon-28 add-block-floorplan" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-floorplan.svg" alt="" width="22" height="17" />
+                  </span>
+                  <span class="add-block-option-label">
+                    <span>Floor Plan</span>
+                    <span>Gallery</span>
+                  </span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Accordion">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-vrpano.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Accordion</span>
+                </button>
+                <button type="button" class="add-block-option" role="option" data-block="Map">
+                  <span class="icon-28" aria-hidden="true">
+                    <img src="assets/floating-settings-ux/icon-block-vrpano.svg" alt="" width="28" height="28" />
+                  </span>
+                  <span>Map</span>
+                </button>
+              </div>
+              <p class="add-block-empty" id="add-block-empty" hidden>No blocks match your search.</p>
+            </aside>
+          </div>
+        </article>
+
+        <article class="ux-example ux-example--stage">
+          <h2 class="ux-example-title">Design Tab</h2>
+          <div class="ux-stage">
+            <aside class="panel ux-panel" id="panel-design" data-panel="design" aria-label="Design tab">
+              <div class="panel-main">
+                <header class="panel-header">
+                  <h1>Block Label</h1>
+                </header>
+
+                <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="design-tab-content"
+                    aria-selected="false"
+                    aria-controls="design-panel-content"
+                    data-tab="content"
+                  >
+                    Content
+                  </button>
+                  <button
+                    class="tab active"
+                    type="button"
+                    role="tab"
+                    id="design-tab-design"
+                    aria-selected="true"
+                    aria-controls="design-panel-design"
+                    data-tab="design"
+                  >
+                    Design
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="design-tab-block"
+                    aria-selected="false"
+                    aria-controls="design-panel-block"
+                    data-tab="block"
+                  >
+                    Block
+                  </button>
+                  <button
+                    class="tab tab-icon"
+                    type="button"
+                    role="tab"
+                    id="design-tab-device"
+                    aria-selected="false"
+                    aria-controls="design-panel-device"
+                    data-tab="device"
+                    aria-label="Mobile Settings"
+                    aria-describedby="ux-tooltip"
+                    data-tooltip="Mobile Settings"
+                  >
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/floating-settings-ux/icon-device.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                </div>
+
+                <div class="tab-panels">
+                  <div
+                    class="tab-panel"
+                    id="design-panel-content"
+                    role="tabpanel"
+                    aria-labelledby="design-tab-content"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>This tab contains settings related to the block's content, data, and information.</p>
+                      <p>
+                        <strong>Examples:</strong> Titles, descriptions, images, content sources, Add and manage
+                        items, number of items displayed, filters, and sorting.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Content-specific controls belong here. Settings should update the
+                        preview when changed. The available fields vary by block type.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="design-panel-design"
+                    role="tabpanel"
+                    aria-labelledby="design-tab-design"
+                  >
+                    <div class="ux-guide-copy">
+                      <p>
+                        This tab contains visual customization options, including design, layout, and background
+                        settings.
+                      </p>
+                      <p>
+                        <strong>Example:</strong> Layout styles, grid columns, spacing, alignment, colors, typography,
+                        corner radius, background images, and overlays.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Group controls into labeled sections such as Layout, Appearance, and
+                        Background. Only display settings supported by the selected block.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="design-panel-block"
+                    role="tabpanel"
+                    aria-labelledby="design-tab-block"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>
+                        Controls the block's structural properties and behavior, including dimensions, padding, layer
+                        positioning, and animations.
+                      </p>
+                      <p>
+                        <strong>Rule:</strong> This tab always occupies the third position. Use consistent labels and
+                        ordering across all blocks.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="design-panel-device"
+                    role="tabpanel"
+                    aria-labelledby="design-tab-device"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>Device settings adjust how this block behaves on mobile breakpoints.</p>
+                      <p>
+                        <strong>Examples:</strong> Show or hide the block on mobile, and mobile-only layout
+                        overrides when the block supports them.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Icon-only tabs need a tooltip and accessible name. Keep focus
+                        visible and the active state clear.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </article>
+
+        <article class="ux-example ux-example--stage">
+          <h2 class="ux-example-title">Block Tab</h2>
+          <div class="ux-stage">
+            <aside class="panel ux-panel" id="panel-block" data-panel="block" aria-label="Block tab">
+              <div class="panel-main">
+                <header class="panel-header">
+                  <h1>Block Label</h1>
+                </header>
+
+                <div class="tabs" role="tablist" aria-orientation="horizontal" aria-label="Block settings">
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="block-tab-content"
+                    aria-selected="false"
+                    aria-controls="block-panel-content"
+                    data-tab="content"
+                  >
+                    Content
+                  </button>
+                  <button
+                    class="tab"
+                    type="button"
+                    role="tab"
+                    id="block-tab-design"
+                    aria-selected="false"
+                    aria-controls="block-panel-design"
+                    data-tab="design"
+                  >
+                    Design
+                  </button>
+                  <button
+                    class="tab active"
+                    type="button"
+                    role="tab"
+                    id="block-tab-block"
+                    aria-selected="true"
+                    aria-controls="block-panel-block"
+                    data-tab="block"
+                  >
+                    Block
+                  </button>
+                  <button
+                    class="tab tab-icon"
+                    type="button"
+                    role="tab"
+                    id="block-tab-device"
+                    aria-selected="false"
+                    aria-controls="block-panel-device"
+                    data-tab="device"
+                    aria-label="Mobile Settings"
+                    aria-describedby="ux-tooltip"
+                    data-tooltip="Mobile Settings"
+                  >
+                    <span class="icon-28" aria-hidden="true">
+                      <img src="assets/floating-settings-ux/icon-device.svg" alt="" width="28" height="28" />
+                    </span>
+                  </button>
+                </div>
+
+                <div class="tab-panels">
+                  <div
+                    class="tab-panel"
+                    id="block-panel-content"
+                    role="tabpanel"
+                    aria-labelledby="block-tab-content"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>This tab contains settings related to the block's content, data, and information.</p>
+                      <p>
+                        <strong>Examples:</strong> Titles, descriptions, images, content sources, Add and manage
+                        items, number of items displayed, filters, and sorting.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Content-specific controls belong here. Settings should update the
+                        preview when changed. The available fields vary by block type.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="block-panel-design"
+                    role="tabpanel"
+                    aria-labelledby="block-tab-design"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>
+                        This tab contains visual customization options, including design, layout, and background
+                        settings.
+                      </p>
+                      <p>
+                        <strong>Example:</strong> Layout styles, grid columns, spacing, alignment, colors, typography,
+                        corner radius, background images, and overlays.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Group controls into labeled sections such as Layout, Appearance, and
+                        Background. Only display settings supported by the selected block.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="block-panel-block"
+                    role="tabpanel"
+                    aria-labelledby="block-tab-block"
+                  >
+                    <div class="ux-guide-copy">
+                      <p>
+                        Controls the block's structural properties and behavior, including dimensions, padding, layer
+                        positioning, and animations.
+                      </p>
+                      <p>
+                        <strong>Rule:</strong> This tab always occupies the third position. Use consistent labels and
+                        ordering across all blocks.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-panel"
+                    id="block-panel-device"
+                    role="tabpanel"
+                    aria-labelledby="block-tab-device"
+                    hidden
+                  >
+                    <div class="ux-guide-copy">
+                      <p>Device settings adjust how this block behaves on mobile breakpoints.</p>
+                      <p>
+                        <strong>Examples:</strong> Show or hide the block on mobile, and mobile-only layout
+                        overrides when the block supports them.
+                      </p>
+                      <p>
+                        <strong>Rules:</strong> Icon-only tabs need a tooltip and accessible name. Keep focus
+                        visible and the active state clear.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </article>
+        </div>
+      </section>
+
+    </main>
+
+    <p class="sr-only" id="live" aria-live="polite"></p>
+    <div class="ux-tooltip" id="ux-tooltip" role="tooltip" hidden></div>
+    <script src="floating-settings-ux.js?v=block-1"></script>
+  </body>
+</html>

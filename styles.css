@@ -277,6 +277,10 @@ body {
   cursor: pointer;
 }
 
+.tab:hover:not(.tab-icon) {
+  background: var(--secondary-bg);
+}
+
 .tab.active {
   font-weight: 700;
 }
@@ -293,7 +297,23 @@ body {
 
 .tab-icon {
   margin-left: auto;
-  padding: 15px 15px 20px;
+  align-self: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.tab-icon:hover,
+.tab-icon.active {
+  background: var(--secondary-bg);
+}
+
+.tab-icon.active::after {
+  content: none;
 }
 
 .tab-panels {
